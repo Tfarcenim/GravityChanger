@@ -1,5 +1,7 @@
 package gravity_changer.platform;
 
+import gravity_changer.EntityTags;
+import gravity_changer.GravityComponent;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.network.ClientPacketHandlerFabric;
 import gravity_changer.network.PacketHandler;
@@ -12,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -83,4 +86,61 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public double getLevelGravity(Level level) {
         return GravityChangerAPI.DIMENSION_DATA_COMPONENT.get(level).getDimensionGravityStrength();
     }
+
+    @Override
+    public void setLevelGravity(Level world, double strength) {
+        GravityChangerAPI.DIMENSION_DATA_COMPONENT.get(world).setDimensionGravityStrength(strength);
+    }
+
+    @Override
+    public  Direction getGravityDirection(Entity entity) {
+        return GravityChangerAPI.getGravityComponent(entity).getCurrGravityDirection();
+    }
+
+    public double getGravityStrength(Entity entity) {
+        return GravityChangerAPI.getGravityComponent(entity).getCurrGravityStrength();
+    }
+
+    public double getBaseGravityStrength(Entity entity) {
+        return GravityChangerAPI.getGravityComponent(entity).getBaseGravityStrength();
+    }
+
+    public void setBaseGravityStrength(Entity entity, double strength) {
+        GravityComponent component = GravityChangerAPI.getGravityComponent(entity);
+
+        component.setBaseGravityStrength(strength);
+    }
+
+    @Override
+    public void instantlySetClientBaseGravityDirection(Entity entity, Direction direction) {
+        GravityComponent component = GravityChangerAPI.getGravityComponent(entity);
+
+        component.setBaseGravityDirection(direction);
+
+        component.updateGravityStatus();
+
+        component.forceApplyGravityChange();
+    }
+
+    /**
+     * Returns the main gravity direction for the given entity
+     * This may not be the applied gravity direction for the player, see GravityChangerAPI#getAppliedGravityDirection
+     */
+    public Direction getBaseGravityDirection(Entity entity) {
+        return GravityChangerAPI.getGravityComponent(entity).getBaseGravityDirection();
+    }
+
+    public void setBaseGravityDirection(
+            Entity entity, Direction gravityDirection
+    ) {
+        GravityComponent component = GravityChangerAPI.getGravityComponent(entity);
+        component.setBaseGravityDirection(gravityDirection);
+    }
+
+    public void resetGravity(Entity entity) {
+        if (!EntityTags.canChangeGravity(entity)) {return;}
+
+        GravityChangerAPI.getGravityComponent(entity).reset();
+    }
+
 }

@@ -73,4 +73,22 @@ public interface GravityChangerAPICommon {
     static void setDimensionGravityStrength(Level world, double strength) {
         Services.PLATFORM.setLevelGravity(world,strength);
     }
+
+    /**
+     * Returns the main gravity direction for the given entity
+     * This may not be the applied gravity direction for the player, see GravityChangerAPI#getAppliedGravityDirection
+     */
+    static Direction getBaseGravityDirection(Entity entity) {
+        return Services.PLATFORM.getBaseGravityDirection(entity);
+    }
+
+    static void setBaseGravityDirection(
+            Entity entity, Direction gravityDirection
+    ) {
+        Services.PLATFORM.setBaseGravityDirection(entity, gravityDirection);
+    }
+
+    static void resetGravity(Entity entity) {
+        Services.PLATFORM.resetGravity(entity);
+    }
 }

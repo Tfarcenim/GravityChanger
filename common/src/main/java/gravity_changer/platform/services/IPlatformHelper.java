@@ -1,5 +1,6 @@
 package gravity_changer.platform.services;
 
+import gravity_changer.EntityTags;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
 import net.minecraft.core.Direction;
@@ -65,5 +66,17 @@ public interface IPlatformHelper {
     void setBaseGravityStrength(Entity entity, double strength);
 
     void instantlySetClientBaseGravityDirection(Entity entity, Direction direction);
+    /**
+     * Returns the main gravity direction for the given entity
+     * This may not be the applied gravity direction for the player, see GravityChangerAPI#getAppliedGravityDirection
+     */
+     Direction getBaseGravityDirection(Entity entity);
+
+    void setBaseGravityDirection(
+            Entity entity, Direction gravityDirection
+    );
+
+    void resetGravity(Entity entity);
+
 
 }

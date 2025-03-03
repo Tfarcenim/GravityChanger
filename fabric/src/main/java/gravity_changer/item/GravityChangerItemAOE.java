@@ -1,15 +1,13 @@
 package gravity_changer.item;
 
 import gravity_changer.GravityChanger;
-import gravity_changer.GravityChangerFabric;
-import gravity_changer.api.GravityChangerAPI;
 
 import java.util.List;
 
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -40,7 +38,7 @@ public class GravityChangerItemAOE extends Item {
             AABB box = user.getBoundingBox().inflate(3);
             List<Entity> list = world.getEntitiesOfClass(Entity.class, box, e -> !(e instanceof Player));
             for (Entity entity : list) {
-                GravityChangerAPI.setBaseGravityDirection(entity, gravityDirection);
+                GravityChangerAPICommon.setBaseGravityDirection(entity, gravityDirection);
             }
         }
         return InteractionResultHolder.success(user.getItemInHand(hand));
