@@ -1,6 +1,23 @@
-/.gradle/
-/.idea/
-/build/
-/run/
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
 
-/complier_output
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
+!.idea/scopes
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

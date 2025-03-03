@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "gravity_changer_q",
+  "id": "gravitychanger",
   "version": "${version}",
 
   "name": "Gravity Changer (qouteall fork)",
