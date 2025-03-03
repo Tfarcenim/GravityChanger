@@ -117,7 +117,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 2
     )
     private Vec3 modify_travel_Vec3d_2(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -134,7 +134,7 @@ public abstract class LivingEntityMixin extends Entity {
         index = 0
     )
     private BlockPos modify_playBlockFallSound_getBlockState_0(BlockPos blockPos) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return blockPos;
         }
@@ -151,7 +151,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private Vec3 redirect_canSee_new_0(double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return new Vec3(x, y, z);
         }
@@ -182,7 +182,7 @@ public abstract class LivingEntityMixin extends Entity {
         cancellable = true
     )
     private void inject_getBoundingBox(Pose pose, CallbackInfoReturnable<AABB> cir) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) return;
         
         AABB box = cir.getReturnValue();
@@ -261,7 +261,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getX_0(Entity attacker) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getX();
@@ -283,7 +283,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getZ_0(Entity attacker) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getZ();
@@ -418,7 +418,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private BlockPos redirect_baseTick_new_0(double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return BlockPos.containing(x, y, z);
         }
@@ -435,7 +435,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private Vec3 wrapOperation_spawnItemParticles_add_0(Vec3 vec3d, double x, double y, double z, Operation<Vec3> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return original.call(vec3d, x, y, z);
         }
@@ -454,7 +454,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 0
     )
     private Vec3 modify_spawnItemParticles_Vec3d_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -470,7 +470,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private void modify_tickStatusEffects_addParticle_0(Args args) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
@@ -488,7 +488,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private void modify_addDeathParticless_addParticle_0(Args args) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
@@ -507,7 +507,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 1
     )
     private Vec3 modify_blockedByShield_Vec3d_1(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
