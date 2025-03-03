@@ -1,6 +1,7 @@
 package gravity_changer;
 
 import gravity_changer.api.RotationParameters;
+import gravity_changer.command.ArgumentTypes;
 import gravity_changer.command.DirectionArgumentType;
 import gravity_changer.command.GravityCommand;
 import gravity_changer.command.LocalDirectionArgumentType;
@@ -19,8 +20,10 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -38,7 +41,8 @@ public class GravityChangerFabric implements ModInitializer {
     
     public static ConfigHolder<GravityChangerConfig> configHolder;
     public static GravityChangerConfig config;
-    
+
+
     @Override
     public void onInitialize() {
         GravityChangerItem.init();
@@ -127,8 +131,23 @@ public class GravityChangerFabric implements ModInitializer {
         GravityPlatingItem.init();
         GravityPlatingBlockEntity.init();
         
-        DirectionArgumentType.init();
-        LocalDirectionArgumentType.init();
+        registerArgumentTYpes();
+        registerArgumentTYpes();
     }
+
+    public static void registerArgumentTYpes() {
+        ArgumentTypeRegistry.registerArgumentType(
+                GravityChanger.id("direction"),
+                DirectionArgumentType.class,
+                SingletonArgumentInfo.contextFree(() -> ArgumentTypes.DIRECTION)
+        );
+        ArgumentTypeRegistry.registerArgumentType(
+                GravityChanger.id("local_direction"),
+                LocalDirectionArgumentType.class,
+                SingletonArgumentInfo.contextFree(() -> ArgumentTypes.LOCAL_DIRECTION)
+        );
+    }
+
+
 
 }

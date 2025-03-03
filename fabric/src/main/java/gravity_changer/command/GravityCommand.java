@@ -29,7 +29,7 @@ public class GravityCommand {
             .requires(source -> source.hasPermission(2));
         
         builder.then(Commands.literal("set_base_direction")
-            .then(Commands.argument("direction", DirectionArgumentType.instance)
+            .then(Commands.argument("direction", ArgumentTypes.DIRECTION)
                 .executes(context -> {
                     Entity entity = context.getSource().getEntity();
                     Validate.isTrue(entity != null);
@@ -121,7 +121,7 @@ public class GravityCommand {
         );
         
         builder.then(Commands.literal("set_relative_base_direction")
-            .then(Commands.argument("relativeDirection", LocalDirectionArgumentType.instance)
+            .then(Commands.argument("relativeDirection", ArgumentTypes.LOCAL_DIRECTION)
                 .executes(context -> {
                     LocalDirection relativeDirection =
                         LocalDirectionArgumentType.getDirection(context, "relativeDirection");
