@@ -15,20 +15,17 @@ public class GravityChangerModClient implements ClientModInitializer {
     
     @Override
     public void onInitializeClient() {
-        ClientTickEvents.START_CLIENT_TICK.register(new ClientTickEvents.StartTick() {
-            @Override
-            public void onStartTick(Minecraft client) {
-                if (client.player == null) {
-                    return;
-                }
-                if (displayPreviewWarning) {
-                    displayPreviewWarning = false;
-                    client.player.sendSystemMessage(
-                        Component.translatable("gravity_changer.preview").append(
-                            GCUtil.getLinkText(ISSUE_LINK)
-                        )
-                    );
-                }
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            if (client.player == null) {
+                return;
+            }
+            if (displayPreviewWarning) {
+                displayPreviewWarning = false;
+                client.player.sendSystemMessage(
+                    Component.translatable("gravity_changer.preview").append(
+                        GCUtil.getLinkText(ISSUE_LINK)
+                    )
+                );
             }
         });
         

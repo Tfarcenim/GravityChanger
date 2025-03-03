@@ -44,7 +44,7 @@ import org.slf4j.Logger;
  */
 public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent {
     
-    public static interface GravityUpdateCallback {
+    public interface GravityUpdateCallback {
         void update(Entity entity, GravityComponent component);
     }
     
@@ -559,7 +559,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         prevGravityStrength = currGravityStrength;
     }
     
-    private static record GravityDirEffect(
+    private record GravityDirEffect(
         @NotNull Direction direction,
         @Nullable RotationParameters rotationParameters,
         double priority

@@ -13,13 +13,13 @@ import net.minecraft.world.entity.Entity;
 public class GravityChangerComponents implements EntityComponentInitializer, WorldComponentInitializer {
     
     public static final ResourceLocation DATA_COMPONENT_ID =
-        new ResourceLocation(Constants.MOD_ID, "gravity_data");
+        new ResourceLocation(GravityChanger.MOD_ID, "gravity_data");
     
     public static final ComponentKey<GravityComponent> GRAVITY_COMP_KEY =
         ComponentRegistry.getOrCreate(DATA_COMPONENT_ID, GravityComponent.class);
     
     public static final ResourceLocation DIMENSION_DATA_ID =
-        new ResourceLocation(Constants.MOD_ID, "dimension_data");
+        new ResourceLocation(GravityChanger.MOD_ID, "dimension_data");
     
     public static final ComponentKey<DimensionGravityDataComponent> DIMENSION_COMP_KEY =
         ComponentRegistry.getOrCreate(DIMENSION_DATA_ID, DimensionGravityDataComponent.class);
@@ -28,14 +28,11 @@ public class GravityChangerComponents implements EntityComponentInitializer, Wor
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(
             GRAVITY_COMP_KEY, GravityComponent::new,
-            new RespawnCopyStrategy<GravityComponent>() {
-                @Override
-                public void copyForRespawn(GravityComponent from, GravityComponent to, boolean lossless, boolean keepInventory, boolean sameCharacter) {
+                (from, to, lossless, keepInventory, sameCharacter) -> {
                     if (lossless || !GravityChangerFabric.config.resetGravityOnRespawn) {
                         RespawnCopyStrategy.copy(from, to);
                     }
                 }
-            }
         );
         registry.registerFor(Entity.class, GRAVITY_COMP_KEY, GravityComponent::new);
     }

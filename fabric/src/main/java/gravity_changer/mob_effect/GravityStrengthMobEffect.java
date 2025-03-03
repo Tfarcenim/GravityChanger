@@ -1,9 +1,9 @@
 package gravity_changer.mob_effect;
 
+import gravity_changer.GravityChanger;
 import gravity_changer.GravityComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,7 +30,7 @@ public class GravityStrengthMobEffect extends MobEffect {
     }
     
     public double getGravityStrengthMultiplier(int level) {
-        return Math.pow(base, (double) level) * signum;
+        return Math.pow(base, level) * signum;
     }
     
     private void apply(LivingEntity entity, GravityComponent component) {
@@ -56,19 +56,19 @@ public class GravityStrengthMobEffect extends MobEffect {
         
         Registry.register(
             BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_increase"),
+            GravityChanger.id("strength_increase"),
             INCREASE
         );
         
         Registry.register(
             BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_decrease"),
+            GravityChanger.id("strength_decrease"),
             DECREASE
         );
         
         Registry.register(
             BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_reverse"),
+            GravityChanger.id("strength_reverse"),
             REVERSE
         );
     }

@@ -1,5 +1,6 @@
 package gravity_changer.item;
 
+import gravity_changer.GravityChanger;
 import gravity_changer.GravityChangerFabric;
 import gravity_changer.api.GravityChangerAPI;
 
@@ -46,11 +47,11 @@ public class GravityChangerItemAOE extends Item {
     }
     
     public static void init() {
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_down_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_DOWN_AOE);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_up_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_UP_AOE);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_north_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_NORTH_AOE);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_south_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_SOUTH_AOE);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_west_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_WEST_AOE);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_east_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_EAST_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_down_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_DOWN_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_up_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_UP_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_north_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_NORTH_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_south_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_SOUTH_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_west_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_WEST_AOE);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_east_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_EAST_AOE);
     }
 }

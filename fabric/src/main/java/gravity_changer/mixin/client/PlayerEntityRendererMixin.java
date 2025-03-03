@@ -1,6 +1,5 @@
 package gravity_changer.mixin.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -9,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(PlayerRenderer.class)

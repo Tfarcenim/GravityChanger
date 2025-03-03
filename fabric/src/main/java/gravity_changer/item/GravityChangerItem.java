@@ -1,5 +1,6 @@
 package gravity_changer.item;
 
+import gravity_changer.GravityChanger;
 import gravity_changer.GravityChangerFabric;
 import gravity_changer.api.GravityChangerAPI;
 import net.fabricmc.api.EnvType;
@@ -58,12 +59,12 @@ public class GravityChangerItem extends Item {
     }
     
     public static void init() {
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_down"), GRAVITY_CHANGER_DOWN);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_up"), GRAVITY_CHANGER_UP);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_north"), GRAVITY_CHANGER_NORTH);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_south"), GRAVITY_CHANGER_SOUTH);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_west"), GRAVITY_CHANGER_WEST);
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(GravityChangerFabric.NAMESPACE, "gravity_changer_east"), GRAVITY_CHANGER_EAST);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_down"), GRAVITY_CHANGER_DOWN);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_up"), GRAVITY_CHANGER_UP);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_north"), GRAVITY_CHANGER_NORTH);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_south"), GRAVITY_CHANGER_SOUTH);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_west"), GRAVITY_CHANGER_WEST);
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_east"), GRAVITY_CHANGER_EAST);
     }
     
 }

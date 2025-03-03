@@ -1,7 +1,6 @@
 package gravity_changer.plating;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -68,7 +66,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     private final Map<BlockState, VoxelShape> shapesByState;
     
     public static final Block PLATING_BLOCK = new GravityPlatingBlock(
-        FabricBlockSettings.of().noOcclusion().noCollission().instabreak()
+        Properties.of().noOcclusion().noCollission().instabreak()
     );
     
     public static void init() {
@@ -130,7 +128,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         if (hasDir(state, direction) && !canPlaceOn(world, pos.relative(direction), direction.getOpposite())) {
             state = state.setValue(directionToProperty(direction), false);
-            if (getDirections(state).size() == 0) {
+            if (getDirections(state).isEmpty()) {
                 return Blocks.AIR.defaultBlockState();
             }
             else {

@@ -1,6 +1,5 @@
 package gravity_changer.plating;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -22,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GravityPlatingItem extends BlockItem {
-    public static final Item PLATING_BLOCK_ITEM = new GravityPlatingItem(GravityPlatingBlock.PLATING_BLOCK, new FabricItemSettings());
+    public static final Item PLATING_BLOCK_ITEM = new GravityPlatingItem(GravityPlatingBlock.PLATING_BLOCK, new Item.Properties());
     
     public static void init() {
         Registry.register(

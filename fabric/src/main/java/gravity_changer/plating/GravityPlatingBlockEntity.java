@@ -10,7 +10,6 @@ import gravity_changer.GravityComponent;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -53,9 +52,9 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     private static final int MAX_LEVEL = 64;
     
     public static void init() {
-        TYPE = FabricBlockEntityTypeBuilder.create(
+        TYPE = BlockEntityType.Builder.of(
             GravityPlatingBlockEntity::new, GravityPlatingBlock.PLATING_BLOCK
-        ).build();
+        ).build(null);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ID, TYPE);
     }
     
@@ -64,8 +63,8 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     }
     
     public static class SideData {
-        public boolean isAttracting = true;
-        public int level = 1;
+        public boolean isAttracting;
+        public int level;
         
         public @Nullable AABB effectBoxCache = null;
         

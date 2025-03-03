@@ -17,7 +17,6 @@ import gravity_changer.mob_effect.GravityInvertMobEffect;
 import gravity_changer.plating.GravityPlatingItem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.event.ConfigSerializeEvent;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -25,7 +24,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -33,13 +31,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class GravityChangerFabric implements ModInitializer {
-    public static final String NAMESPACE = "gravity_changer";
-    public static final Logger LOGGER = LogManager.getLogger(GravityChangerFabric.class);
-    
+
     public static CreativeModeTab GravityChangerGroup;
     
     public static ConfigHolder<GravityChangerConfig> configHolder;
@@ -53,12 +47,9 @@ public class GravityChangerFabric implements ModInitializer {
         
         AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
         configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
-        configHolder.registerSaveListener(new ConfigSerializeEvent.Save<GravityChangerConfig>() {
-            @Override
-            public InteractionResult onSave(ConfigHolder<GravityChangerConfig> configHolder, GravityChangerConfig gravityChangerConfig) {
-                RotationParameters.updateDefault();
-                return InteractionResult.PASS;
-            }
+        configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
+            RotationParameters.updateDefault();
+            return InteractionResult.PASS;
         });
         config = configHolder.getConfig();
         
@@ -123,7 +114,7 @@ public class GravityChangerFabric implements ModInitializer {
             .build();
         
         Registry.register(
-            BuiltInRegistries.CREATIVE_MODE_TAB, id("general"),
+            BuiltInRegistries.CREATIVE_MODE_TAB, GravityChanger.id("general"),
             GravityChangerGroup
         );
         
@@ -139,8 +130,5 @@ public class GravityChangerFabric implements ModInitializer {
         DirectionArgumentType.init();
         LocalDirectionArgumentType.init();
     }
-    
-    public static ResourceLocation id(String path) {
-        return new ResourceLocation(NAMESPACE, path);
-    }
+
 }
