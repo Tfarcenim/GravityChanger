@@ -1,8 +1,7 @@
 package gravity_changer.command;
 
-import gravity_changer.GravityComponent;
-import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.platform.Services;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
 import com.mojang.brigadier.CommandDispatcher;
@@ -87,21 +86,7 @@ public class GravityCommand {
         );
         
         builder.then(Commands.literal("view")
-            .executes(context -> {
-                Entity entity = context.getSource().getEntity();
-                
-                GravityComponent component = GravityChangerAPI.getGravityComponent(entity);
-                
-                context.getSource().sendSuccess(
-                    () -> Component.translatable(
-                        "gravity_changer.command.inform",
-                        component.getBaseGravityDirection().getName(),
-                        component.getBaseGravityStrength()
-                    ), false
-                );
-                
-                return 0;
-            })
+            .executes(Services.PLATFORM::viewGravity)
         );
         
         builder.then(Commands.literal("randomize_base_direction")

@@ -88,7 +88,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     //        )
     //)
     //private BlockPos redirect_travel_new_0(double x, double y, double z) {
-    //    Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity)(Object)this);
+    //    Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection((Entity)(Object)this);
     //    if(gravityDirection == Direction.DOWN) {
     //        return new BlockPos(x, y, z);
     //    }

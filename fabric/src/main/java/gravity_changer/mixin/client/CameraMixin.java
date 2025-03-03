@@ -8,7 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import gravity_changer.RotationAnimation;
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPIFabric;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
@@ -53,7 +53,7 @@ public abstract class CameraMixin {
         boolean thirdPerson, boolean inverseView, float tickDelta
     ) {
         Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(focusedEntity);
-        RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
+        RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(focusedEntity);
         
         if (animation == null) {
             original.call(this, x, y, z);
@@ -102,7 +102,7 @@ public abstract class CameraMixin {
     private void inject_setRotation(CallbackInfo ci) {
         if (this.entity != null) {
             Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.entity);
-            RotationAnimation animation = GravityChangerAPI.getRotationAnimation(entity);
+            RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(entity);
             if (animation == null) {
                 return;
             }

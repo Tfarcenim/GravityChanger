@@ -1,9 +1,7 @@
 package gravity_changer.mixin.client;
 
-import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler;
-import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;

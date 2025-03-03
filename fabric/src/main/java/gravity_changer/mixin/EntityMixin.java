@@ -261,7 +261,7 @@ public abstract class EntityMixin {
 //        index = 0
 //    )
 //    private Vec3 modify_move_multiply_0(Vec3 vec3d) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection((Entity) (Object) this);
 //        if (gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }

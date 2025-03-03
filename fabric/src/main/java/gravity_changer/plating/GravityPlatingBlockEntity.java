@@ -7,7 +7,7 @@ import com.mojang.logging.LogUtils;
 import gravity_changer.EntityTags;
 import gravity_changer.GravityChangerFabric;
 import gravity_changer.GravityComponent;
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPIFabric;
 import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
@@ -130,9 +130,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     if (!GravityPlatingBlock.hasDir(sideBlockState, sideDir.getOpposite())) {continue;}
                     
                     if (!(world.getBlockEntity(sidePos) instanceof GravityPlatingBlockEntity be)) {continue;}
-                    
-                    if (isAttracting != this.isAttracting) {continue;}
-                    
+
                     double sideDelta = getEffectRange();
                     switch (sideDir) {
                         case DOWN -> minY -= sideDelta;
@@ -263,13 +261,13 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         List<Entity> entities = world.getEntitiesOfClass(
             Entity.class,
             roughBox,
-            e -> EntityTags.canChangeGravity(e)
+                EntityTags::canChangeGravity
         );
         
         for (Entity entity : entities) {
             boolean applies = false;
             
-            GravityComponent comp = GravityChangerAPI.getGravityComponent(entity);
+            GravityComponent comp = GravityChangerAPIFabric.getGravityComponent(entity);
             Direction entityGravityDir = comp.getCurrGravityDirection();
             
             for (Direction plateDir : Direction.values()) {

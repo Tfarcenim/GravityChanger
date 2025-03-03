@@ -1,8 +1,10 @@
 package gravity_changer.platform.services;
 
+import com.mojang.brigadier.context.CommandContext;
 import gravity_changer.EntityTags;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -78,5 +80,6 @@ public interface IPlatformHelper {
 
     void resetGravity(Entity entity);
 
+    int viewGravity(CommandContext<CommandSourceStack> ctx);
 
 }

@@ -3,7 +3,7 @@ package gravity_changer.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import gravity_changer.RotationAnimation;
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPIFabric;
 import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import gravity_changer.EntityTags;
@@ -59,7 +59,7 @@ public abstract class EntityRenderDispatcherMixin {
             if (!this.shouldRenderShadow) return;
             
             matrices.pushPose();
-            RotationAnimation animation = GravityChangerAPI.getRotationAnimation(entity);
+            RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(entity);
             if (animation == null) {
                 return;
             }

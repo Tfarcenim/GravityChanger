@@ -29,7 +29,7 @@ public abstract class FishingBobberEntityMixin extends Entity {
 //        )
 //    )
 //    private void wrapOperation_init_(FishingHook fishingBobberEntity, double x, double y, double z, float yaw, float pitch, Operation<Void> original, Player thrower, Level world, int lureLevel, int luckOfTheSeaLevel) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(thrower);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(thrower);
 //        if(gravityDirection == Direction.DOWN) {
 //            original.call(fishingBobberEntity, x, y, z, yaw, pitch);
 //            return;
@@ -50,7 +50,7 @@ public abstract class FishingBobberEntityMixin extends Entity {
 //        ordinal = 0
 //    )
 //    private Vec3 modify_init_Vec3d_1(Vec3 vec3d, Player thrower, Level world, int lureLevel, int luckOfTheSeaLevel) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(thrower);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(thrower);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }

@@ -1,11 +1,13 @@
 package gravity_changer.platform;
 
+import com.mojang.brigadier.context.CommandContext;
 import gravity_changer.api.GravityChangerAPIForge;
 import gravity_changer.capability.DimensionDataAttachment;
 import gravity_changer.network.PacketHandlerForge;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
 import gravity_changer.platform.services.IPlatformHelper;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -97,6 +99,26 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public void instantlySetClientBaseGravityDirection(Entity entity, Direction direction) {
 
+    }
+
+    @Override
+    public Direction getBaseGravityDirection(Entity entity) {
+        return null;
+    }
+
+    @Override
+    public void setBaseGravityDirection(Entity entity, Direction gravityDirection) {
+
+    }
+
+    @Override
+    public void resetGravity(Entity entity) {
+
+    }
+
+    @Override
+    public int viewGravity(CommandContext<CommandSourceStack> ctx) {
+        return 0;
     }
 
 
