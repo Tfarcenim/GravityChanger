@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +23,7 @@ public abstract class ItemUsageContextMixin {
         )
     )
     private float wrapOperation_getPlayerYaw_getYaw_0(Player entity, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity);
         }

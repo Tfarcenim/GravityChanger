@@ -1,6 +1,6 @@
 package gravity_changer.mixin.client;
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -35,7 +35,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
         )
     )
     private AABB redirect_wouldCollideAt_new_0(double x1, double y1, double z1, double x2, double y2, double z2, BlockPos pos) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this);
         if (gravityDirection == Direction.DOWN) {
             return new AABB(x1, y1, z1, x2, y2, z2);
         }
@@ -57,7 +57,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
         cancellable = true
     )
     private void inject_pushOutOfBlocks(double x, double z, CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this);
         if (gravityDirection == Direction.DOWN) return;
         
         ci.cancel();

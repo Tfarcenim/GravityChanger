@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
         )
     )
     private double redirect_tick_getEyeY_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getEyeY();
         }
@@ -38,7 +38,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
         )
     )
     private double redirect_tick_getX_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getX();
         }
@@ -55,7 +55,7 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
         )
     )
     private double redirect_tick_getZ_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getZ();
         }

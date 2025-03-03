@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,6 @@ public class ExperienceOrbEntityMixin {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
+        return x * GravityChangerAPICommon.getGravityStrength(((Entity) (Object) this));
     }
 }

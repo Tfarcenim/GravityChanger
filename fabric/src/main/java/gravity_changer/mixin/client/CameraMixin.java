@@ -1,10 +1,6 @@
 package gravity_changer.mixin.client;
 
-import java.util.Optional;
-
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
-import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
@@ -24,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 @Mixin(value = Camera.class, priority = 1001)
 public abstract class CameraMixin {
@@ -57,7 +52,7 @@ public abstract class CameraMixin {
         Operation<Void> original, BlockGetter area, Entity focusedEntity,
         boolean thirdPerson, boolean inverseView, float tickDelta
     ) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(focusedEntity);
         RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
         
         if (animation == null) {
@@ -106,7 +101,7 @@ public abstract class CameraMixin {
     )
     private void inject_setRotation(CallbackInfo ci) {
         if (this.entity != null) {
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.entity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.entity);
             RotationAnimation animation = GravityChangerAPI.getRotationAnimation(entity);
             if (animation == null) {
                 return;

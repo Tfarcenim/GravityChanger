@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +26,7 @@ public abstract class PillagerEntityMixin implements CrossbowAttackMob {
         )
     )
     private void redirect_shoot_shoot_0(Pillager pillagerEntity, LivingEntity entity, LivingEntity target, Projectile projectile, float multishotSpray, float speed) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             this.shootCrossbowProjectile(entity, target, projectile, multishotSpray, speed);
             return;

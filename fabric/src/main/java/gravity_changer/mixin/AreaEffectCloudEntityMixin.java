@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
@@ -214,11 +214,11 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
         double d = this.getX();
         double e = this.getY();
         double l = this.getZ();
-        Vec3 modify = RotationUtil.vecWorldToPlayer(d, e, l, GravityChangerAPI.getGravityDirection(this));
+        Vec3 modify = RotationUtil.vecWorldToPlayer(d, e, l, GravityChangerAPICommon.getGravityDirection(this));
         d = modify.x + (double) (Mth.cos(h) * k);
         e = modify.y;
         l = modify.z + (double) (Mth.sin(h) * k);
-        modify = RotationUtil.vecPlayerToWorld(d, e, l, GravityChangerAPI.getGravityDirection(this));
+        modify = RotationUtil.vecPlayerToWorld(d, e, l, GravityChangerAPICommon.getGravityDirection(this));
         
         args.set(1, modify.x);
         args.set(2, modify.y);

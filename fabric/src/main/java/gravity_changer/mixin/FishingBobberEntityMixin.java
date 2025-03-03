@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.FishingHook;
@@ -60,6 +60,6 @@ public abstract class FishingBobberEntityMixin extends Entity {
     
     @ModifyConstant(method = "Lnet/minecraft/world/entity/projectile/FishingHook;tick()V", constant = @Constant(doubleValue = -0.03))
     private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
+        return constant * GravityChangerAPICommon.getGravityStrength(this);
     }
 }

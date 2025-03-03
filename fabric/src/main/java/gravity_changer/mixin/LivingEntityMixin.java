@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,7 +48,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_travel_getY_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getY();
         }
@@ -65,7 +65,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_travel_getY_1(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getY();
         }
@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_travel_getY_2(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getY();
         }
@@ -99,7 +99,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_travel_getY_3(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getY();
         }
@@ -117,7 +117,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 2
     )
     private Vec3 modify_travel_Vec3d_2(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -134,7 +134,7 @@ public abstract class LivingEntityMixin extends Entity {
         index = 0
     )
     private BlockPos modify_playBlockFallSound_getBlockState_0(BlockPos blockPos) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return blockPos;
         }
@@ -151,7 +151,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private Vec3 redirect_canSee_new_0(double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return new Vec3(x, y, z);
         }
@@ -168,7 +168,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private Vec3 redirect_canSee_new_1(double x, double y, double z, Entity entity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return new Vec3(x, y, z);
         }
@@ -182,7 +182,7 @@ public abstract class LivingEntityMixin extends Entity {
         cancellable = true
     )
     private void inject_getBoundingBox(Pose pose, CallbackInfoReturnable<AABB> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) return;
         
         AABB box = cir.getReturnValue();
@@ -227,7 +227,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double wrapOperation_tick_getX_0(LivingEntity livingEntity, Operation<Double> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(livingEntity);
         }
@@ -244,7 +244,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double wrapOperation_tick_getZ_0(LivingEntity livingEntity, Operation<Double> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(livingEntity);
         }
@@ -261,9 +261,9 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getX_0(Entity attacker) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
-            if (GravityChangerAPI.getGravityDirection(attacker) == Direction.DOWN) {
+            if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getX();
             }
             else {
@@ -283,9 +283,9 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getZ_0(Entity attacker) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
-            if (GravityChangerAPI.getGravityDirection(attacker) == Direction.DOWN) {
+            if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getZ();
             }
             else {
@@ -305,7 +305,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getX_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
@@ -322,7 +322,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_damage_getZ_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getZ();
         }
@@ -339,7 +339,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_knockback_getX_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
@@ -357,7 +357,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_knockback_getZ_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getZ();
         }
@@ -374,9 +374,9 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_knockback_getX_1(LivingEntity attacker, LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
-            if (GravityChangerAPI.getGravityDirection(attacker) == Direction.DOWN) {
+            if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getX();
             }
             else {
@@ -396,9 +396,9 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private double redirect_knockback_getZ_1(LivingEntity attacker, LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
-            if (GravityChangerAPI.getGravityDirection(attacker) == Direction.DOWN) {
+            if (GravityChangerAPICommon.getGravityDirection(attacker) == Direction.DOWN) {
                 return attacker.getZ();
             }
             else {
@@ -418,7 +418,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private BlockPos redirect_baseTick_new_0(double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return BlockPos.containing(x, y, z);
         }
@@ -435,7 +435,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private Vec3 wrapOperation_spawnItemParticles_add_0(Vec3 vec3d, double x, double y, double z, Operation<Vec3> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return original.call(vec3d, x, y, z);
         }
@@ -454,7 +454,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 0
     )
     private Vec3 modify_spawnItemParticles_Vec3d_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -470,7 +470,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private void modify_tickStatusEffects_addParticle_0(Args args) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
@@ -488,7 +488,7 @@ public abstract class LivingEntityMixin extends Entity {
         )
     )
     private void modify_addDeathParticless_addParticle_0(Args args) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
@@ -507,7 +507,7 @@ public abstract class LivingEntityMixin extends Entity {
         ordinal = 1
     )
     private Vec3 modify_blockedByShield_Vec3d_1(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -554,11 +554,11 @@ public abstract class LivingEntityMixin extends Entity {
     
     @ModifyConstant(method = "Lnet/minecraft/world/entity/LivingEntity;travel(Lnet/minecraft/world/phys/Vec3;)V", constant = @Constant(doubleValue = 0.08))
     private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
+        return constant * GravityChangerAPICommon.getGravityStrength(this);
     }
     
     @ModifyVariable(method = "Lnet/minecraft/world/entity/LivingEntity;calculateFallDamage(FF)I", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float diminishFallDamage(float value) {
-        return value * (float) Math.sqrt(GravityChangerAPI.getGravityStrength(this));
+        return value * (float) Math.sqrt(GravityChangerAPICommon.getGravityStrength(this));
     }
 }

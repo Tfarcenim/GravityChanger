@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -39,9 +39,9 @@ public abstract class ThrownEntityMixin {
     public Vec3 tick(Vec3 modify) {
         //if(this instanceof RotatableEntityAccessor) {
         modify = new Vec3(modify.x, modify.y + this.getGravity(), modify.z);
-        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
+        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPICommon.getGravityDirection((ThrowableProjectile) (Object) this));
         modify = new Vec3(modify.x, modify.y - this.getGravity(), modify.z);
-        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
+        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPICommon.getGravityDirection((ThrowableProjectile) (Object) this));
         // }
         return modify;
     }
@@ -55,7 +55,7 @@ public abstract class ThrownEntityMixin {
         )
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrowableProjectile> type, LivingEntity owner, Level world) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(owner);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
@@ -66,6 +66,6 @@ public abstract class ThrownEntityMixin {
     
     @ModifyReturnValue(method = "getGravity", at = @At("RETURN"))
     private float multiplyGravity(float original) {
-        return original * (float) GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
+        return original * (float) GravityChangerAPICommon.getGravityStrength(((Entity) (Object) this));
     }
 }

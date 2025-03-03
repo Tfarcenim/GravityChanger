@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.api.RotationParameters;
 import gravity_changer.mixin.EntityAccessor;
 import gravity_changer.util.GCUtil;
@@ -209,13 +209,13 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         
         Entity vehicle = entity.getVehicle();
         if (vehicle != null) {
-            currGravityDirection = GravityChangerAPI.getGravityDirection(vehicle);
-            currGravityStrength = GravityChangerAPI.getGravityStrength(vehicle);
+            currGravityDirection = GravityChangerAPICommon.getGravityDirection(vehicle);
+            currGravityStrength = GravityChangerAPICommon.getGravityStrength(vehicle);
         }
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChangerAPICommon.getDimensionGravityStrength(entity.level());
             currGravityStrength *= GravityChangerFabric.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
@@ -551,7 +551,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     /**
      * Not needed in normal cases.
-     * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
+     * Only used in {@link GravityChangerAPICommon#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
     public void forceApplyGravityChange() {

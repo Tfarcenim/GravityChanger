@@ -4,7 +4,7 @@ package gravity_changer.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -58,7 +58,7 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
         Player playerEntity = fishingBobberEntity.getPlayerOwner();
         if (playerEntity == null) return;
         
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(playerEntity);
         if (gravityDirection == Direction.DOWN) return;
         
         ci.cancel();

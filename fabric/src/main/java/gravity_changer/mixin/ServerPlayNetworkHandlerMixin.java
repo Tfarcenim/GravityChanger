@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -140,7 +140,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         )
     )
     private Vec3 modify_onPlayerMove_move_1(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -191,7 +191,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         index = 1
     )
     private Vec3 modify_onVehicleMove_move_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -225,7 +225,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         )
     )
     private void modify_onVehicleMove_move_0(Args args) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.player);
         Vec3 argVec = new Vec3(args.get(0), args.get(1), args.get(2));
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         

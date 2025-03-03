@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import gravity_changer.EntityTags;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -54,7 +55,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private void inject_render_0(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
         if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
             if (!this.shouldRenderShadow) return;
             
             matrices.pushPose();
@@ -77,7 +78,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private void inject_render_1(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
         if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
             if (!this.shouldRenderShadow) return;
             
             matrices.popPose();
@@ -95,7 +96,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private void inject_render_2(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
         if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
             if (gravityDirection == Direction.DOWN) return;
             if (!this.shouldRenderShadow) return;
             
@@ -109,7 +110,7 @@ public abstract class EntityRenderDispatcherMixin {
         cancellable = true
     )
     private static void inject_renderShadow(PoseStack matrices, MultiBufferSource vertexConsumers, Entity entity, float opacity, float tickDelta, LevelReader world, float radius, CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) return;
         
         ci.cancel();
@@ -177,7 +178,7 @@ public abstract class EntityRenderDispatcherMixin {
         ordinal = 0
     )
     private static AABB modify_renderHitbox_Box_0(AABB box, PoseStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return box;
         }
@@ -195,7 +196,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private static Vec3 redirectViewVector(Entity instance, float partialTicks) {
         Vec3 viewVector = instance.getViewVector(partialTicks);
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(instance);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(instance);
         if (gravityDirection == Direction.DOWN) {
             return viewVector;
         }

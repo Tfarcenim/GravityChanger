@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +21,7 @@ public abstract class DrownedEntityMixin {
         )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
@@ -38,7 +38,7 @@ public abstract class DrownedEntityMixin {
         )
     )
     private double redirect_attack_getBodyY_0(LivingEntity target, double heightScale) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getY(heightScale);
         }
@@ -55,7 +55,7 @@ public abstract class DrownedEntityMixin {
         )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getZ();
         }
@@ -71,7 +71,7 @@ public abstract class DrownedEntityMixin {
         )
     )
     private double redirect_attack_sqrt_0(double value, LivingEntity target, float pullProgress) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return Math.sqrt(value);
         }

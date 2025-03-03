@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -24,6 +24,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPI.getGravityStrength(this);
+        return x * GravityChangerAPICommon.getGravityStrength(this);
     }
 }

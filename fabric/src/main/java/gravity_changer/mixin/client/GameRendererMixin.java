@@ -3,6 +3,7 @@ package gravity_changer.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import net.minecraft.client.Minecraft;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;
@@ -11,8 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
@@ -37,7 +36,7 @@ public abstract class GameRendererMixin {
     private void inject_renderWorld(float tickDelta, long limitTime, PoseStack matrix, CallbackInfo ci) {
         if (this.mainCamera.getEntity() != null) {
             Entity focusedEntity = this.mainCamera.getEntity();
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(focusedEntity);
             RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
             if (animation == null) {
                 return;

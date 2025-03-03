@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -32,9 +32,9 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     )
     public Vec3 tick(Vec3 modify) {
         modify = new Vec3(modify.x, modify.y + 0.05, modify.z);
-        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection(this));
+        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPICommon.getGravityDirection(this));
         modify = new Vec3(modify.x, modify.y - 0.05, modify.z);
-        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection(this));
+        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPICommon.getGravityDirection(this));
         return modify;
     }
     
@@ -47,7 +47,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         )
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrowableProjectile> type, LivingEntity owner, Level world) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(owner);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
@@ -58,6 +58,6 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     
     @ModifyConstant(method = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tick()V", constant = @Constant(doubleValue = 0.05000000074505806))
     private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
+        return constant * GravityChangerAPICommon.getGravityStrength(this);
     }
 }

@@ -2,6 +2,7 @@ package gravity_changer.command;
 
 import gravity_changer.GravityComponent;
 import gravity_changer.api.GravityChangerAPI;
+import gravity_changer.api.GravityChangerAPICommon;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
 import com.mojang.brigadier.CommandDispatcher;
@@ -155,7 +156,7 @@ public class GravityCommand {
                 .executes(context -> {
                     ServerLevel world = context.getSource().getLevel();
                     double strength = DoubleArgumentType.getDouble(context, "strength");
-                    GravityChangerAPI.setDimensionGravityStrength(world, strength);
+                    GravityChangerAPICommon.setDimensionGravityStrength(world, strength);
                     return 0;
                 })
             )
@@ -164,7 +165,7 @@ public class GravityCommand {
         builder.then(Commands.literal("view_dimension_info")
             .executes(context -> {
                 ServerLevel world = context.getSource().getLevel();
-                double strength = GravityChangerAPI.getDimensionGravityStrength(world);
+                double strength = GravityChangerAPICommon.getDimensionGravityStrength(world);
                 context.getSource().sendSuccess(
                     () -> Component.translatable("gravity_changer.command.dimension_info", strength), false
                 );
@@ -177,7 +178,7 @@ public class GravityCommand {
     
     private static int executeSetBaseStrength(Collection<? extends Entity> entities, double strength) {
         for (Entity entity : entities) {
-            GravityChangerAPI.setBaseGravityStrength(entity, strength);
+            GravityChangerAPICommon.setBaseGravityStrength(entity, strength);
         }
         return entities.size();
     }
@@ -207,7 +208,7 @@ public class GravityCommand {
     ) {
         int i = 0;
         for (Entity entity : entities) {
-            Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
             Direction combinedRelativeDirection = switch (relativeDirection) {
                 case DOWN -> Direction.DOWN;
                 case UP -> Direction.UP;

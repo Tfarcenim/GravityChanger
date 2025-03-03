@@ -2,10 +2,12 @@ package gravity_changer.platform.services;
 
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.Validate;
 
 import java.util.function.Function;
 
@@ -49,6 +51,19 @@ public interface IPlatformHelper {
     void sendToServer(C2SModPacket msg);
     void sendToTracking(S2CModPacket msg, Entity entity);
 
+    //gravity helpers
+
     double getLevelGravity(Level level);
+    void setLevelGravity(Level world, double strength);
+
+    Direction getGravityDirection(Entity entity);
+
+    double getGravityStrength(Entity entity);
+
+    double getBaseGravityStrength(Entity entity);
+
+    void setBaseGravityStrength(Entity entity, double strength);
+
+    void instantlySetClientBaseGravityDirection(Entity entity, Direction direction);
 
 }
