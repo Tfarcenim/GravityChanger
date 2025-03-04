@@ -5,7 +5,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.entity.EntityEvent;
 
 public class GravityUpdateEvent extends EntityEvent {
-    public GravityUpdateEvent(Entity entity, EntityGravity entityGravity) {
+    private final EntityGravity gravity;
+
+    public GravityUpdateEvent(Entity entity, EntityGravity gravity) {
         super(entity);
+        this.gravity = gravity;
+    }
+
+    public EntityGravity getGravity() {
+        return gravity;
     }
 }

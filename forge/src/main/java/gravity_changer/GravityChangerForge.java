@@ -8,10 +8,14 @@ import gravity_changer.command.ArgumentTypes;
 import gravity_changer.command.DirectionArgumentType;
 import gravity_changer.command.GravityCommand;
 import gravity_changer.command.LocalDirectionArgumentType;
+import gravity_changer.item.GravityAnchorItem;
 import gravity_changer.network.S2CSyncEntityGravityPacket;
 import gravity_changer.platform.Services;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -61,6 +65,11 @@ public class GravityChangerForge {
                     ArgumentTypeInfos.registerByClass(LocalDirectionArgumentType.class,info);
                     return info;
                 });
+
+        for (Direction direction : Direction.values()) {
+            event.register(Registries.ITEM, GravityAnchorItem.getItemId(direction),() -> GravityAnchorItem.ITEM_MAP.get(direction));
+        }
+
     }
 
     void attachEntityCaps(AttachCapabilitiesEvent<Entity> event) {
@@ -76,6 +85,8 @@ public class GravityChangerForge {
     }
 
     void setup(FMLCommonSetupEvent event) {
+        ModEventHandler.init();
+
     }
 
     public static void onEntityTick(Entity entity) {

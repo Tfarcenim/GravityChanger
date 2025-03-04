@@ -106,7 +106,7 @@ public class EntityGravity  implements EntityGravityAttachment{
         }
     }
 
-    private void updateGravityStatus() {
+    public void updateGravityStatus() {
         // for the remote players and non-player entities,
         // their effect data is not synchronized to the client
         // (possibly for making it harder to cheat for hacked clients)
@@ -160,7 +160,7 @@ public class EntityGravity  implements EntityGravityAttachment{
 
         boolean changed = oldGravityDirection != currGravityDirection ||
                 Math.abs(oldGravityStrength - currGravityStrength) > 0.0001;
-        if (changed) {
+        if (changed && !entity.level().isClientSide) {
             sendSyncPacketToOtherPlayers();
         }
     }
@@ -440,10 +440,12 @@ public class EntityGravity  implements EntityGravityAttachment{
     }
 
 
+    @Override
     public double getBaseGravityStrength() {
         return baseGravityStrength;
     }
 
+    @Override
     public void setBaseGravityStrength(double strength) {
         if (!canChangeGravity()) {
             return;
@@ -453,10 +455,12 @@ public class EntityGravity  implements EntityGravityAttachment{
         needsSync = true;
     }
 
+    @Override
     public Direction getCurrGravityDirection() {
         return currGravityDirection;
     }
 
+    @Override
     public double getCurrGravityStrength() {
         return currGravityStrength;
     }
@@ -465,14 +469,17 @@ public class EntityGravity  implements EntityGravityAttachment{
         return EntityTags.canChangeGravity(entity);
     }
 
+    @Override
     public Direction getPrevGravityDirection() {
         return prevGravityDirection;
     }
 
+    @Override
     public Direction getBaseGravityDirection() {
         return baseGravityDirection;
     }
 
+    @Override
     public void setBaseGravityDirection(Direction gravityDirection) {
         if (!canChangeGravity()) {
             return;
@@ -493,6 +500,16 @@ public class EntityGravity  implements EntityGravityAttachment{
     @Override
     public RotationAnimation getRotationAnimation() {
         return animation;
+    }
+
+    /**
+     * Not needed in normal cases.
+     * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
+     * Used by ImmPtl.
+     */
+    public void forceApplyGravityChange() {
+        prevGravityDirection = currGravityDirection;
+        prevGravityStrength = currGravityStrength;
     }
 
 }

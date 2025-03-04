@@ -1,6 +1,7 @@
 package gravity_changer.platform;
 
 import com.mojang.brigadier.context.CommandContext;
+import gravity_changer.GravityChangerForge;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPIForge;
 import gravity_changer.capability.DimensionAttachment;
@@ -12,9 +13,11 @@ import gravity_changer.platform.services.IPlatformHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.PacketDistributor;
@@ -86,37 +89,45 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public Direction getGravityDirection(Entity entity) {
-        return null;
+        return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve()
+                .map(EntityGravityAttachment::getCurrGravityDirection).orElse(Direction.DOWN);
     }
 
     @Override
     public double getGravityStrength(Entity entity) {
-        return 1;
+        return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve()
+                .map(EntityGravityAttachment::getCurrGravityStrength).orElse(1d);
     }
 
     @Override
     public double getBaseGravityStrength(Entity entity) {
-        return 1;
+        return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve()
+                .map(EntityGravityAttachment::getBaseGravityStrength).orElse(1d);
     }
 
     @Override
     public void setBaseGravityStrength(Entity entity, double strength) {
-
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve()
+                .ifPresent(entityGravityAttachment -> entityGravityAttachment.setBaseGravityStrength(strength));
     }
 
     @Override
     public void instantlySetClientBaseGravityDirection(Entity entity, Direction direction) {
-
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment -> {
+            entityGravityAttachment.setBaseGravityDirection(direction);
+            entityGravityAttachment.updateGravityStatus();
+            entityGravityAttachment.forceApplyGravityChange();
+        });
     }
 
     @Override
     public Direction getBaseGravityDirection(Entity entity) {
-        return null;
+        return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().map(EntityGravityAttachment::getBaseGravityDirection).orElse(Direction.DOWN);
     }
 
     @Override
     public void setBaseGravityDirection(Entity entity, Direction gravityDirection) {
-
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment -> entityGravityAttachment.setBaseGravityDirection(gravityDirection));
     }
 
     @Override
@@ -126,6 +137,21 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public int viewGravity(CommandContext<CommandSourceStack> ctx) {
+
+        Entity entity = ctx.getSource().getEntity();
+
+        if (entity != null) {
+            EntityGravityAttachment component = GravityChangerAPIForge.getEntityGravityAttachment(entity).orElse(null);
+            if (component != null) {
+                ctx.getSource().sendSuccess(
+                        () -> Component.translatable(
+                                "gravity_changer.command.inform",
+                                component.getBaseGravityDirection().getName(),
+                                component.getBaseGravityStrength()
+                        ), false
+                );
+            }
+        }
         return 1;
     }
 

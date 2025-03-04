@@ -1,11 +1,9 @@
 package gravity_changer;
 
-import gravity_changer.api.RotationParameters;
 import gravity_changer.command.ArgumentTypes;
 import gravity_changer.command.DirectionArgumentType;
 import gravity_changer.command.GravityCommand;
 import gravity_changer.command.LocalDirectionArgumentType;
-import gravity_changer.config.GravityChangerConfig;
 import gravity_changer.item.GravityAnchorItem;
 import gravity_changer.mob_effect.GravityPotion;
 import gravity_changer.mob_effect.GravityStrengthMobEffect;
@@ -16,8 +14,6 @@ import gravity_changer.item.GravityChangerItemAOE;
 import gravity_changer.mob_effect.GravityDirectionMobEffect;
 import gravity_changer.mob_effect.GravityInvertMobEffect;
 import gravity_changer.plating.GravityPlatingItem;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -27,7 +23,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

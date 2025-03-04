@@ -30,8 +30,6 @@
     "PiglinEntityMixin",
     "PillagerEntityMixin",
     "PistonBlockEntityMixin",
-    "PlayerEntityMixin",
-    "PlayerEntityMixinFabric",
     "PointedDripstoneBlockMixin",
     "PotionEntityMixin",
     "ProjectileEntityMixin",
