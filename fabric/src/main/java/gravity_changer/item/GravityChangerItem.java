@@ -1,7 +1,7 @@
 package gravity_changer.item;
 
 import gravity_changer.GravityChanger;
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -38,7 +38,7 @@ public class GravityChangerItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         if (!world.isClientSide())
-            GravityChangerAPICommon.setBaseGravityDirection(user, gravityDirection);
+            GravityChangerAPI.setBaseGravityDirection(user, gravityDirection);
         return InteractionResultHolder.success(user.getItemInHand(hand));
     }
     

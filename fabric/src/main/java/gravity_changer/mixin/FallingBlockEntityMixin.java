@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -63,6 +63,6 @@ public abstract class FallingBlockEntityMixin extends Entity {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPICommon.getGravityStrength(this);
+        return x * GravityChangerAPI.getGravityStrength(this);
     }
 }

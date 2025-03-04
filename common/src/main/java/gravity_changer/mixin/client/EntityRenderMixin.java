@@ -1,7 +1,7 @@
 package gravity_changer.mixin.client;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.Direction;
@@ -43,7 +43,7 @@ public abstract class EntityRenderMixin {
         )
     )
     private Quaternionf modifyExpressionValue_renderLabelIfPresent_getRotation_0(Quaternionf originalRotation, Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return originalRotation;
         }

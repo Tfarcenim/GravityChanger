@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +22,7 @@ public abstract class DirectionMixin {
         )
     )
     private static float wrapOperation_getEntityFacingOrder_getYaw_0(Entity entity, float tickDelta, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity, tickDelta);
         }
@@ -39,7 +39,7 @@ public abstract class DirectionMixin {
         )
     )
     private static float wrapOperation_getEntityFacingOrder_getPitch_0(Entity entity, float tickDelta, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity, tickDelta);
         }
@@ -56,7 +56,7 @@ public abstract class DirectionMixin {
         )
     )
     private static float wrapOperation_getLookDirectionForAxis_getYaw_0(Entity entity, float tickDelta, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity, tickDelta);
         }
@@ -73,7 +73,7 @@ public abstract class DirectionMixin {
         )
     )
     private static float wrapOperation_getLookDirectionForAxis_getYaw_1(Entity entity, float tickDelta, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity, tickDelta);
         }
@@ -90,7 +90,7 @@ public abstract class DirectionMixin {
         )
     )
     private static float wrapOperation_getLookDirectionForAxis_getPitch_0(Entity entity, float tickDelta, Operation<Float> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity, tickDelta);
         }

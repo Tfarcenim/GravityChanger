@@ -17,13 +17,13 @@ import gravity_changer.mob_effect.GravityDirectionMobEffect;
 import gravity_changer.mob_effect.GravityInvertMobEffect;
 import gravity_changer.plating.GravityPlatingItem;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -38,25 +38,33 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 public class GravityChangerFabric implements ModInitializer {
 
     public static CreativeModeTab GravityChangerGroup;
-    
-    public static ConfigHolder<GravityChangerConfig> configHolder;
-    public static GravityChangerConfig config;
-
 
     @Override
     public void onInitialize() {
         GravityChangerItem.init();
         GravityChangerItemAOE.init();
-        GravityAnchorItem.init();
-        
-        AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
-        configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
-        configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
-            RotationParameters.updateDefault();
-            return InteractionResult.PASS;
+
+        GravityChanger.init();
+
+        for (Direction direction : Direction.values()) {
+            Registry.register(
+                    BuiltInRegistries.ITEM, GravityAnchorItem.getItemId(direction), GravityAnchorItem.ITEM_MAP.get(direction)
+            );
+        }
+
+        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
+            for (ItemStack handSlot : entity.getHandSlots()) {
+                Item item = handSlot.getItem();
+                if (item instanceof GravityAnchorItem anchorItem) {
+                    component.applyGravityDirectionEffect(
+                            anchorItem.direction,
+                            null, 1000000
+                    );
+                }
+            }
         });
-        config = configHolder.getConfig();
-        
+
+
         CommandRegistrationCallback.EVENT.register(
             (dispatcher, registryAccess, environment) -> GravityCommand.register(dispatcher)
         );

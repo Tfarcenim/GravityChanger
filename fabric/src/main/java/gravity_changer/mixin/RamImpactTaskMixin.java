@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public abstract class RamImpactTaskMixin {
         )
     )
     private void wrapOperation_keepRunning_takeKnockback_0(LivingEntity target, double strength, double x, double z, Operation<Void> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             original.call(target, strength, x, z);
             return;

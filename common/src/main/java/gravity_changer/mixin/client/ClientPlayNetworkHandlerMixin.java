@@ -3,7 +3,7 @@ package gravity_changer.mixin.client;
 import java.util.Map;
 import java.util.UUID;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -39,7 +39,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         )
     )
     private double redirect_onGameStateChange_getEyeY_0(Player playerEntity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(playerEntity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
         if (gravityDirection == Direction.DOWN) {
             return playerEntity.getEyeY();
         }
@@ -56,7 +56,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         )
     )
     private double redirect_onGameStateChange_getX_0(Player playerEntity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(playerEntity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
         if (gravityDirection == Direction.DOWN) {
             return playerEntity.getX();
         }
@@ -73,7 +73,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         )
     )
     private double redirect_onGameStateChange_getZ_0(Player playerEntity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(playerEntity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
         if (gravityDirection == Direction.DOWN) {
             return playerEntity.getZ();
         }
@@ -90,7 +90,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         )
     )
     private Vec3 wrapOperation_onExplosion_add_0(Vec3 vec3d, double x, double y, double z, Operation<Vec3> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(minecraft.player);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(minecraft.player);
         if (gravityDirection == Direction.DOWN) {
             return original.call(vec3d, x, y, z);
         }

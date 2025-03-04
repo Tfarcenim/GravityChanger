@@ -34,7 +34,7 @@ public class DimensionGravity implements ICapabilitySerializable<CompoundTag>, D
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putDouble("dimension_gravity_strength",dimensionGravityStrength);
-        return null;
+        return tag;
     }
 
     @Override

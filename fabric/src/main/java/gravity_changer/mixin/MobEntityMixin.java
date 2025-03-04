@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,7 @@ public abstract class MobEntityMixin {
         )
     )
     private float wrapOperation_tryAttack_getYaw_0(Mob attacker, Operation<Float> original, Entity target) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return original.call(attacker);
         }
@@ -41,7 +41,7 @@ public abstract class MobEntityMixin {
         )
     )
     private double redirect_lookAtEntity_getEyeY_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getEyeY();
         }
@@ -58,7 +58,7 @@ public abstract class MobEntityMixin {
         )
     )
     private double redirect_lookAtEntity_getX_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getX();
         }
@@ -75,7 +75,7 @@ public abstract class MobEntityMixin {
         )
     )
     private double redirect_lookAtEntity_getZ_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getZ();
         }

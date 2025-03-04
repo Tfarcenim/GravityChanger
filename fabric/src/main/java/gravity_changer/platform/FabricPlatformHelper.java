@@ -3,6 +3,7 @@ package gravity_changer.platform;
 import com.mojang.brigadier.context.CommandContext;
 import gravity_changer.EntityTags;
 import gravity_changer.GravityComponent;
+import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPIFabric;
 import gravity_changer.network.ClientPacketHandlerFabric;
 import gravity_changer.network.PacketHandler;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.util.ArrayList;
@@ -75,9 +77,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void sendToTracking(S2CModPacket msg, Entity entity) {
+    public void sendToTracking(S2CModPacket msg, Entity entity, boolean includeSelf) {
         Collection<ServerPlayer> tracking = new ArrayList<>(PlayerLookup.tracking(entity));
-        if (entity instanceof ServerPlayer self) {
+        if (includeSelf && entity instanceof ServerPlayer self) {
             sendToClient(msg,self);
         }
         for (ServerPlayer player : tracking) {
@@ -162,4 +164,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
         return 1;
     }
+
+    @Nullable
+    public RotationAnimation getRotationAnimation(Entity entity) {
+        return GravityChangerAPIFabric.getGravityComponent(entity).getRotationAnimation();
+    }
+
 }

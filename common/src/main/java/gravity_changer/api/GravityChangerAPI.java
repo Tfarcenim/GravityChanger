@@ -1,6 +1,7 @@
 package gravity_changer.api;
 
 import gravity_changer.EntityTags;
+import gravity_changer.RotationAnimation;
 import gravity_changer.platform.Services;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
@@ -8,8 +9,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 
-public interface GravityChangerAPICommon {
+public interface GravityChangerAPI {
     /**
      * Returns the applied gravity direction for the given entity
      */
@@ -90,5 +92,10 @@ public interface GravityChangerAPICommon {
 
     static void resetGravity(Entity entity) {
         Services.PLATFORM.resetGravity(entity);
+    }
+
+    @Nullable
+    static RotationAnimation getRotationAnimation(Entity entity) {
+        return Services.PLATFORM.getRotationAnimation(entity);
     }
 }

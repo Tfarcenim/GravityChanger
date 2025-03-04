@@ -1,7 +1,7 @@
 package gravity_changer.mixin.client;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.particle.ItemPickupParticle;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ public abstract class ItemPickupParticleMixin {
         ordinal = 0
     )
     private double modify_buildGeometry_double_0(double value) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.target);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.target);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }
@@ -48,7 +48,7 @@ public abstract class ItemPickupParticleMixin {
         ordinal = 1
     )
     private double modify_buildGeometry_double_1(double value) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.target);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.target);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }
@@ -67,7 +67,7 @@ public abstract class ItemPickupParticleMixin {
         ordinal = 2
     )
     private double modify_buildGeometry_double_2(double value) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.target);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.target);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }

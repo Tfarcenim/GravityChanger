@@ -1,13 +1,13 @@
 package gravity_changer;
 
 import com.mojang.logging.LogUtils;
-import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.api.RotationParameters;
 import gravity_changer.mixin.EntityAccessor;
 import gravity_changer.util.GCUtil;
+import gravity_changer.util.GravityDirEffect;
 import gravity_changer.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -100,7 +100,7 @@ public class GravityComponent implements AutoSyncedComponent, CommonTickingCompo
     
     private boolean isFiringUpdateEvent = false;
     
-    private @Nullable GravityComponent.GravityDirEffect delayApplyDirEffect = null;
+    private @Nullable GravityDirEffect delayApplyDirEffect = null;
     private double delayApplyStrengthEffect = 1.0;
     
     // if it equals entity.tickCount,
@@ -211,14 +211,14 @@ public class GravityComponent implements AutoSyncedComponent, CommonTickingCompo
         
         Entity vehicle = entity.getVehicle();
         if (vehicle != null) {
-            currGravityDirection = GravityChangerAPICommon.getGravityDirection(vehicle);
-            currGravityStrength = GravityChangerAPICommon.getGravityStrength(vehicle);
+            currGravityDirection = GravityChangerAPI.getGravityDirection(vehicle);
+            currGravityStrength = GravityChangerAPI.getGravityStrength(vehicle);
         }
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPICommon.getDimensionGravityStrength(entity.level());
-            currGravityStrength *= GravityChangerFabric.config.gravityStrengthMultiplier;
+            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChanger.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
             currentEffectPriority = Double.MIN_VALUE;
@@ -417,7 +417,7 @@ public class GravityComponent implements AutoSyncedComponent, CommonTickingCompo
     
     // Adjust position to avoid suffocation in blocks when changing gravity
     private void adjustEntityPosition(Direction oldGravity, Direction newGravity, AABB entityBoundingBox) {
-        if (!GravityChangerFabric.config.adjustPositionAfterChangingGravity) {
+        if (!GravityChanger.config.adjustPositionAfterChangingGravity) {
             return;
         }
         
@@ -553,19 +553,12 @@ public class GravityComponent implements AutoSyncedComponent, CommonTickingCompo
     
     /**
      * Not needed in normal cases.
-     * Only used in {@link GravityChangerAPICommon#instantlySetClientBaseGravityDirection(Entity, Direction)}
+     * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
     public void forceApplyGravityChange() {
         prevGravityDirection = currGravityDirection;
         prevGravityStrength = currGravityStrength;
     }
-    
-    private record GravityDirEffect(
-        @NotNull Direction direction,
-        @Nullable RotationParameters rotationParameters,
-        double priority
-    ) {
-    
-    }
+
 }

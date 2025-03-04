@@ -30,7 +30,6 @@
         "PillagerEntityMixin",
         "PistonBlockEntityMixin",
         "PlayerEntityMixin",
-        "PlayerManagerMixin",
         "PointedDripstoneBlockMixin",
         "PotionEntityMixin",
         "ProjectileEntityMixin",
@@ -48,18 +47,6 @@
         "fall_distance.ServerPlayerEntityMixin_FallDistance"
     ],
     "client": [
-        "client.BiomeEffectSoundPlayerMixin",
-        "client.CameraMixin",
-        "client.ClientPlayerEntityMixin",
-        "client.ClientPlayNetworkHandlerMixin",
-        "client.EntityRenderDispatcherMixin",
-        "client.EntityRenderMixin",
-        "client.FishingBobberEntityRendererMixin",
-        "client.GameRendererMixin",
-        "client.InGameOverlayRendererMixin",
-        "client.ItemPickupParticleMixin",
-        "client.OtherClientPlayerEntityMixin",
-        "client.PlayerEntityRendererMixin"
     ],
     "server": [
     ],

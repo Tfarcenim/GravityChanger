@@ -55,6 +55,8 @@ dependencies {
 
     modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 
+    modApi("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+
 }
 
 jar {

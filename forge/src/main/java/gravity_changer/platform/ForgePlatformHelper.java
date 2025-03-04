@@ -1,8 +1,10 @@
 package gravity_changer.platform;
 
 import com.mojang.brigadier.context.CommandContext;
+import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPIForge;
 import gravity_changer.capability.DimensionAttachment;
+import gravity_changer.capability.EntityGravityAttachment;
 import gravity_changer.network.PacketHandlerForge;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
@@ -15,6 +17,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -62,8 +66,12 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public void sendToTracking(S2CModPacket msg, Entity entity) {
-
+    public void sendToTracking(S2CModPacket msg, Entity entity, boolean includeSelf) {
+        if (includeSelf) {
+            PacketHandlerForge.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),msg);
+        } else {
+            PacketHandlerForge.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),msg);
+        }
     }
 
     @Override
@@ -113,13 +121,16 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public void resetGravity(Entity entity) {
-
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(EntityGravityAttachment::reset);
     }
 
     @Override
     public int viewGravity(CommandContext<CommandSourceStack> ctx) {
-        return 0;
+        return 1;
     }
 
-
+    @Override
+    public @Nullable RotationAnimation getRotationAnimation(Entity entity) {
+        return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().map(EntityGravityAttachment::getRotationAnimation).orElse(null);
+    }
 }

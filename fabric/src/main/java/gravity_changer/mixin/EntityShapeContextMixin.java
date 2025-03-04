@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +36,7 @@ public abstract class EntityShapeContextMixin {
         )
     )
     private static double redirect_init_getY_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getY();
         }
@@ -52,7 +52,7 @@ public abstract class EntityShapeContextMixin {
     private void inject_isAbove(VoxelShape shape, BlockPos pos, boolean defaultValue, CallbackInfoReturnable<Boolean> cir) {
         if (this.entity == null) return;
         
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(this.entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.entity);
         if (gravityDirection == Direction.DOWN) return;
         
         cir.setReturnValue(this.entityBottom > RotationUtil.boxWorldToPlayer(new AABB(pos), gravityDirection).minY + RotationUtil.boxWorldToPlayer(shape.bounds().inflate(-9.999999747378752E-6D), gravityDirection).maxX);

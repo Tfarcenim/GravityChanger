@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +44,7 @@ public abstract class FireworkRocketEntityMixin extends Entity {
     )
     public Vec3 tick(Vec3 value) {
         if (attachedToEntity != null) {
-            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPICommon.getGravityDirection(attachedToEntity));
+            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPI.getGravityDirection(attachedToEntity));
         }
         return value;
     }

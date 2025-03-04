@@ -1,7 +1,7 @@
 package gravity_changer.platform.services;
 
 import com.mojang.brigadier.context.CommandContext;
-import gravity_changer.EntityTags;
+import gravity_changer.RotationAnimation;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
 import net.minecraft.commands.CommandSourceStack;
@@ -10,7 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -52,7 +52,7 @@ public interface IPlatformHelper {
     <MSG extends C2SModPacket> void registerServerPacket(Class<MSG> packetLocation, Function<FriendlyByteBuf,MSG> reader);
     void sendToClient(S2CModPacket msg, ServerPlayer player);
     void sendToServer(C2SModPacket msg);
-    void sendToTracking(S2CModPacket msg, Entity entity);
+    void sendToTracking(S2CModPacket msg, Entity entity,boolean includeSelf);
 
     //gravity helpers
 
@@ -81,5 +81,8 @@ public interface IPlatformHelper {
     void resetGravity(Entity entity);
 
     int viewGravity(CommandContext<CommandSourceStack> ctx);
+
+    @Nullable
+    RotationAnimation getRotationAnimation(Entity entity);
 
 }

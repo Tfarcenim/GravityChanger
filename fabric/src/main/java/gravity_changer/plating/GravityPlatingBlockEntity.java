@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.mojang.logging.LogUtils;
 import gravity_changer.EntityTags;
-import gravity_changer.GravityChangerFabric;
+import gravity_changer.GravityChanger;
 import gravity_changer.GravityComponent;
 import gravity_changer.api.GravityChangerAPIFabric;
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.BlockPos;
@@ -317,7 +317,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                 }
             }
             
-            if (applies && GravityChangerFabric.config.autoJumpOnGravityPlateInnerCorner) {
+            if (applies && GravityChanger.config.autoJumpOnGravityPlateInnerCorner) {
                 tryToDoCornerAutoJump(blockState, blockPos, entity, comp);
             }
         }
@@ -351,7 +351,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     continue;
                 }
                 
-                Vec3 worldVelocity = GravityChangerAPICommon.getWorldVelocity(entity);
+                Vec3 worldVelocity = GravityChangerAPI.getWorldVelocity(entity);
                 if (worldVelocity.dot(plateDirVec) < 0.01) {
                     continue;
                 }
@@ -366,9 +366,9 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                         entityGravityVec.scale(-strengthSqrt * 0.4)
                             .add(plateDirVec.scale(0.08));
                     
-                    GravityChangerAPICommon.setWorldVelocity(
+                    GravityChangerAPI.setWorldVelocity(
                         entity,
-                        GravityChangerAPICommon.getWorldVelocity(entity).add(deltaWorldVelocity)
+                        GravityChangerAPI.getWorldVelocity(entity).add(deltaWorldVelocity)
                     );
                     
                     if (entity.level().isClientSide()) {

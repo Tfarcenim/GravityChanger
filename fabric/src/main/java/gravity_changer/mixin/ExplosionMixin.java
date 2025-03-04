@@ -1,7 +1,7 @@
 package gravity_changer.mixin;
 
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +25,7 @@ public abstract class ExplosionMixin {
         )
     )
     private double redirect_collectBlocksAndDamageEntities_getEyeY_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getEyeY();
         }
@@ -42,7 +42,7 @@ public abstract class ExplosionMixin {
         )
     )
     private double redirect_collectBlocksAndDamageEntities_getX_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getX();
         }
@@ -59,7 +59,7 @@ public abstract class ExplosionMixin {
         )
     )
     private double redirect_collectBlocksAndDamageEntities_getZ_0(Entity entity) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getZ();
         }
@@ -76,7 +76,7 @@ public abstract class ExplosionMixin {
         )
     )
     private Vec3 wrapOperation_collectBlocksAndDamageEntities_getVelocity_0(Entity entity, Operation<Vec3> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity);
         }
@@ -93,7 +93,7 @@ public abstract class ExplosionMixin {
         )
     )
     private void wrapOperation_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3 vec3d, Operation<Void> original) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             original.call(entity, vec3d);
             return;

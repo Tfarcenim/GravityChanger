@@ -1,8 +1,14 @@
 package gravity_changer;
 
+import gravity_changer.api.RotationParameters;
+import gravity_changer.config.GravityChangerConfig;
 import gravity_changer.platform.Services;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
 
 // This class is part of the common project meaning it is shared between all supported loaders. Code written here can only
@@ -12,6 +18,8 @@ import net.minecraft.world.item.Items;
 public class GravityChanger {
 
     public static final String MOD_ID = "gravitychanger";
+    public static ConfigHolder<GravityChangerConfig> configHolder;
+    public static GravityChangerConfig config;
 
     // The loader specific projects are able to import and use any code from the common project. This allows you to
     // write the majority of your code here and load it from your loader specific projects. This example has some
@@ -22,6 +30,14 @@ public class GravityChanger {
         // your own abstraction layer. You can learn more about this in our provided services class. In this example
         // we have an interface in the common code and use a loader specific implementation to delegate our call to
         // the platform specific approach.
+        AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
+        GravityChanger.configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
+        GravityChanger.configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
+            RotationParameters.updateDefault();
+            return InteractionResult.PASS;
+        });
+        GravityChanger.config = GravityChanger.configHolder.getConfig();
+
     }
 
     public static ResourceLocation id(String path) {

@@ -1,13 +1,9 @@
 package gravity_changer.item;
 
-import gravity_changer.GravityComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -27,27 +23,7 @@ public class GravityAnchorItem extends Item {
             ITEM_MAP.put(direction, new GravityAnchorItem(direction, new Properties()));
         }
     }
-    
-    public static void init() {
-        for (Direction direction : Direction.values()) {
-            Registry.register(
-                BuiltInRegistries.ITEM, getItemId(direction), ITEM_MAP.get(direction)
-            );
-        }
-        
-        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
-            for (ItemStack handSlot : entity.getHandSlots()) {
-                Item item = handSlot.getItem();
-                if (item instanceof GravityAnchorItem anchorItem) {
-                    component.applyGravityDirectionEffect(
-                        anchorItem.direction,
-                        null, 1000000
-                    );
-                }
-            }
-        });
-    }
-    
+
     public static ResourceLocation getItemId(Direction direction) {
         return new ResourceLocation("gravity_changer", "gravity_anchor_" + direction.getName());
     }

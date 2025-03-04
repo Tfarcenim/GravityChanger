@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -17,7 +17,7 @@ public abstract class ProjectileEntityMixin {
         ordinal = 0
     )
     private float modify_setProperties_pitch(float value, Entity user, float yaw, float roll, float speed, float divergence) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(user);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(user);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }
@@ -31,7 +31,7 @@ public abstract class ProjectileEntityMixin {
         ordinal = 1
     )
     private float modify_setProperties_yaw(float value, Entity user, float pitch, float roll, float speed, float divergence) {
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(user);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(user);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }

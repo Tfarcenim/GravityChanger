@@ -1,6 +1,6 @@
 package gravity_changer.mixin.client;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -22,7 +22,7 @@ public abstract class PlayerEntityRendererMixin {
     private Vec3 modify_setupTransforms_Vec3d_0(AbstractClientPlayer instance, float partialTick) {
         Vec3 viewVector = instance.getViewVector(partialTick);
         
-        Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(instance);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(instance);
         if (gravityDirection == Direction.DOWN) {
             return viewVector;
         }

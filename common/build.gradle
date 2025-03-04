@@ -24,6 +24,9 @@ dependencies {
 
     compileOnly "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 
+    compileOnly("me.shedaniel.cloth:cloth-config-forge:${project.cloth_config_version}")
+
+
 }
 
 configurations {

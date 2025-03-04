@@ -1,6 +1,6 @@
 package gravity_changer.mixin;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,6 @@ public class LlamaSpitEntityMixin {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPICommon.getGravityStrength(((Entity) (Object) this));
+        return x * GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
     }
 }

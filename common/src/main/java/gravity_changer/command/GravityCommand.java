@@ -1,6 +1,6 @@
 package gravity_changer.command;
 
-import gravity_changer.api.GravityChangerAPICommon;
+import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.platform.Services;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
@@ -33,7 +33,7 @@ public class GravityCommand {
                     Entity entity = context.getSource().getEntity();
                     Validate.isTrue(entity != null);
                     Direction direction = DirectionArgumentType.getDirection(context, "direction");
-                    GravityChangerAPICommon.setBaseGravityDirection(entity, direction);
+                    GravityChangerAPI.setBaseGravityDirection(entity, direction);
                     return 1;
                 })
                 .then(Commands.argument("entities", EntityArgument.entities())
@@ -41,7 +41,7 @@ public class GravityCommand {
                         Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                         Direction direction = DirectionArgumentType.getDirection(context, "direction");
                         for (Entity entity : entities) {
-                            GravityChangerAPICommon.setBaseGravityDirection(entity, direction);
+                            GravityChangerAPI.setBaseGravityDirection(entity, direction);
                         }
                         return entities.size();
                     })
@@ -53,14 +53,14 @@ public class GravityCommand {
             .executes(context -> {
                 Entity entity = context.getSource().getEntity();
                 Validate.isTrue(entity != null);
-                GravityChangerAPICommon.resetGravity(entity);
+                GravityChangerAPI.resetGravity(entity);
                 return 1;
             })
             .then(Commands.argument("entities", EntityArgument.entities())
                 .executes(context -> {
                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                     for (Entity entity : entities) {
-                        GravityChangerAPICommon.resetGravity(entity);
+                        GravityChangerAPI.resetGravity(entity);
                     }
                     return entities.size();
                 })
@@ -141,7 +141,7 @@ public class GravityCommand {
                 .executes(context -> {
                     ServerLevel world = context.getSource().getLevel();
                     double strength = DoubleArgumentType.getDouble(context, "strength");
-                    GravityChangerAPICommon.setDimensionGravityStrength(world, strength);
+                    GravityChangerAPI.setDimensionGravityStrength(world, strength);
                     return 0;
                 })
             )
@@ -150,7 +150,7 @@ public class GravityCommand {
         builder.then(Commands.literal("view_dimension_info")
             .executes(context -> {
                 ServerLevel world = context.getSource().getLevel();
-                double strength = GravityChangerAPICommon.getDimensionGravityStrength(world);
+                double strength = GravityChangerAPI.getDimensionGravityStrength(world);
                 context.getSource().sendSuccess(
                     () -> Component.translatable("gravity_changer.command.dimension_info", strength), false
                 );
@@ -163,7 +163,7 @@ public class GravityCommand {
     
     private static int executeSetBaseStrength(Collection<? extends Entity> entities, double strength) {
         for (Entity entity : entities) {
-            GravityChangerAPICommon.setBaseGravityStrength(entity, strength);
+            GravityChangerAPI.setBaseGravityStrength(entity, strength);
         }
         return entities.size();
     }
@@ -172,7 +172,7 @@ public class GravityCommand {
         RandomSource random = source.getLevel().random;
         for (Entity entity : entities) {
             Direction gravityDirection = Direction.getRandom(random);
-            GravityChangerAPICommon.setBaseGravityDirection(entity, gravityDirection);
+            GravityChangerAPI.setBaseGravityDirection(entity, gravityDirection);
         }
         return entities.size();
     }
@@ -193,7 +193,7 @@ public class GravityCommand {
     ) {
         int i = 0;
         for (Entity entity : entities) {
-            Direction gravityDirection = GravityChangerAPICommon.getGravityDirection(entity);
+            Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
             Direction combinedRelativeDirection = switch (relativeDirection) {
                 case DOWN -> Direction.DOWN;
                 case UP -> Direction.UP;
@@ -201,7 +201,7 @@ public class GravityCommand {
                     Direction.from2DDataValue(relativeDirection.getHorizontalOffset() + Direction.fromYRot(entity.getYRot()).get2DDataValue());
             };
             Direction newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection);
-            GravityChangerAPICommon.setBaseGravityDirection(entity, newGravityDirection);
+            GravityChangerAPI.setBaseGravityDirection(entity, newGravityDirection);
             
             getSendFeedback(source, entity, newGravityDirection);
             i++;
