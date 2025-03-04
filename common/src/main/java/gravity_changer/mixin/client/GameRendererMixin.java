@@ -3,7 +3,6 @@ package gravity_changer.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPI;
-import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.client.Minecraft;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;

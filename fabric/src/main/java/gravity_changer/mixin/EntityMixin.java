@@ -1,5 +1,7 @@
 package gravity_changer.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import gravity_changer.GravityChanger;
 import gravity_changer.api.GravityChangerAPI;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -27,7 +30,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -69,7 +71,7 @@ public abstract class EntityMixin {
     public abstract double getZ();
     
     @Shadow
-    public Level level;
+    private Level level;
     
     @Shadow
     public abstract int getBlockX();
@@ -125,7 +127,9 @@ public abstract class EntityMixin {
     
     @Shadow
     public float fallDistance;
-    
+
+    @Shadow public abstract float rotate(Rotation transformRotation);
+
     @Inject(
         method = "Lnet/minecraft/world/entity/Entity;makeBoundingBox()Lnet/minecraft/world/phys/AABB;",
         at = @At("RETURN"),
@@ -352,38 +356,37 @@ public abstract class EntityMixin {
         
         cir.setReturnValue(RotationUtil.vecPlayerToWorld(cir.getReturnValue(), gravityDirection));
     }
-    
+
     // the argument was transformed to local coord,
     // but bounding box stretch needs world coord
-    @ModifyArgs(
-        method = "collide",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
-        )
+    @WrapOperation(
+            method = "collide",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
+            )
     )
-    private void redirect_adjustMovementForCollisions_stretch_0(Args args) {
-        Vec3 rotate = new Vec3(args.get(0), args.get(1), args.get(2));
+    private AABB redirect_adjustMovementForCollisions_stretch_1(AABB instance, double x, double y, double z, Operation<AABB> original) {
+        Vec3 rotate = new Vec3(x, y, z);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate.x);
-        args.set(1, rotate.y);
-        args.set(2, rotate.z);
+
+        return original.call(instance,rotate.x,rotate.y,rotate.z);
     }
     
     // the argument was transformed to local coord,
     // but bounding box move needs world coord
-    @ModifyArgs(
+    @ModifyArg(
         method = "collide",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/phys/AABB;move(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;"
         )
     )
-    private void redirect_adjustMovementForCollisions_offset_0(Args args) {
-        Vec3 rotate = args.get(0);
+    private Vec3 redirect_adjustMovementForCollisions_offset_0(Vec3 rotate) {
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate);
+        return rotate;
     }
+
     
     // Entity.collideBoundingBox is inputed with local coord, transform it to world coord
     @ModifyVariable(
@@ -470,7 +473,7 @@ public abstract class EntityMixin {
         return RotationUtil.vecPlayerToWorld(playerMovementX, playerMovementY, playerMovementZ, gravityDirection);
     }
     
-    @ModifyArgs(
+    @WrapOperation(
         method = "isInWall",
         at = @At(
             value = "INVOKE",
@@ -478,12 +481,11 @@ public abstract class EntityMixin {
             ordinal = 0
         )
     )
-    private void modify_isInsideWall_of_0(Args args) {
-        Vec3 rotate = new Vec3(args.get(1), args.get(2), args.get(3));
+    private AABB modify_isInsideWall_of_0(Vec3 center, double xSize, double ySize, double zSize, Operation<AABB> original) {
+        Vec3 rotate = new Vec3(xSize, ySize, zSize);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(1, rotate.x);
-        args.set(2, rotate.y);
-        args.set(3, rotate.z);
+
+        return original.call(center,rotate.x,rotate.y,rotate.z);
     }
     
     @ModifyArg(
@@ -658,7 +660,7 @@ public abstract class EntityMixin {
         }
     }
     
-    @ModifyArgs(
+    @WrapOperation(
         method = "isFree(DDD)Z",
         at = @At(
             value = "INVOKE",
@@ -666,12 +668,11 @@ public abstract class EntityMixin {
             ordinal = 0
         )
     )
-    private void redirect_doesNotCollide_offset_0(Args args) {
-        Vec3 rotate = new Vec3(args.get(0), args.get(1), args.get(2));
+    private AABB redirect_doesNotCollide_offset_0(AABB instance, double x, double y, double z, Operation<AABB> original) {
+        Vec3 rotate = new Vec3(x,y,z);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate.x);
-        args.set(1, rotate.y);
-        args.set(2, rotate.z);
+
+        return original.call(instance,rotate.x,rotate.y,rotate.z);
     }
     
     
