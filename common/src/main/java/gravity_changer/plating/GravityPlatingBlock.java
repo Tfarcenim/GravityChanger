@@ -3,9 +3,6 @@ package gravity_changer.plating;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -68,13 +65,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     public static final Block PLATING_BLOCK = new GravityPlatingBlock(
         Properties.of().noOcclusion().noCollission().instabreak()
     );
-    
-    public static void init() {
-        Registry.register(
-            BuiltInRegistries.BLOCK, new ResourceLocation("gravity_changer:plating"), PLATING_BLOCK
-        );
-    }
-    
+
     public GravityPlatingBlock(Properties settings) {
         super(settings);
         registerDefaultState(getStateDefinition().any()

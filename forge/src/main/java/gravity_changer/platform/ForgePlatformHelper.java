@@ -1,9 +1,9 @@
 package gravity_changer.platform;
 
 import com.mojang.brigadier.context.CommandContext;
-import gravity_changer.GravityChangerForge;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPIForge;
+import gravity_changer.api.RotationParameters;
 import gravity_changer.capability.DimensionAttachment;
 import gravity_changer.capability.EntityGravityAttachment;
 import gravity_changer.network.PacketHandlerForge;
@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.PacketDistributor;
@@ -158,5 +157,12 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public @Nullable RotationAnimation getRotationAnimation(Entity entity) {
         return GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().map(EntityGravityAttachment::getRotationAnimation).orElse(null);
+    }
+
+    @Override
+    public void applyGravityDirectionEffect(Entity entity, Direction gravityEffectDir, @Nullable RotationParameters rotationParameters, double priority) {
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment -> {
+            entityGravityAttachment.applyGravityDirectionEffect(gravityEffectDir,rotationParameters,priority);
+        });
     }
 }

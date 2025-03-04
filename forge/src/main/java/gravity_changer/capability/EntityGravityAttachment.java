@@ -1,10 +1,14 @@
 package gravity_changer.capability;
 
 import gravity_changer.RotationAnimation;
+import gravity_changer.api.RotationParameters;
+import gravity_changer.util.GravityDirEffect;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @AutoRegisterCapability
 public interface EntityGravityAttachment extends ICapabilitySerializable<CompoundTag> {
@@ -30,4 +34,11 @@ public interface EntityGravityAttachment extends ICapabilitySerializable<Compoun
     void updateGravityStatus();
 
     void forceApplyGravityChange();
+
+    void applyGravityDirectionEffect(
+            @NotNull Direction direction,
+            @Nullable RotationParameters rotationParameters,
+            double priority
+    );
+
 }

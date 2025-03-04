@@ -1,5 +1,6 @@
 package gravity_changer.item;
 
+import gravity_changer.GravityChanger;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,7 @@ public class GravityAnchorItem extends Item {
     }
 
     public static ResourceLocation getItemId(Direction direction) {
-        return new ResourceLocation("gravity_changer", "gravity_anchor_" + direction.getName());
+        return GravityChanger.id("gravity_anchor_" + direction.getName());
     }
     
     public GravityAnchorItem(Direction _direction, Properties settings) {

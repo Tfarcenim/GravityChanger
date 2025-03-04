@@ -11,6 +11,7 @@ import gravity_changer.command.LocalDirectionArgumentType;
 import gravity_changer.item.GravityAnchorItem;
 import gravity_changer.network.S2CSyncEntityGravityPacket;
 import gravity_changer.platform.Services;
+import gravity_changer.plating.GravityPlatingBlockEntity;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Direction;
@@ -69,6 +70,8 @@ public class GravityChangerForge {
         for (Direction direction : Direction.values()) {
             event.register(Registries.ITEM, GravityAnchorItem.getItemId(direction),() -> GravityAnchorItem.ITEM_MAP.get(direction));
         }
+
+        event.register(Registries.BLOCK_ENTITY_TYPE,GravityChanger.id("gravity_plating"),() -> GravityPlatingBlockEntity.TYPE);
 
     }
 

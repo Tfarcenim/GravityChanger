@@ -2,6 +2,7 @@ package gravity_changer.platform.services;
 
 import com.mojang.brigadier.context.CommandContext;
 import gravity_changer.RotationAnimation;
+import gravity_changer.api.RotationParameters;
 import gravity_changer.network.client.S2CModPacket;
 import gravity_changer.network.server.C2SModPacket;
 import net.minecraft.commands.CommandSourceStack;
@@ -84,5 +85,8 @@ public interface IPlatformHelper {
 
     @Nullable
     RotationAnimation getRotationAnimation(Entity entity);
+
+    void  applyGravityDirectionEffect(Entity entity,Direction gravityEffectDir,  @Nullable RotationParameters rotationParameters,
+             double priority);
 
 }

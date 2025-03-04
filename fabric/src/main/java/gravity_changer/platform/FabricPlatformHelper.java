@@ -5,6 +5,7 @@ import gravity_changer.EntityTags;
 import gravity_changer.GravityComponent;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPIFabric;
+import gravity_changer.api.RotationParameters;
 import gravity_changer.network.ClientPacketHandlerFabric;
 import gravity_changer.network.PacketHandler;
 import gravity_changer.network.PacketHandlerFabric;
@@ -168,6 +169,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Nullable
     public RotationAnimation getRotationAnimation(Entity entity) {
         return GravityChangerAPIFabric.getGravityComponent(entity).getRotationAnimation();
+    }
+
+    @Override
+    public void applyGravityDirectionEffect(Entity entity, Direction gravityEffectDir, @Nullable RotationParameters rotationParameters, double priority) {
+        GravityChangerAPIFabric.getGravityComponent(entity).applyGravityDirectionEffect(gravityEffectDir,rotationParameters,priority);
     }
 
 }

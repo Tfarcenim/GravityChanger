@@ -2,11 +2,8 @@ package gravity_changer.plating;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -22,14 +19,7 @@ import java.util.List;
 
 public class GravityPlatingItem extends BlockItem {
     public static final Item PLATING_BLOCK_ITEM = new GravityPlatingItem(GravityPlatingBlock.PLATING_BLOCK, new Item.Properties());
-    
-    public static void init() {
-        Registry.register(
-            BuiltInRegistries.ITEM, new ResourceLocation("gravity_changer:plating"),
-            GravityPlatingItem.PLATING_BLOCK_ITEM
-        );
-    }
-    
+
     public GravityPlatingItem(Block block, Properties properties) {
         super(block, properties);
     }

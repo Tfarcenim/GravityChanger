@@ -1,13 +1,9 @@
 package gravity_changer.item;
 
-import gravity_changer.GravityChanger;
-
 import java.util.List;
 
 import gravity_changer.api.GravityChangerAPI;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -43,13 +39,5 @@ public class GravityChangerItemAOE extends Item {
         }
         return InteractionResultHolder.success(user.getItemInHand(hand));
     }
-    
-    public static void init() {
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_down_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_DOWN_AOE);
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_up_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_UP_AOE);
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_north_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_NORTH_AOE);
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_south_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_SOUTH_AOE);
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_west_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_WEST_AOE);
-        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_changer_east_aoe"), GravityChangerItemAOE.GRAVITY_CHANGER_EAST_AOE);
-    }
+
 }
