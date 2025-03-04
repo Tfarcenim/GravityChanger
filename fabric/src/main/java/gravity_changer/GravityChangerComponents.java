@@ -23,7 +23,7 @@ public class GravityChangerComponents implements EntityComponentInitializer, Wor
     
     public static final ComponentKey<DimensionGravityDataComponent> DIMENSION_COMP_KEY =
         ComponentRegistry.getOrCreate(DIMENSION_DATA_ID, DimensionGravityDataComponent.class);
-    
+
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(

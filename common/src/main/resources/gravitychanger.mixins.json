@@ -15,7 +15,9 @@
     "EndermanEntityChasePlayerGoalMixin",
     "EndermanEntityMixin",
     "EntityAccessor",
+    "EntityMixin",
     "FishingBobberEntityMixin",
+    "ItemMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin"
   ],

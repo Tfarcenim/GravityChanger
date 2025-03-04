@@ -133,8 +133,8 @@ public class GravityChangerFabric implements ModInitializer {
         GravityPlatingBlock.init();
         GravityPlatingItem.init();
         GravityPlatingBlockEntity.init();
-        
-        registerArgumentTYpes();
+
+
         registerArgumentTYpes();
     }
 

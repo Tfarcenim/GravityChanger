@@ -2,7 +2,6 @@ package gravity_changer.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import gravity_changer.GravityChanger;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
@@ -14,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -34,12 +34,14 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+
+    private boolean constructing = true;
+
     @Shadow
     private Vec3 position;
     
@@ -92,7 +94,7 @@ public abstract class EntityMixin {
     public abstract AABB getBoundingBox();
     
     @Shadow
-    public static Vec3 collideWithShapes(Vec3 movement, AABB entityBoundingBox, List<VoxelShape> collisions) {
+    private static Vec3 collideWithShapes(Vec3 movement, AABB entityBoundingBox, List<VoxelShape> collisions) {
         return null;
     }
     
@@ -142,7 +144,7 @@ public abstract class EntityMixin {
         // cardinal components initializes the component container in the end of constructor
         // but bounding box calculation can happen inside constructor
         // see dev.onyxstudios.cca.mixin.entity.common.MixinEntity
-        if (((ComponentProvider) entity).getComponentContainer() == null) {
+        if (constructing) {
             return;
         }
         
@@ -154,6 +156,11 @@ public abstract class EntityMixin {
             box = box.move(0.0D, -1.0E-6D, 0.0D);
         }
         cir.setReturnValue(RotationUtil.boxPlayerToWorld(box, gravityDirection).move(this.position));
+    }
+
+    @Inject(method = "<init>",at = @At("RETURN"))
+    private void fin(EntityType entityType, Level level, CallbackInfo ci) {
+        constructing = false;
     }
     
     @Inject(
@@ -527,42 +534,7 @@ public abstract class EntityMixin {
         }
     }
     
-    @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;updateFluidHeightAndDoFluidPushing(Lnet/minecraft/tags/TagKey;D)Z",
-        at = @At(
-            value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
-            ordinal = 0
-        ),
-        ordinal = 1
-    )
-    private Vec3 modify_updateMovementInFluid_Vec3d_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return vec3d;
-        }
-        
-        return RotationUtil.vecPlayerToWorld(vec3d, gravityDirection);
-    }
-    
-    @ModifyArg(
-        method = "updateFluidHeightAndDoFluidPushing",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/phys/Vec3;add(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
-            ordinal = 1
-        ),
-        index = 0
-    )
-    private Vec3 modify_updateMovementInFluid_add_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return vec3d;
-        }
-        
-        return RotationUtil.vecWorldToPlayer(vec3d, gravityDirection);
-    }
-    
+
     
     @Inject(
         method = "Lnet/minecraft/world/entity/Entity;push(Lnet/minecraft/world/entity/Entity;)V",
