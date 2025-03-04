@@ -1,8 +1,9 @@
 package gravity_changer.capability;
 
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
-public interface DimensionDataAttachment {
+@AutoRegisterCapability
+public interface DimensionAttachment {
     double getDimensionGravityStrength();
     void setDimensionGravityStrength(double dimensionGravityStrength);
 }

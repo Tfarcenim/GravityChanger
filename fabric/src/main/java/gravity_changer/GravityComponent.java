@@ -42,14 +42,13 @@ import org.slf4j.Logger;
  * (The client player's gravity attributes are separately computed.
  * Other client entities' are synced from server.)
  */
-public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent {
+public class GravityComponent implements AutoSyncedComponent, CommonTickingComponent {
     
     public interface GravityUpdateCallback {
         void update(Entity entity, GravityComponent component);
     }
     
-    private static final Logger LOGGER = LogUtils.getLogger();
-    
+
     /**
      * Fired every tick for every entity, both on client and server.
      * <p>
@@ -73,7 +72,8 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
                 }
             }
         );
-    
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     boolean initialized = false;
     
     // not synchronized
@@ -163,19 +163,21 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             );
         }
     }
-    
-    private boolean shouldAcceptServerSync() {
-        return entity.level().isClientSide() && !GCUtil.isClientPlayer(entity);
-    }
-    
+
     @Override
     public void writeToNbt(@NotNull CompoundTag tag) {
         tag.putString("baseGravityDirection", baseGravityDirection.getName());
         tag.putString("currentGravityDirection", currGravityDirection.getName());
-        
+
         tag.putDouble("baseGravityStrength", baseGravityStrength);
         tag.putDouble("currentGravityStrength", currGravityStrength);
     }
+
+    private boolean shouldAcceptServerSync() {
+        return entity.level().isClientSide() && !GCUtil.isClientPlayer(entity);
+    }
+    
+
     
     @Override
     public void tick() {

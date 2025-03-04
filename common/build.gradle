@@ -22,6 +22,8 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
 
+    compileOnly "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
+
 }
 
 configurations {

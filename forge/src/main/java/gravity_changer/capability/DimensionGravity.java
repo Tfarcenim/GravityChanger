@@ -9,9 +9,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DimensionData implements  ICapabilitySerializable<CompoundTag>,DimensionDataAttachment {
+public class DimensionGravity implements ICapabilitySerializable<CompoundTag>, DimensionAttachment {
 
-    private final LazyOptional<DimensionDataAttachment> holder = LazyOptional.of(() -> this);
+    private final LazyOptional<DimensionAttachment> holder = LazyOptional.of(() -> this);
 
     double dimensionGravityStrength = 1;
 

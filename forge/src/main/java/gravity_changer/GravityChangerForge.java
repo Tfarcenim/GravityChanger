@@ -1,13 +1,19 @@
 package gravity_changer;
 
+import gravity_changer.api.GravityChangerAPIForge;
+import gravity_changer.capability.DimensionGravity;
+import gravity_changer.capability.EntityGravity;
+import gravity_changer.capability.EntityGravityAttachment;
 import gravity_changer.command.ArgumentTypes;
 import gravity_changer.command.DirectionArgumentType;
-import gravity_changer.command.LocalDirection;
 import gravity_changer.command.LocalDirectionArgumentType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,7 +32,8 @@ public class GravityChangerForge {
         bus.addListener(this::setup);
         // Use Forge to bootstrap the Common mod.
         GravityChanger.init();
-        
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntityCaps);
+        MinecraftForge.EVENT_BUS.addGenericListener(Level.class,this::attachLevelCaps);
     }
 
     void register(RegisterEvent event) {
@@ -46,6 +53,22 @@ public class GravityChangerForge {
                 });
     }
 
+    void attachEntityCaps(AttachCapabilitiesEvent<Entity> event) {
+        Entity e = event.getObject();
+        if (EntityTags.canChangeGravity(e)) {
+            event.addCapability(GravityChanger.id("entity_gravity"),new EntityGravity(e));
+        }
+    }
+
+    void attachLevelCaps(AttachCapabilitiesEvent<Level> event) {
+        Level level = event.getObject();
+            event.addCapability(GravityChanger.id("entity_gravity"),new DimensionGravity());
+    }
+
     void setup(FMLCommonSetupEvent event) {
+    }
+
+    public static void onEntityTick(Entity entity) {
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(EntityGravityAttachment::tick);
     }
 }
