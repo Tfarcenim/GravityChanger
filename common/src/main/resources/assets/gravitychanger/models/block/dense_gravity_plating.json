@@ -3,8 +3,8 @@
 	"ambientocclusion": false,
 	"parent": "block/thin_block",
 	"textures": {
-		"0": "gravity_changer:block/plating",
-		"particle": "gravity_changer:block/plating"
+		"0": "gravitychanger:block/plating_dense",
+		"particle": "gravitychanger:block/plating_dense"
 	},
 	"elements": [
 		{

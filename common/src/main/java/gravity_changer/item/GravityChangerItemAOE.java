@@ -1,5 +1,6 @@
 package gravity_changer.item;
 
+import java.util.EnumMap;
 import java.util.List;
 
 import gravity_changer.api.GravityChangerAPI;
@@ -14,13 +15,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 public class GravityChangerItemAOE extends Item {
-    public static final Item GRAVITY_CHANGER_DOWN_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.DOWN);
-    public static final Item GRAVITY_CHANGER_UP_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.UP);
-    public static final Item GRAVITY_CHANGER_NORTH_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.NORTH);
-    public static final Item GRAVITY_CHANGER_SOUTH_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.SOUTH);
-    public static final Item GRAVITY_CHANGER_WEST_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.WEST);
-    public static final Item GRAVITY_CHANGER_EAST_AOE = new GravityChangerItemAOE(new Properties().stacksTo(1), Direction.EAST);
-    
+
+    public static final EnumMap<Direction, GravityChangerItemAOE> ITEM_MAP = new EnumMap<>(Direction.class);
+
+    static {
+        for (Direction direction : Direction.values()) {
+            ITEM_MAP.put(direction, new GravityChangerItemAOE(new Properties(), direction));
+        }
+    }
+
     public final Direction gravityDirection;
     
     public GravityChangerItemAOE(Properties settings, Direction _gravityDirection) {

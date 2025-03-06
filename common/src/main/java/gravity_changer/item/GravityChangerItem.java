@@ -13,16 +13,19 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.List;
 
 public class GravityChangerItem extends Item {
-    public static final Item GRAVITY_CHANGER_DOWN = new GravityChangerItem(new Properties().stacksTo(1), Direction.DOWN);
-    public static final Item GRAVITY_CHANGER_UP = new GravityChangerItem(new Properties().stacksTo(1), Direction.UP);
-    public static final Item GRAVITY_CHANGER_NORTH = new GravityChangerItem(new Properties().stacksTo(1), Direction.NORTH);
-    public static final Item GRAVITY_CHANGER_SOUTH = new GravityChangerItem(new Properties().stacksTo(1), Direction.SOUTH);
-    public static final Item GRAVITY_CHANGER_WEST = new GravityChangerItem(new Properties().stacksTo(1), Direction.WEST);
-    public static final Item GRAVITY_CHANGER_EAST = new GravityChangerItem(new Properties().stacksTo(1), Direction.EAST);
-    
+
+    public static final EnumMap<Direction, GravityChangerItem> ITEM_MAP = new EnumMap<>(Direction.class);
+
+    static {
+        for (Direction direction : Direction.values()) {
+            ITEM_MAP.put(direction, new GravityChangerItem( new Properties().stacksTo(1),direction));
+        }
+    }
+
     public final Direction gravityDirection;
     
     public GravityChangerItem(Properties settings, Direction _gravityDirection) {
@@ -41,11 +44,11 @@ public class GravityChangerItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         super.appendHoverText(stack, world, tooltip, context);
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_changer.tooltip.0")
+            Component.translatable("gravitychanger.gravity_changer.tooltip.0")
                 .withStyle(ChatFormatting.GRAY)
         );
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_changer.tooltip.1")
+            Component.translatable("gravitychanger.gravity_changer.tooltip.1")
                 .withStyle(ChatFormatting.GRAY)
         );
     }

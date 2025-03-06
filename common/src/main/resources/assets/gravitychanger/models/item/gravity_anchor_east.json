@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gravity_changer:item/gravity_anchor_east"
+    "layer0": "gravitychanger:item/gravity_anchor_east"
   }
 }

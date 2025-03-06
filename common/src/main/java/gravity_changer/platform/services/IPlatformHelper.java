@@ -89,4 +89,8 @@ public interface IPlatformHelper {
     void  applyGravityDirectionEffect(Entity entity,Direction gravityEffectDir,  @Nullable RotationParameters rotationParameters,
              double priority);
 
+    void applyGravityStrengthEffect(
+            Entity entity,double strengthMultiplier
+    );
+
 }

@@ -56,7 +56,7 @@ public class GravityPlatingItem extends BlockItem {
         GravityPlatingBlockEntity.SideData sideData = getSideData(stack.getTag());
         if (sideData != null) {
             return Component.translatable(
-                "gravity_changer.plating.item_name",
+                "gravitychanger.gravity_plating.item_name",
                 sideData.level, GravityPlatingBlockEntity.getForceText(sideData.isAttracting)
             );
         }
@@ -90,8 +90,8 @@ public class GravityPlatingItem extends BlockItem {
     
     @Override
     public void appendHoverText(ItemStack itemStack, Level world, List<Component> tooltip, TooltipFlag tooltipContext) {
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.2").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.gravity_plating.tooltip.0").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.gravity_plating.tooltip.1").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.gravity_plating.tooltip.2").withStyle(ChatFormatting.GRAY));
     }
 }

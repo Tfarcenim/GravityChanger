@@ -1,6 +1,7 @@
 package gravity_changer;
 
 import gravity_changer.api.GravityChangerAPIForge;
+import gravity_changer.network.S2CSyncDimensionGravityPacket;
 import gravity_changer.network.S2CSyncEntityGravityPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,5 +19,9 @@ public class GravityChangerClientForge {
                         entityGravityAttachment.deserializeNBT(s2CSyncEntityGravityPacket.data));
             }
         }
+    }
+
+    public static void handle(S2CSyncDimensionGravityPacket s2CSyncDimensionGravityPacket) {
+
     }
 }

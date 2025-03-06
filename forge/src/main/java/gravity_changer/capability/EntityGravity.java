@@ -106,6 +106,7 @@ public class EntityGravity  implements EntityGravityAttachment{
         }
     }
 
+    @Override
     public void updateGravityStatus() {
         // for the remote players and non-player entities,
         // their effect data is not synchronized to the client
@@ -169,6 +170,7 @@ public class EntityGravity  implements EntityGravityAttachment{
         Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity,serializeNBT()),entity,false );
     }
 
+    @Override
     public void applyGravityDirectionEffect(
             @NotNull Direction direction,
             @Nullable RotationParameters rotationParameters,
@@ -265,6 +267,18 @@ public class EntityGravity  implements EntityGravityAttachment{
         else {
             // Velocity will be conserved relative to the world, will result in more natural motion
             entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(realWorldVelocity, newGravity));
+        }
+    }
+
+    @Override
+    public void applyGravityStrengthEffect(
+            double strengthMultiplier
+    ) {
+        if (isFiringUpdateEvent) {
+            currGravityStrength *= strengthMultiplier;
+        }
+        else {
+            delayApplyStrengthEffect *= strengthMultiplier;
         }
     }
 
@@ -507,6 +521,7 @@ public class EntityGravity  implements EntityGravityAttachment{
      * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
+    @Override
     public void forceApplyGravityChange() {
         prevGravityDirection = currGravityDirection;
         prevGravityStrength = currGravityStrength;

@@ -165,4 +165,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
             entityGravityAttachment.applyGravityDirectionEffect(gravityEffectDir,rotationParameters,priority);
         });
     }
+
+    @Override
+    public void applyGravityStrengthEffect(Entity entity, double strengthMultiplier) {
+        GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment ->
+                entityGravityAttachment.applyGravityStrengthEffect(strengthMultiplier));
+    }
 }

@@ -41,4 +41,8 @@ public interface EntityGravityAttachment extends ICapabilitySerializable<Compoun
             double priority
     );
 
+    void applyGravityStrengthEffect(
+            double strengthMultiplier
+    );
+
 }

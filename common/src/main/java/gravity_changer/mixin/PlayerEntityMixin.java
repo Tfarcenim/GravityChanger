@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-@Debug(export = true)
+//@Debug(export = true)
 @Mixin(value = Player.class, priority = 1001)
 public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow

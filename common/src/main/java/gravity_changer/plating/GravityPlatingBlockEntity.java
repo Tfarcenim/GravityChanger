@@ -407,7 +407,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         }
         else {
             ((ServerPlayer) player).sendSystemMessage(
-                Component.translatable("gravity_changer.plate.wrong_interaction"),
+                Component.translatable("gravitychanger.plate.wrong_interaction"),
                 true // on overlay (wrong parchment name)
             );
             return InteractionResult.FAIL;
@@ -418,7 +418,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         boolean isAttracting = sideDatum.isAttracting;
         ((ServerPlayer) player).sendSystemMessage(
             Component.translatable(
-                "gravity_changer.plate.status",
+                "gravitychanger.plate.status",
                 GCUtil.getDirectionText(plateDir.getOpposite()),
                 sideDatum.level,
                 getForceText(isAttracting)
@@ -428,12 +428,12 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         
         return InteractionResult.SUCCESS;
     }
-    
+
+    public static final MutableComponent UNATTRACTIVE = Component.translatable("gravitychanger.plate.force.repulse");
+    public static final MutableComponent ATTRACTIVE = Component.translatable("gravitychanger.plate.force.attract");
+
     public static MutableComponent getForceText(boolean isAttracting) {
-        return Component.translatable(
-            isAttracting ?
-                "gravity_changer.plate.force.attract" : "gravity_changer.plate.force.repulse"
-        );
+           return isAttracting ?ATTRACTIVE : UNATTRACTIVE;
     }
     
     public void sync() {

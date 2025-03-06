@@ -1,9 +1,6 @@
 package gravity_changer.mob_effect;
 
-import gravity_changer.GravityChanger;
-import gravity_changer.GravityComponent;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import gravity_changer.platform.Services;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -33,7 +30,7 @@ public class GravityStrengthMobEffect extends MobEffect {
         return Math.pow(base, level) * signum;
     }
     
-    private void apply(LivingEntity entity, GravityComponent component) {
+    public void apply(LivingEntity entity) {
         MobEffectInstance effectInstance = entity.getEffect(this);
         
         if (effectInstance == null) {
@@ -41,35 +38,8 @@ public class GravityStrengthMobEffect extends MobEffect {
         }
         
         int level = effectInstance.getAmplifier() + 1;
-    
-        component.applyGravityStrengthEffect(getGravityStrengthMultiplier(level));
+
+        Services.PLATFORM.applyGravityStrengthEffect(entity,getGravityStrengthMultiplier(level));
     }
-    
-    public static void init() {
-        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
-            if (entity instanceof LivingEntity livingEntity) {
-                INCREASE.apply(livingEntity, component);
-                DECREASE.apply(livingEntity, component);
-                REVERSE.apply(livingEntity, component);
-            }
-        });
-        
-        Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            GravityChanger.id("strength_increase"),
-            INCREASE
-        );
-        
-        Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            GravityChanger.id("strength_decrease"),
-            DECREASE
-        );
-        
-        Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            GravityChanger.id("strength_reverse"),
-            REVERSE
-        );
-    }
+
 }

@@ -1,0 +1,21 @@
+package gravity_changer.mob_effect;
+
+import gravity_changer.GravityChanger;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+
+public class GravityInvertMobEffect extends MobEffect {
+    
+    public static final int COLOR = 0x98D982;
+    
+    public static final ResourceLocation PHASE = GravityChanger.id("invert_mob_effect_phase");
+
+    public static final GravityInvertMobEffect INSTANCE = new GravityInvertMobEffect();
+    
+    private GravityInvertMobEffect() {
+        super(MobEffectCategory.NEUTRAL, COLOR);
+    }
+
+
+}
