@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LookControl.class)
 public abstract class LookControlMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;getWantedY(Lnet/minecraft/world/entity/Entity;)D",
+        method = "getWantedY(Lnet/minecraft/world/entity/Entity;)D",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
@@ -29,7 +29,7 @@ public abstract class LookControlMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;)V",
+        method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -46,7 +46,7 @@ public abstract class LookControlMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;)V",
+        method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",
@@ -63,7 +63,7 @@ public abstract class LookControlMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
+        method = "setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -80,7 +80,7 @@ public abstract class LookControlMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
+        method = "setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",

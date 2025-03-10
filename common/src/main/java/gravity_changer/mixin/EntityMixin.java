@@ -133,7 +133,7 @@ public abstract class EntityMixin {
     @Shadow public abstract float rotate(Rotation transformRotation);
 
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;makeBoundingBox()Lnet/minecraft/world/phys/AABB;",
+        method = "makeBoundingBox()Lnet/minecraft/world/phys/AABB;",
         at = @At("RETURN"),
         cancellable = true
     )
@@ -164,7 +164,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getBoundingBoxForPose(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/phys/AABB;",
+        method = "getBoundingBoxForPose(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/phys/AABB;",
         at = @At("RETURN"),
         cancellable = true
     )
@@ -181,7 +181,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;calculateViewVector(FF)Lnet/minecraft/world/phys/Vec3;",
+        method = "calculateViewVector(FF)Lnet/minecraft/world/phys/Vec3;",
         at = @At("RETURN"),
         cancellable = true
     )
@@ -193,7 +193,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getBlockPosBelowThatAffectsMyMovement()Lnet/minecraft/core/BlockPos;",
+        method = "getBlockPosBelowThatAffectsMyMovement()Lnet/minecraft/core/BlockPos;",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -205,7 +205,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getEyePosition()Lnet/minecraft/world/phys/Vec3;",
+        method = "getEyePosition()Lnet/minecraft/world/phys/Vec3;",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -217,7 +217,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getEyePosition(F)Lnet/minecraft/world/phys/Vec3;",
+        method = "getEyePosition(F)Lnet/minecraft/world/phys/Vec3;",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -227,14 +227,14 @@ public abstract class EntityMixin {
         
         Vec3 vec3d = RotationUtil.vecPlayerToWorld(0.0D, this.eyeHeight, 0.0D, gravityDirection);
         
-        double d = Mth.lerp((double) tickDelta, this.xo, this.getX()) + vec3d.x;
-        double e = Mth.lerp((double) tickDelta, this.yo, this.getY()) + vec3d.y;
-        double f = Mth.lerp((double) tickDelta, this.zo, this.getZ()) + vec3d.z;
+        double d = Mth.lerp(tickDelta, this.xo, this.getX()) + vec3d.x;
+        double e = Mth.lerp(tickDelta, this.yo, this.getY()) + vec3d.y;
+        double f = Mth.lerp(tickDelta, this.zo, this.getZ()) + vec3d.z;
         cir.setReturnValue(new Vec3(d, e, f));
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getLightLevelDependentMagicValue()F",
+        method = "getLightLevelDependentMagicValue()F",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -247,7 +247,7 @@ public abstract class EntityMixin {
     
     // transform move vector from local to world (the velocity is local)
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
         at = @At("HEAD"),
         ordinal = 0,
         argsOnly = true
@@ -282,7 +282,7 @@ public abstract class EntityMixin {
     
     // transform the argument vector back to local coordinate
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V",
@@ -302,7 +302,7 @@ public abstract class EntityMixin {
     
     // transform the local variable (result from collide()) to local coordinate
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V",
@@ -320,7 +320,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;getOnPosLegacy()Lnet/minecraft/core/BlockPos;",
+        method = "getOnPosLegacy()Lnet/minecraft/core/BlockPos;",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -353,7 +353,7 @@ public abstract class EntityMixin {
     // transform the result to world coordinate
     // the input to Entity.collideBoundingBox will be in local coord
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;collide(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
+        method = "collide(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
         at = @At("RETURN"),
         cancellable = true
     )
@@ -397,7 +397,7 @@ public abstract class EntityMixin {
     
     // Entity.collideBoundingBox is inputed with local coord, transform it to world coord
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
+        method = "collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
         at = @At("HEAD"),
         ordinal = 0,
         argsOnly = true
@@ -417,7 +417,7 @@ public abstract class EntityMixin {
     
     // transform back to local coord
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
+        method = "collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
         at = @At("RETURN"),
         cancellable = true
     )
@@ -431,7 +431,7 @@ public abstract class EntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/Entity;collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
+        method = "collideBoundingBox(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/level/Level;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;collideWithShapes(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/List;)Lnet/minecraft/world/phys/Vec3;",
@@ -512,7 +512,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;spawnSprintParticle()V",
+        method = "spawnSprintParticle()V",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -537,7 +537,7 @@ public abstract class EntityMixin {
 
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;push(Lnet/minecraft/world/entity/Entity;)V",
+        method = "push(Lnet/minecraft/world/entity/Entity;)V",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -605,7 +605,7 @@ public abstract class EntityMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/Entity;checkBelowWorld()V",
+        method = "checkBelowWorld()V",
         at = @At("HEAD"),
         cancellable = true
     )
@@ -628,7 +628,6 @@ public abstract class EntityMixin {
         ) {
             this.onBelowWorld();
             ci.cancel();
-            return;
         }
     }
     
@@ -649,7 +648,7 @@ public abstract class EntityMixin {
     
     
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;updateFluidOnEyes()V",
+        method = "updateFluidOnEyes()V",
         at = @At(
             value = "STORE"
         ),
@@ -661,7 +660,7 @@ public abstract class EntityMixin {
     }
     
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/Entity;updateFluidOnEyes()V",
+        method = "updateFluidOnEyes()V",
         at = @At(
             value = "STORE"
         ),

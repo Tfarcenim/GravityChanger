@@ -12,9 +12,10 @@ public abstract class BiomeEffectSoundPlayerMixin {
 
     private static final String MOJANG = "lambda$tick$3";
     private static final String FABRIC = "method_26271";
+    private static final String SRG = "m_274008_";
 
     @Redirect(
-        method = {MOJANG,FABRIC},
+        method = {MOJANG,FABRIC,SRG},
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/player/LocalPlayer;getEyeY()D"
@@ -25,7 +26,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
     
     @Redirect(
-        method = {MOJANG,FABRIC},
+        method = {MOJANG,FABRIC,SRG},
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/player/LocalPlayer;getX()D"
@@ -36,7 +37,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     }
     
     @Redirect(
-        method = {MOJANG,FABRIC},
+        method = {MOJANG,FABRIC,SRG},
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/player/LocalPlayer;getZ()D"

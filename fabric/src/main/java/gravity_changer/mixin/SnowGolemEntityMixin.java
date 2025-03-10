@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(SnowGolem.class)
 public abstract class SnowGolemEntityMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/animal/SnowGolem;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
@@ -30,7 +30,7 @@ public abstract class SnowGolemEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/animal/SnowGolem;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D",
@@ -47,7 +47,7 @@ public abstract class SnowGolemEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/animal/SnowGolem;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
@@ -64,7 +64,7 @@ public abstract class SnowGolemEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/animal/SnowGolem;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/Math;sqrt(D)D"

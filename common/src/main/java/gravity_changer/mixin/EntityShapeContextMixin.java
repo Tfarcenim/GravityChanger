@@ -45,7 +45,7 @@ public abstract class EntityShapeContextMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/phys/shapes/EntityCollisionContext;isAbove(Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/core/BlockPos;Z)Z",
+        method = "isAbove(Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/core/BlockPos;Z)Z",
         at = @At("HEAD"),
         cancellable = true
     )

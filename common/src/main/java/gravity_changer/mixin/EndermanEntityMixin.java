@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(EnderMan.class)
 public abstract class EndermanEntityMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
+        method = "isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D",
@@ -30,7 +30,7 @@ public abstract class EndermanEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
+        method = "isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getX()D",
@@ -47,7 +47,7 @@ public abstract class EndermanEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
+        method = "isLookingAtMe(Lnet/minecraft/world/entity/player/Player;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getZ()D",
@@ -64,7 +64,7 @@ public abstract class EndermanEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
+        method = "teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
@@ -81,7 +81,7 @@ public abstract class EndermanEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
+        method = "teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -98,7 +98,7 @@ public abstract class EndermanEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/EnderMan;teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
+        method = "teleportTowards(Lnet/minecraft/world/entity/Entity;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",

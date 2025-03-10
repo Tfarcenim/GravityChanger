@@ -22,9 +22,7 @@ import org.joml.Quaternionf;
 
 @Mixin(value = Camera.class, priority = 1001)
 public abstract class CameraMixin {
-    @Shadow
-    protected abstract void setPosition(double x, double y, double z);
-    
+
     @Shadow
     private Entity entity;
     
@@ -69,9 +67,9 @@ public abstract class CameraMixin {
     
         Quaternionf gravityRotation = animation.getCurrentGravityRotation(gravityDirection, timeMs);
         
-        double entityX = Mth.lerp((double) tickDelta, focusedEntity.xo, focusedEntity.getX());
-        double entityY = Mth.lerp((double) tickDelta, focusedEntity.yo, focusedEntity.getY());
-        double entityZ = Mth.lerp((double) tickDelta, focusedEntity.zo, focusedEntity.getZ());
+        double entityX = Mth.lerp(tickDelta, focusedEntity.xo, focusedEntity.getX());
+        double entityY = Mth.lerp(tickDelta, focusedEntity.yo, focusedEntity.getY());
+        double entityZ = Mth.lerp(tickDelta, focusedEntity.zo, focusedEntity.getZ());
         
         double currentCameraY = Mth.lerp(tickDelta, this.eyeHeightOld, this.eyeHeight);
     
@@ -90,7 +88,7 @@ public abstract class CameraMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/Camera;setRotation(FF)V",
+        method = "setRotation(FF)V",
         at = @At(
             value = "INVOKE",
             target = "Lorg/joml/Quaternionf;rotationYXZ(FFF)Lorg/joml/Quaternionf;",

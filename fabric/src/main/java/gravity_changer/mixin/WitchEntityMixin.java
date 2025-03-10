@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Witch.class)
 public abstract class WitchEntityMixin {
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/monster/Witch;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE_ASSIGN",
             target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
@@ -33,7 +33,7 @@ public abstract class WitchEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/Witch;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
@@ -50,7 +50,7 @@ public abstract class WitchEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/Witch;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D",
@@ -67,7 +67,7 @@ public abstract class WitchEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/Witch;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
@@ -84,7 +84,7 @@ public abstract class WitchEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/Witch;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/Math;sqrt(D)D"

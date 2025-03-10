@@ -24,7 +24,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     
     
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tick()V",
+        method = "tick()V",
         at = @At(
             value = "STORE"
         )
@@ -56,7 +56,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         args.set(3, pos.z);
     }
     
-    @ModifyConstant(method = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tick()V", constant = @Constant(doubleValue = 0.05000000074505806))
+    @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = 0.05000000074505806))
     private double multiplyGravity(double constant) {
         return constant * GravityChangerAPI.getGravityStrength(this);
     }

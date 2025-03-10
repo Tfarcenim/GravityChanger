@@ -31,7 +31,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     private Map<UUID, PlayerInfo> playerInfoMap;
     
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D",
@@ -48,7 +48,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getX()D",
@@ -65,7 +65,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getZ()D",

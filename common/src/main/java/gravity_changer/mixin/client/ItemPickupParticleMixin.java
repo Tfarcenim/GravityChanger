@@ -19,7 +19,7 @@ public abstract class ItemPickupParticleMixin {
     private Entity target;
     
     @ModifyVariable(
-        method = "Lnet/minecraft/client/particle/ItemPickupParticle;render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
+        method = "render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -38,7 +38,7 @@ public abstract class ItemPickupParticleMixin {
     }
     
     @ModifyVariable(
-        method = "Lnet/minecraft/client/particle/ItemPickupParticle;render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
+        method = "render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -57,7 +57,7 @@ public abstract class ItemPickupParticleMixin {
     }
     
     @ModifyVariable(
-        method = "Lnet/minecraft/client/particle/ItemPickupParticle;render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
+        method = "render(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/client/Camera;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",

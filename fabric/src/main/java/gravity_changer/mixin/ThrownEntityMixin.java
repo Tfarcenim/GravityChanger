@@ -30,7 +30,7 @@ public abstract class ThrownEntityMixin {
     }*/
     
     @ModifyVariable(
-        method = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;tick()V",
+        method = "tick()V",
         at = @At(
             value = "STORE"
         )
@@ -47,7 +47,7 @@ public abstract class ThrownEntityMixin {
     }
     
     @ModifyArgs(
-        method = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
+        method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V",

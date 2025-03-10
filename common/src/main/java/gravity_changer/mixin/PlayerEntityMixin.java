@@ -98,7 +98,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     //}
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/player/Player;drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+        method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
         at = @At(
             value = "NEW",
             target = "(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/item/ItemEntity;",
@@ -117,7 +117,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
     
     @WrapOperation(
-        method = "Lnet/minecraft/world/entity/player/Player;drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+        method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/item/ItemEntity;setDeltaMovement(DDD)V"
@@ -135,7 +135,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
     
     @Inject(
-        method = "Lnet/minecraft/world/entity/player/Player;maybeBackOffFromEdge(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/entity/MoverType;)Lnet/minecraft/world/phys/Vec3;",
+        method = "maybeBackOffFromEdge(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/entity/MoverType;)Lnet/minecraft/world/phys/Vec3;",
         at = @At("HEAD"),
         cancellable = true
     )

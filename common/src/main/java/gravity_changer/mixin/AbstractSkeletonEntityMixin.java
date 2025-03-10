@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(AbstractSkeleton.class)
 public abstract class AbstractSkeletonEntityMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
@@ -29,7 +29,7 @@ public abstract class AbstractSkeletonEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getY(D)D",
@@ -46,7 +46,7 @@ public abstract class AbstractSkeletonEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
@@ -63,7 +63,7 @@ public abstract class AbstractSkeletonEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
+        method = "performRangedAttack(Lnet/minecraft/world/entity/LivingEntity;F)V",
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/Math;sqrt(D)D"
