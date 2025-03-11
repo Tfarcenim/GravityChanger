@@ -15,8 +15,10 @@ public class GravityChangerClientForge {
         if (level != null) {
             Entity entity = level.getEntity(s2CSyncEntityGravityPacket.entityID);
             if (entity != null) {
-                GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment ->
-                        entityGravityAttachment.deserializeNBT(s2CSyncEntityGravityPacket.data));
+                GravityChangerAPIForge.getEntityGravityAttachment(entity).resolve().ifPresent(entityGravityAttachment -> {
+                    entityGravityAttachment.deserializeNBT(s2CSyncEntityGravityPacket.data);
+                    entityGravityAttachment.onSynced();
+                });
             }
         }
     }

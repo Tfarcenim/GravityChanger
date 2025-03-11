@@ -28,12 +28,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -61,6 +64,27 @@ public class GravityChangerForge {
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntityCaps);
         MinecraftForge.EVENT_BUS.addGenericListener(Level.class,this::attachLevelCaps);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
+        MinecraftForge.EVENT_BUS.addListener(this::login);
+        MinecraftForge.EVENT_BUS.addListener(this::tracking);
+    }
+
+    void login(PlayerEvent.PlayerLoggedInEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        //                Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity, serializeNBT()), entity, true);
+        player.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY_DATA).ifPresent(entityGravityAttachment -> {
+            Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(player,entityGravityAttachment.serializeNBT()),player,true);
+        });
+    }
+
+    void tracking(PlayerEvent.StartTracking event) {
+        Player player = event.getEntity();
+        Entity target = event.getTarget();
+
+        target.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY_DATA).ifPresent(entityGravityAttachment -> {
+            Services.PLATFORM.sendToClient(new S2CSyncEntityGravityPacket(target,entityGravityAttachment.serializeNBT()),
+                    (ServerPlayer) player);
+        });
+
     }
 
     void commands(RegisterCommandsEvent event) {

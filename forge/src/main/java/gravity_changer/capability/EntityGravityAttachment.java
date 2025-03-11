@@ -45,4 +45,5 @@ public interface EntityGravityAttachment extends ICapabilitySerializable<Compoun
             double strengthMultiplier
     );
 
+ void onSynced();
 }

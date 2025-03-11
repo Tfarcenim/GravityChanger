@@ -16,6 +16,7 @@ import gravity_changer.util.GravityDirEffect;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 
-public class EntityGravity  implements EntityGravityAttachment{
+public class EntityGravity implements EntityGravityAttachment {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -50,7 +51,8 @@ public class EntityGravity  implements EntityGravityAttachment{
     // the base gravity strength
     double baseGravityStrength = 1.0;
 
-    @Nullable RotationParameters currentRotationParameters = RotationParameters.getDefault();
+    @Nullable
+    RotationParameters currentRotationParameters = RotationParameters.getDefault();
 
     // Only used on client, not synchronized.
     @Nullable
@@ -86,6 +88,14 @@ public class EntityGravity  implements EntityGravityAttachment{
         updateGravityStatus();
 
         applyGravityChange();
+
+        if (!entity.level().isClientSide()) {
+            if (needsSync) {
+                needsSync = false;
+                Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity, serializeNBT()), entity, true);
+                //GravityChangerComponents.GRAVITY_COMP_KEY.sync(entity);
+            }
+        }
     }
 
     private void applyGravityChange() {
@@ -123,8 +133,7 @@ public class EntityGravity  implements EntityGravityAttachment{
         if (vehicle != null) {
             currGravityDirection = GravityChangerAPI.getGravityDirection(vehicle);
             currGravityStrength = GravityChangerAPI.getGravityStrength(vehicle);
-        }
-        else {
+        } else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
             currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
@@ -135,7 +144,7 @@ public class EntityGravity  implements EntityGravityAttachment{
 
             isFiringUpdateEvent = true;
             try {
-                MinecraftForge.EVENT_BUS.post(new GravityUpdateEvent(entity,this));
+                MinecraftForge.EVENT_BUS.post(new GravityUpdateEvent(entity, this));
                 //GRAVITY_UPDATE_EVENT.invoker().update(entity, this);
                 if (delayApplyDirEffect != null) {
                     applyGravityDirectionEffect(
@@ -146,8 +155,7 @@ public class EntityGravity  implements EntityGravityAttachment{
                 }
                 currGravityStrength *= delayApplyStrengthEffect;
                 delayApplyStrengthEffect = 1.0;
-            }
-            finally {
+            } finally {
                 isFiringUpdateEvent = false;
             }
 
@@ -167,7 +175,7 @@ public class EntityGravity  implements EntityGravityAttachment{
     }
 
     private void sendSyncPacketToOtherPlayers() {
-        Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity,serializeNBT()),entity,false );
+        Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity, serializeNBT()), entity, false);
     }
 
     @Override
@@ -185,8 +193,7 @@ public class EntityGravity  implements EntityGravityAttachment{
                     currentRotationParameters = rotationParameters;
                 }
             }
-        }
-        else {
+        } else {
             // When not firing event, store it on delayApplyEffect.
             // The effect could come from another entity ticking,
             // but there is no guarantee for ticking order between entities.
@@ -263,8 +270,7 @@ public class EntityGravity  implements EntityGravityAttachment{
             Vector3f worldSpaceVec = realWorldVelocity.toVector3f();
             worldSpaceVec.rotate(RotationUtil.getRotationBetween(oldGravity, newGravity));
             entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(new Vec3(worldSpaceVec), newGravity));
-        }
-        else {
+        } else {
             // Velocity will be conserved relative to the world, will result in more natural motion
             entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(realWorldVelocity, newGravity));
         }
@@ -276,9 +282,17 @@ public class EntityGravity  implements EntityGravityAttachment{
     ) {
         if (isFiringUpdateEvent) {
             currGravityStrength *= strengthMultiplier;
-        }
-        else {
+        } else {
             delayApplyStrengthEffect *= strengthMultiplier;
+        }
+    }
+
+    @Override
+    public void onSynced() {
+        if (entity.level().isClientSide()) {
+            // the packet should be handled on client thread
+            // start the gravity animation (doing that during ticking is too late)
+            applyGravityChange();
         }
     }
 
@@ -306,8 +320,7 @@ public class EntityGravity  implements EntityGravityAttachment{
                 AABB boundingBox = collision.bounds();
                 if (totalCollisionBox == null) {
                     totalCollisionBox = boundingBox;
-                }
-                else {
+                } else {
                     totalCollisionBox = totalCollisionBox.minmax(boundingBox);
                 }
             }
@@ -335,8 +348,7 @@ public class EntityGravity  implements EntityGravityAttachment{
             if (pushing > pushed) {
                 offset = pushing - pushed;
             }
-        }
-        else {
+        } else {
             double pushing = nearbyCollisionUnion.min(axis);
             double pushed = entityBoundingBox.max(axis);
             if (pushing < pushed) {
@@ -376,8 +388,7 @@ public class EntityGravity  implements EntityGravityAttachment{
         if (newGravity.getOpposite() == oldGravity) {
             // In the center of the hit-box
             return new Vec3(0, dimensions.height / 2, 0);
-        }
-        else {
+        } else {
             return Vec3.ZERO;
         }
     }
@@ -389,7 +400,7 @@ public class EntityGravity  implements EntityGravityAttachment{
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return GravityChangerAPIForge.ENTITY_GRAVITY_DATA.orEmpty(cap,holder);
+        return GravityChangerAPIForge.ENTITY_GRAVITY_DATA.orEmpty(cap, holder);
     }
 
     @Override
@@ -407,15 +418,13 @@ public class EntityGravity  implements EntityGravityAttachment{
     public void deserializeNBT(CompoundTag tag) {
         if (tag.contains("baseGravityDirection")) {
             baseGravityDirection = Direction.byName(tag.getString("baseGravityDirection"));
-        }
-        else {
+        } else {
             baseGravityDirection = Direction.DOWN;
         }
 
         if (tag.contains("baseGravityStrength")) {
             baseGravityStrength = tag.getDouble("baseGravityStrength");
-        }
-        else {
+        } else {
             baseGravityStrength = 1.0;
         }
 
@@ -424,15 +433,13 @@ public class EntityGravity  implements EntityGravityAttachment{
         if (!initialized || shouldAcceptServerSync()) {
             if (tag.contains("currentGravityDirection")) {
                 currGravityDirection = Direction.byName(tag.getString("currentGravityDirection"));
-            }
-            else {
+            } else {
                 currGravityDirection = Direction.DOWN;
             }
 
             if (tag.contains("currentGravityStrength")) {
                 currGravityStrength = tag.getDouble("currentGravityStrength");
-            }
-            else {
+            } else {
                 currGravityStrength = 1.0;
             }
         }
