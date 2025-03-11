@@ -1,7 +1,6 @@
 package gravitychanger.api;
 
 import gravitychanger.RotationAnimation;
-import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

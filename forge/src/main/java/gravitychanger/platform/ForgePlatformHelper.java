@@ -1,8 +1,10 @@
 package gravitychanger.platform;
 
 import gravitychanger.api.IEntityGravityData;
+import gravitychanger.api.ILevelGravityData;
 import gravitychanger.platform.services.IPlatformHelper;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 
@@ -28,6 +30,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public IEntityGravityData getGravityData(Entity entity) {
+        return null;
+    }
+
+    @Override
+    public ILevelGravityData getLevelGravityData(Level level) {
         return null;
     }
 }

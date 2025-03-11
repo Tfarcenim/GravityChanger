@@ -12,7 +12,6 @@
         "DirectionMixin",
         "DrownedEntityMixin",
         "EndermanEntityMixin",
-        "EntityAccessor",
         "EntityShapeContextMixin",
         "ExperienceBottleEntityMixin",
         "ExperienceBottleItemMixin",

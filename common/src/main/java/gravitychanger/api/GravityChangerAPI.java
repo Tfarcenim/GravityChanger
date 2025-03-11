@@ -5,6 +5,7 @@ import gravitychanger.RotationAnimation;
 import gravitychanger.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +13,9 @@ public interface GravityChangerAPI {
 
     static IEntityGravityData getGravityData(Entity entity) {
         return Services.PLATFORM.getGravityData(entity);
+    }
+    static ILevelGravityData getLevelGravityData(Level level) {
+        return Services.PLATFORM.getLevelGravityData(level);
     }
 
     static double getBaseGravityStrength(Entity entity) {
@@ -75,5 +79,13 @@ public interface GravityChangerAPI {
     @Nullable
     static RotationAnimation getRotationAnimation(Entity entity) {
         return getGravityData(entity).getRotationAnimation();
+    }
+
+    static double getDimensionGravityStrength(Level world) {
+        return getLevelGravityData(world).getDimensionGravityStrength();
+    }
+
+    static void setDimensionGravityStrength(Level world, double strength) {
+        getLevelGravityData(world).setDimensionGravityStrength(strength);
     }
 }

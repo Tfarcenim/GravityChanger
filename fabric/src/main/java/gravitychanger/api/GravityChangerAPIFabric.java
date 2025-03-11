@@ -18,18 +18,15 @@ public abstract class GravityChangerAPIFabric {
         GravityChangerComponents.DIMENSION_COMP_KEY;
 
 
-    public static double getDimensionGravityStrength(Level world) {
-        return DIMENSION_DATA_COMPONENT.get(world).getDimensionGravityStrength();
-    }
-    
-    public static void setDimensionGravityStrength(Level world, double strength) {
-        DIMENSION_DATA_COMPONENT.get(world).setDimensionGravityStrength(strength);
-    }
-
     public static GravityComponent getGravityComponent(Entity entity) {
         return GRAVITY_COMPONENT.get(entity);
     }
-    
+
+    public static DimensionGravityDataComponent getLevelGravityComponent(Level level) {
+        return DIMENSION_DATA_COMPONENT.get(level);
+    }
+
+
     /**
      * Returns the world relative velocity for the given entity
      * Using minecraft's methods to get the velocity will return entity local velocity

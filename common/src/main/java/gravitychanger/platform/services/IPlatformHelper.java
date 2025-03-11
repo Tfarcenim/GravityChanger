@@ -1,7 +1,9 @@
 package gravitychanger.platform.services;
 
+import gravitychanger.api.ILevelGravityData;
 import gravitychanger.api.IEntityGravityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
 public interface IPlatformHelper {
 
@@ -38,4 +40,7 @@ public interface IPlatformHelper {
     }
 
     IEntityGravityData getGravityData(Entity entity);
+
+    ILevelGravityData getLevelGravityData(Level level);
+
 }
