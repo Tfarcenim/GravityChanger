@@ -50,7 +50,7 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
     
     // TODO mixin fishing hook rendering in a better way
     @Inject(
-        method = "Lnet/minecraft/client/renderer/entity/FishingHookRenderer;render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        method = "render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
         at = @At("HEAD"),
         cancellable = true
     )

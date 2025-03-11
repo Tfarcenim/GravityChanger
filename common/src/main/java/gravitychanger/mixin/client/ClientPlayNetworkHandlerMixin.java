@@ -1,12 +1,8 @@
 package gravitychanger.mixin.client;
 
-import java.util.Map;
-import java.util.UUID;
-
 import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -25,13 +21,9 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
-    
-    @Shadow
-    @Final
-    private Map<UUID, PlayerInfo> playerInfoMap;
-    
+
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D",
@@ -48,7 +40,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getX()D",
@@ -65,7 +57,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/client/multiplayer/ClientPacketListener;handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
+        method = "handleGameEvent(Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;getZ()D",

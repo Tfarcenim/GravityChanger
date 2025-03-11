@@ -88,7 +88,7 @@ public abstract class CameraMixin {
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/Camera;setRotation(FF)V",
+        method = "setRotation(FF)V",
         at = @At(
             value = "INVOKE",
             target = "Lorg/joml/Quaternionf;rotationYXZ(FFF)Lorg/joml/Quaternionf;",

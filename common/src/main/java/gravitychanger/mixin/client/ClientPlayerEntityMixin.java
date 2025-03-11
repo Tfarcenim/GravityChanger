@@ -27,7 +27,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
     protected abstract boolean suffocatesAt(BlockPos pos);
     
     @Redirect(
-        method = "Lnet/minecraft/client/player/LocalPlayer;suffocatesAt(Lnet/minecraft/core/BlockPos;)Z",
+        method = "suffocatesAt(Lnet/minecraft/core/BlockPos;)Z",
         at = @At(
             value = "NEW",
             target = "(DDDDDD)Lnet/minecraft/world/phys/AABB;",
@@ -52,7 +52,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayer {
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/player/LocalPlayer;moveTowardsClosestSpace(DD)V",
+        method = "moveTowardsClosestSpace(DD)V",
         at = @At("HEAD"),
         cancellable = true
     )
