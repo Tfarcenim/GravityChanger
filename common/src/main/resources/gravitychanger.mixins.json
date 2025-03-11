@@ -8,10 +8,12 @@
     "DirectionMixin",
     "EntityAccessor",
     "EntityMixin",
+    "ItemMixin",
     "ItemUsageContextMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "fall_distance.ServerPlayerEntityMixin_FallDistance"
   ],
   "client": [
     "client.BiomeEffectSoundPlayerMixin",

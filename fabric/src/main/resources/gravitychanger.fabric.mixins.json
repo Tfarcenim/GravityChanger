@@ -23,7 +23,6 @@
         "FoxEntityMixin",
         "HorseBaseEntityMixin",
         "IllusionerEntityMixin",
-        "ItemMixin",
         "LivingEntityMixinFabric",
         "LlamaSpitEntityMixin",
         "LookAtEntityGoalMixin",
@@ -45,8 +44,7 @@
         "TntEntityMixin",
         "WitchEntityMixin",
         "WitherEntityMixin",
-        "WolfBegGoalMixin",
-        "fall_distance.ServerPlayerEntityMixin_FallDistance"
+        "WolfBegGoalMixin"
     ],
     "client": [
     ],
