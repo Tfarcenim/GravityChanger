@@ -46,6 +46,7 @@
     "WolfBegGoalMixin"
   ],
   "client": [
+    "client.GameRendererMixinFabric",
     "client.InGameOverlayRendererMixinFabric"
   ],
   "server": [

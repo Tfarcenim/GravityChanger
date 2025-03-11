@@ -8,6 +8,7 @@
     "EntityMixinForge"
   ],
   "client": [
+    "client.GameRendererMixinForge",
     "client.InGameOverlayRendererMixinForge"
   ],
   "server": [
