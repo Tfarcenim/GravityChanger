@@ -19,7 +19,7 @@ public abstract class LivingEntityMixinFabric extends Entity {
     }
 
     @Redirect(//todo, also doesn't work on forge
-            method = "Lnet/minecraft/world/entity/LivingEntity;baseTick()V",
+            method = "baseTick()V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/core/BlockPos;containing(DDD)Lnet/minecraft/core/BlockPos;",

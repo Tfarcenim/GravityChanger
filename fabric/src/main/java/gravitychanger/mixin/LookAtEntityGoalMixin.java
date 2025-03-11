@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LookAtPlayerGoal.class)
 public abstract class LookAtEntityGoalMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/goal/LookAtPlayerGoal;tick()V",
+        method = "tick()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
@@ -29,7 +29,7 @@ public abstract class LookAtEntityGoalMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/goal/LookAtPlayerGoal;tick()V",
+        method = "tick()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -46,7 +46,7 @@ public abstract class LookAtEntityGoalMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/goal/LookAtPlayerGoal;tick()V",
+        method = "tick()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",

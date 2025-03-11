@@ -15,7 +15,7 @@ public abstract class ItemEntityMixin extends Entity {
         super(type, world);
     }
     
-    @ModifyConstant(method = "Lnet/minecraft/world/entity/item/ItemEntity;tick()V", constant = @Constant(doubleValue = -0.04))
+    @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = -0.04))
     private double multiplyGravity(double constant) {
         return constant * GravityChangerAPI.getGravityStrength(this);
     }

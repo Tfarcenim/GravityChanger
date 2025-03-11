@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(PistonMovingBlockEntity.class)
 public abstract class PistonBlockEntityMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/level/block/piston/PistonMovingBlockEntity;moveEntityByPiston(Lnet/minecraft/core/Direction;Lnet/minecraft/world/entity/Entity;DLnet/minecraft/core/Direction;)V",
+        method = "moveEntityByPiston(Lnet/minecraft/core/Direction;Lnet/minecraft/world/entity/Entity;DLnet/minecraft/core/Direction;)V",
         at = @At(
             value = "NEW",
             target = "(DDD)Lnet/minecraft/world/phys/Vec3;",
