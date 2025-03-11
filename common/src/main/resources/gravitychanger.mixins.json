@@ -8,8 +8,10 @@
     "DirectionMixin",
     "EntityAccessor",
     "EntityMixin",
+    "ItemUsageContextMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "client.BiomeEffectSoundPlayerMixin",

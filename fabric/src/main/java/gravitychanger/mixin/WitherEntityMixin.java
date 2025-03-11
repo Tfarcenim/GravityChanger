@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(WitherBoss.class)
 public abstract class WitherEntityMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
+        method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
@@ -31,7 +31,7 @@ public abstract class WitherEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
+        method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getY()D",
@@ -48,7 +48,7 @@ public abstract class WitherEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
+        method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
@@ -65,7 +65,7 @@ public abstract class WitherEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;aiStep()V",
+        method = "aiStep()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
@@ -82,7 +82,7 @@ public abstract class WitherEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;aiStep()V",
+        method = "aiStep()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -99,7 +99,7 @@ public abstract class WitherEntityMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/boss/wither/WitherBoss;aiStep()V",
+        method = "aiStep()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",

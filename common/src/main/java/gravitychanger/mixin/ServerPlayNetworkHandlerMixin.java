@@ -1,15 +1,19 @@
 package gravitychanger.mixin;
 
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -217,22 +221,23 @@ public abstract class ServerPlayNetworkHandlerMixin {
     //}
     
     
-    @ModifyArgs(
+    @WrapOperation(
         method = "noBlocksAround",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
         )
     )
-    private void modify_onVehicleMove_move_0(Args args) {
+    private AABB modify_onVehicleMove_move_0(AABB instance, double x, double y, double z, Operation<AABB> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        Vec3 argVec = new Vec3(args.get(0), args.get(1), args.get(2));
+        Vec3 argVec = new Vec3(x,y,z);
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         
-        args.set(0, argVec.x);
-        args.set(1, argVec.y);
-        args.set(2, argVec.z);
-        
+        x=argVec.x;
+        y=argVec.y;
+        z=argVec.z;
+
+        return original.call(instance,x,y,z);
     }
     
 }
