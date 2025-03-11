@@ -25,7 +25,6 @@
         "IllusionerEntityMixin",
         "ItemMixin",
         "ItemUsageContextMixin",
-        "LivingEntityMixin",
         "LlamaSpitEntityMixin",
         "LookAtEntityGoalMixin",
         "LookControlMixin",
