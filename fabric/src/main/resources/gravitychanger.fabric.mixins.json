@@ -9,9 +9,9 @@
         "AbstractSkeletonEntityMixin",
         "AreaEffectCloudEntityMixin",
         "CrossbowItemMixin",
-        "DirectionMixin",
         "DrownedEntityMixin",
         "EndermanEntityMixin",
+        "EntityMixinFabric",
         "EntityShapeContextMixin",
         "ExperienceBottleEntityMixin",
         "ExperienceBottleItemMixin",
@@ -25,6 +25,7 @@
         "IllusionerEntityMixin",
         "ItemMixin",
         "ItemUsageContextMixin",
+        "LivingEntityMixinFabric",
         "LlamaSpitEntityMixin",
         "LookAtEntityGoalMixin",
         "LookControlMixin",
@@ -51,12 +52,11 @@
         "fall_distance.ServerPlayerEntityMixin_FallDistance"
     ],
     "client": [
-
     ],
     "server": [
     ],
     "injectors": {
-      "defaultRequire": 1
+        "defaultRequire": 1
     }
   }
   

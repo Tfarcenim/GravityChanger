@@ -232,6 +232,7 @@ public abstract class EntityGravityData implements IEntityGravityData {
         }
     }
 
+    @Override
     public void commonTick() {
         if (!canChangeGravity()) {
             return;
@@ -448,7 +449,7 @@ public abstract class EntityGravityData implements IEntityGravityData {
 
         boolean changed = oldGravityDirection != currGravityDirection ||
                 Math.abs(oldGravityStrength - currGravityStrength) > 0.0001;
-        if (changed) {
+        if (changed && !entity.level().isClientSide) {
             sendSyncPacketToOtherPlayers();
         }
     }

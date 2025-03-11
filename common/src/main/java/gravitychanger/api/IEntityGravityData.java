@@ -29,6 +29,8 @@ public interface IEntityGravityData {
             double priority
     );
 
+    void commonTick();
+
     void toNbt(CompoundTag tag);
     void fromNbt(CompoundTag tag);
 }

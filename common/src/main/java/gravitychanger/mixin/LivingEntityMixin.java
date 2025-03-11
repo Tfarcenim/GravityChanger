@@ -416,23 +416,6 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecWorldToPlayer(attacker.getEyePosition(), gravityDirection).z;
     }
     
-    @Redirect(
-        method = "Lnet/minecraft/world/entity/LivingEntity;baseTick()V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/core/BlockPos;containing(DDD)Lnet/minecraft/core/BlockPos;",
-            ordinal = 0
-        )
-    )
-    private BlockPos redirect_baseTick_new_0(double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
-        if (gravityDirection == Direction.DOWN) {
-            return BlockPos.containing(x, y, z);
-        }
-        
-        return BlockPos.containing(this.getEyePosition());
-    }
-    
     @WrapOperation(
         method = "spawnItemParticles",
         at = @At(

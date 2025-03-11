@@ -3,11 +3,15 @@ package gravitychanger;
 import gravitychanger.api.GravityChangerAPIForge;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.ILevelGravityData;
+import gravitychanger.command.DirectionArgumentType;
 import gravitychanger.command.GravityCommand;
+import gravitychanger.command.LocalDirectionArgumentType;
 import gravitychanger.item.GravityAnchorItem;
 import gravitychanger.network.S2CEntityGravityPacket;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -53,7 +57,26 @@ public class GravityChangerForge {
         ForgeEvents.init();
     }
 
+    public static void onTick(Entity entity) {
+        entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(IEntityGravityData::commonTick);
+    }
+
     void register(RegisterEvent event) {
+
+        event.register(Registries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("direction"),
+                () -> {
+                    SingletonArgumentInfo<DirectionArgumentType> info = SingletonArgumentInfo.contextFree(() -> DirectionArgumentType.instance);
+                    ArgumentTypeInfos.registerByClass(DirectionArgumentType.class,info);
+                    return info;
+                });
+
+        event.register(Registries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("local_direction"),
+                () -> {
+                    SingletonArgumentInfo<LocalDirectionArgumentType> info = SingletonArgumentInfo.contextFree(() -> LocalDirectionArgumentType.instance);
+                    ArgumentTypeInfos.registerByClass(LocalDirectionArgumentType.class,info);
+                    return info;
+                });
+
 
         for (Direction direction : Direction.values()) {
             event.register(

@@ -3,6 +3,8 @@ package gravitychanger;
 import gravitychanger.api.GravityChangerAPIForge;
 import gravitychanger.api.GravityUpdateEvent;
 import gravitychanger.api.IEntityGravityData;
+import gravitychanger.network.S2CEntityGravityPacket;
+import gravitychanger.platform.Services;
 import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,12 +40,16 @@ public class EntityGravityCapability extends EntityGravityData implements ICapab
 ////////////////
     @Override
     protected void syncEntity() {
-
+        CompoundTag tag = new CompoundTag();
+        toNbt(tag);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(entity,tag),entity,true);
     }
 
     @Override
     protected void sendSyncPacketToOtherPlayers() {
-
+        CompoundTag tag = new CompoundTag();
+        toNbt(tag);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(entity,tag),entity,false);
     }
 
     @Override
