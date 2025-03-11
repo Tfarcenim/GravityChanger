@@ -162,12 +162,12 @@ public class GravityChangerForge {
     void attachEntity(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         if (EntityTags.canChangeGravity(entity)) {
-            event.addCapability(GravityChanger.id("entity_data"),new EntityGravityCapability(entity));
+            event.addCapability(GravityChanger.DATA_COMPONENT_ID,new EntityGravityCapability(entity));
         }
     }
 
     void attachLevel(AttachCapabilitiesEvent<Level> event) {
         Level level = event.getObject();
-        event.addCapability(GravityChanger.id("level_data"),new LevelGravityCapability(level));
+        event.addCapability(GravityChanger.DIMENSION_DATA_ID,new LevelGravityCapability(level));
     }
 }

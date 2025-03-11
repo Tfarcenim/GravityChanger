@@ -12,7 +12,6 @@
         "DrownedEntityMixin",
         "EndermanEntityMixin",
         "EntityMixinFabric",
-        "EntityShapeContextMixin",
         "ExperienceBottleEntityMixin",
         "ExperienceBottleItemMixin",
         "ExperienceOrbEntityMixin",

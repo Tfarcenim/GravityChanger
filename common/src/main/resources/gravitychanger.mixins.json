@@ -8,6 +8,7 @@
     "DirectionMixin",
     "EntityAccessor",
     "EntityMixin",
+    "EntityShapeContextMixin",
     "ItemMixin",
     "ItemUsageContextMixin",
     "LivingEntityMixin",

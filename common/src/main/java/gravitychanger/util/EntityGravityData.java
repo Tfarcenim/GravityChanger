@@ -370,6 +370,7 @@ public abstract class EntityGravityData implements IEntityGravityData {
         return animation;
     }
 
+    @Override
     public void applyGravityChange() {
         if (currentRotationParameters == null) {
             currentRotationParameters = RotationParameters.getDefault();

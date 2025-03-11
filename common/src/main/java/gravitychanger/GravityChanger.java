@@ -19,6 +19,10 @@ public class GravityChanger {
     public static final String MOD_NAME = "GravityChanger";
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
     public static final String MOD_ID = "gravitychanger";
+    public static final ResourceLocation DATA_COMPONENT_ID =
+        id("gravity_data");
+    public static final ResourceLocation DIMENSION_DATA_ID =
+        id("dimension_data");
     public static ConfigHolder<GravityChangerConfig> configHolder;
     public static GravityChangerConfig config;
 

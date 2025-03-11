@@ -7,22 +7,15 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
 public class GravityChangerComponents implements EntityComponentInitializer, WorldComponentInitializer {
-    
-    public static final ResourceLocation DATA_COMPONENT_ID =
-        GravityChanger.id("gravity_data");
-    
+
     public static final ComponentKey<GravityComponent> GRAVITY_COMP_KEY =
-        ComponentRegistry.getOrCreate(DATA_COMPONENT_ID, GravityComponent.class);
-    
-    public static final ResourceLocation DIMENSION_DATA_ID =
-        GravityChanger.id("dimension_data");
-    
+        ComponentRegistry.getOrCreate(GravityChanger.DATA_COMPONENT_ID, GravityComponent.class);
+
     public static final ComponentKey<DimensionGravityDataComponent> DIMENSION_COMP_KEY =
-        ComponentRegistry.getOrCreate(DIMENSION_DATA_ID, DimensionGravityDataComponent.class);
+        ComponentRegistry.getOrCreate(GravityChanger.DIMENSION_DATA_ID, DimensionGravityDataComponent.class);
     
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

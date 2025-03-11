@@ -17,7 +17,10 @@ public class ClientPacketHandler {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = level.getEntity(s2CEntityGravityPacket.entityID);
         if (entity != null) {
-            entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(iEntityGravityData -> iEntityGravityData.fromNbt(s2CEntityGravityPacket.data));
+            entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(iEntityGravityData -> {
+                iEntityGravityData.fromNbt(s2CEntityGravityPacket.data);
+                iEntityGravityData.applyGravityChange();
+            });
         }
     }
 }

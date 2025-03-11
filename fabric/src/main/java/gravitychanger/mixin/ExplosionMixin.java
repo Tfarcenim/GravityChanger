@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = Explosion.class, priority = 1001)
 public abstract class ExplosionMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "explode()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
@@ -34,7 +34,7 @@ public abstract class ExplosionMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "explode()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getX()D",
@@ -51,7 +51,7 @@ public abstract class ExplosionMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "explode()V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getZ()D",
