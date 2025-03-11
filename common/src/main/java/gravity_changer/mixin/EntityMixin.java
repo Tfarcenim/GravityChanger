@@ -333,14 +333,14 @@ public abstract class EntityMixin {
     
     // transform the argument to local coordinate
     @ModifyVariable(
-        method = "collide",
-        at = @At(
-            value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/world/level/Level;getEntityCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;",
-            ordinal = 0
-        ),
-        ordinal = 0
-    )
+            method = "collide",
+            at = @At(
+                    value = "INVOKE_ASSIGN",
+                    target = "Lnet/minecraft/world/level/Level;getEntityCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;",
+                    ordinal = 0
+            ),
+            ordinal = 0,
+            argsOnly = true)
     private Vec3 modify_adjustMovementForCollisions_Vec3d_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {

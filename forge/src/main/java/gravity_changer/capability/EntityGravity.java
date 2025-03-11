@@ -452,12 +452,6 @@ public class EntityGravity implements EntityGravityAttachment {
                     prevGravityDirection, currGravityDirection, currentRotationParameters, true
             );
         }
-
-        if (entity.level().isClientSide()) {
-            // the packet should be handled on client thread
-            // start the gravity animation (doing that during ticking is too late)
-            applyGravityChange();
-        }
     }
 
 

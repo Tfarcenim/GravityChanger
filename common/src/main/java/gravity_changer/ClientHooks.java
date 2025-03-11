@@ -1,6 +1,7 @@
 package gravity_changer;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.mojang.blaze3d.vertex.PoseStack;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import net.minecraft.client.Camera;
@@ -107,5 +108,25 @@ public class ClientHooks {
                 entityY + eyeOffset.y(),
                 entityZ + eyeOffset.z()
         );
+    }
+
+    public static void inject_renderWorld(GameRenderer gameRenderer,float tickDelta, long limitTime, PoseStack matrix, CallbackInfo ci) {
+        if (gameRenderer.getMainCamera().getEntity() != null) {
+            Entity focusedEntity = gameRenderer.getMainCamera().getEntity();
+            Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
+            RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
+            if (animation == null) {
+                return;
+            }
+            long timeMs = focusedEntity.level().getGameTime() * 50 + (long) (tickDelta * 50);
+            Quaternionf currentGravityRotation = animation.getCurrentGravityRotation(gravityDirection, timeMs);
+
+            if (animation.isInAnimation()) {
+                // make sure that frustum culling updates when running rotation animation
+                Minecraft.getInstance().levelRenderer.needsUpdate();
+            }
+
+            matrix.mulPose(currentGravityRotation);
+        }
     }
 }

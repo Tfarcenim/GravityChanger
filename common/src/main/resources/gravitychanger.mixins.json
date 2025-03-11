@@ -19,8 +19,10 @@
     "EntityShapeContextMixin",
     "FishingBobberEntityMixin",
     "ItemMixin",
+    "ItemUsageContextMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "client.BiomeEffectSoundPlayerMixin",
