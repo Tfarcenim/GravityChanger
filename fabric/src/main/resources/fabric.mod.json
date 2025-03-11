@@ -1,0 +1,52 @@
+{
+    "schemaVersion": 1,
+    "id": "mod_id",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+    "license": "${license}",
+    "icon": "assets/modid/${mod_id}.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "gravitychanger.GravityChangerFabric"
+        ],
+        "client": [
+            "gravitychanger.GravityChangerModClient"
+        ],
+        "modmenu": [
+            "gravitychanger.ModMenuIntegration"
+        ],
+        "cardinal-components": [
+            "gravitychanger.GravityChangerComponents"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json",
+        "${mod_id}.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.16",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=17"
+    },
+    "custom": {
+        "cardinal-components": [
+            "gravitychanger:gravity_data",
+            "gravitychanger:dimension_data"
+        ],
+        "lithium:options": {
+            "mixin.entity.collisions": false,
+            "mixin.entity.fast_suffocation_check": false
+        }
+    }
+}
+  

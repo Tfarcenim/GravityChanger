@@ -41,7 +41,7 @@ This mod's commands are different to Gravity API's. These are the commands in th
 
 By default, all living entities, projectiles and minecarts can change gravity.
 
-For other entity types, the entity types that are in tag `gravity_changer:allowed_special` can change gravity.
+For other entity types, the entity types that are in tag `gravitychanger:allowed_special` can change gravity.
 
 ### How to use the API
 
