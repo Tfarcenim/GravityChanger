@@ -197,6 +197,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         }
     }
     
+    @Override
     public void updateGravityStatus() {
         // for the remote players and non-player entities,
         // their effect data is not synchronized to the client
@@ -218,7 +219,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
             currGravityStrength *= GravityChangerAPIFabric.getDimensionGravityStrength(entity.level());
-            currGravityStrength *= GravityChangerFabric.config.gravityStrengthMultiplier;
+            currGravityStrength *= GravityChanger.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
             currentEffectPriority = Double.MIN_VALUE;
@@ -287,6 +288,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         }
     }
     
+    @Override
     public void applyGravityStrengthEffect(
         double strengthMultiplier
     ) {
@@ -417,7 +419,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     // Adjust position to avoid suffocation in blocks when changing gravity
     private void adjustEntityPosition(Direction oldGravity, Direction newGravity, AABB entityBoundingBox) {
-        if (!GravityChangerFabric.config.adjustPositionAfterChangingGravity) {
+        if (!GravityChanger.config.adjustPositionAfterChangingGravity) {
             return;
         }
         
@@ -480,10 +482,12 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         return new Vec3(movingDirection.step()).scale(offset);
     }
     
+    @Override
     public double getBaseGravityStrength() {
         return baseGravityStrength;
     }
     
+    @Override
     public void setBaseGravityStrength(double strength) {
         if (!canChangeGravity()) {
             return;
@@ -493,10 +497,12 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         needsSync = true;
     }
     
+    @Override
     public Direction getCurrGravityDirection() {
         return currGravityDirection;
     }
     
+    @Override
     public double getCurrGravityStrength() {
         return currGravityStrength;
     }
@@ -509,10 +515,12 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         return prevGravityDirection;
     }
     
+    @Override
     public Direction getBaseGravityDirection() {
         return baseGravityDirection;
     }
     
+    @Override
     public void setBaseGravityDirection(Direction gravityDirection) {
         if (!canChangeGravity()) {
             return;
@@ -522,13 +530,14 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         needsSync = true;
     }
     
+    @Override
     public void reset() {
         baseGravityDirection = Direction.DOWN;
         baseGravityStrength = 1.0;
         needsSync = true;
     }
     
-    @Environment(EnvType.CLIENT)
+    @Override
     public RotationAnimation getRotationAnimation() {
         return animation;
     }
@@ -556,6 +565,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
      * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
+    @Override
     public void forceApplyGravityChange() {
         prevGravityDirection = currGravityDirection;
         prevGravityStrength = currGravityStrength;

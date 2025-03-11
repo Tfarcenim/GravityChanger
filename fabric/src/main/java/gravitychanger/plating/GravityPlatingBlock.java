@@ -1,7 +1,6 @@
 package gravitychanger.plating;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -67,7 +66,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     private final Map<BlockState, VoxelShape> shapesByState;
     
     public static final Block PLATING_BLOCK = new GravityPlatingBlock(
-        FabricBlockSettings.of().noOcclusion().noCollission().instabreak()
+        Properties.of().noOcclusion().noCollission().instabreak()
     );
     
     public static void init() {
@@ -129,7 +128,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         if (hasDir(state, direction) && !canPlaceOn(world, pos.relative(direction), direction.getOpposite())) {
             state = state.setValue(directionToProperty(direction), false);
-            if (getDirections(state).size() == 0) {
+            if (getDirections(state).isEmpty()) {
                 return Blocks.AIR.defaultBlockState();
             }
             else {

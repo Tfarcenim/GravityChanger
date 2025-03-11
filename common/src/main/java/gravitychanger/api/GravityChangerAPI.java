@@ -1,10 +1,12 @@
 package gravitychanger.api;
 
 import gravitychanger.EntityTags;
+import gravitychanger.RotationAnimation;
 import gravitychanger.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 
 public interface GravityChangerAPI {
 
@@ -68,5 +70,10 @@ public interface GravityChangerAPI {
         component.updateGravityStatus();
 
         component.forceApplyGravityChange();
+    }
+
+    @Nullable
+    static RotationAnimation getRotationAnimation(Entity entity) {
+        return getGravityData(entity).getRotationAnimation();
     }
 }

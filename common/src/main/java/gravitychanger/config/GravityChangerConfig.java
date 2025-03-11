@@ -1,11 +1,12 @@
 package gravitychanger.config;
 
+import gravitychanger.GravityChanger;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(
-    name = "gravitychanger"
+    name = GravityChanger.MOD_ID
 )
 public class GravityChangerConfig implements ConfigData {
 //    @ConfigEntry.Gui.Tooltip(count = 2)

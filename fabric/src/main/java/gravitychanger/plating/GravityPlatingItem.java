@@ -1,14 +1,12 @@
 package gravitychanger.plating;
 
 import gravitychanger.GravityChanger;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -23,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GravityPlatingItem extends BlockItem {
-    public static final Item PLATING_BLOCK_ITEM = new GravityPlatingItem(GravityPlatingBlock.PLATING_BLOCK, new FabricItemSettings());
+    public static final Item PLATING_BLOCK_ITEM = new GravityPlatingItem(GravityPlatingBlock.PLATING_BLOCK, new Properties());
     
     public static void init() {
         Registry.register(
@@ -68,7 +66,7 @@ public class GravityPlatingItem extends BlockItem {
         GravityPlatingBlockEntity.SideData sideData = getSideData(stack.getTag());
         if (sideData != null) {
             return Component.translatable(
-                "gravity_changer.plating.item_name",
+                "gravitychanger.plating.item_name",
                 sideData.level, GravityPlatingBlockEntity.getForceText(sideData.isAttracting)
             );
         }

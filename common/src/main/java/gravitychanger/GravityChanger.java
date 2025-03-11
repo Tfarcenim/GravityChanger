@@ -1,5 +1,7 @@
 package gravitychanger;
 
+import gravitychanger.config.GravityChangerConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ public class GravityChanger {
     public static final String MOD_NAME = "GravityChanger";
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
     public static final String MOD_ID = "gravitychanger";
+    public static ConfigHolder<GravityChangerConfig> configHolder;
+    public static GravityChangerConfig config;
 
     // The loader specific projects are able to import and use any code from the common project. This allows you to
     // write the majority of your code here and load it from your loader specific projects. This example has some

@@ -2,15 +2,13 @@ package gravitychanger.mob_effect;
 
 import gravitychanger.GravityChanger;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 
 import java.util.EnumMap;
 
-public class GravityPotion {
+public class GravityPotions {
     public static Potion STRENGTH_DECR_POTION_0 = new Potion(
         new MobEffectInstance(
             GravityStrengthMobEffect.DECREASE, 9600, 0
@@ -71,39 +69,4 @@ public class GravityPotion {
         DIR_POTIONS.get(Direction.WEST),
         DIR_POTIONS.get(Direction.EAST)
     };
-    
-    public static void init() {
-        Registry.register(
-            BuiltInRegistries.POTION,
-            GravityChanger.id("gravity_decr_0"),
-            STRENGTH_DECR_POTION_0
-        );
-        
-        Registry.register(
-            BuiltInRegistries.POTION,
-            GravityChanger.id("gravity_decr_1"),
-            STRENGTH_DECR_POTION_1
-        );
-        
-        Registry.register(
-            BuiltInRegistries.POTION,
-            GravityChanger.id("gravity_incr_0"),
-            STRENGTH_INCR_POTION_0
-        );
-        
-        Registry.register(
-            BuiltInRegistries.POTION,
-            GravityChanger.id("gravity_incr_1"),
-            STRENGTH_INCR_POTION_1
-        );
-        
-        for (Direction direction : Direction.values()) {
-            Potion potion = DIR_POTIONS.get(direction);
-            Registry.register(
-                BuiltInRegistries.POTION,
-                getPotionId(direction),
-                potion
-            );
-        }
-    }
 }

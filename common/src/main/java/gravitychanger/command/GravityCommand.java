@@ -1,8 +1,7 @@
 package gravitychanger.command;
 
-import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.IEntityGravityData;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
 import com.mojang.brigadier.CommandDispatcher;
@@ -90,7 +89,7 @@ public class GravityCommand {
             .executes(context -> {
                 Entity entity = context.getSource().getEntity();
                 
-                GravityComponent component = GravityChangerAPIFabric.getGravityComponent(entity);
+                IEntityGravityData component = GravityChangerAPI.getGravityData(entity);
                 
                 context.getSource().sendSuccess(
                     () -> Component.translatable(
@@ -151,7 +150,7 @@ public class GravityCommand {
             )
         );
         
-        builder.then(Commands.literal("set_dimension_gravity_strength")
+       /* builder.then(Commands.literal("set_dimension_gravity_strength")
             .then(Commands.argument("strength", DoubleArgumentType.doubleArg(-20, 20))
                 .executes(context -> {
                     ServerLevel world = context.getSource().getLevel();
@@ -171,7 +170,7 @@ public class GravityCommand {
                 );
                 return 0;
             })
-        );
+        );*///todo
         
         dispatcher.register(builder);
     }

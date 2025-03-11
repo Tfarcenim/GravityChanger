@@ -1,5 +1,6 @@
 package gravitychanger.api;
 
+import gravitychanger.RotationAnimation;
 import net.minecraft.core.Direction;
 
 public interface IEntityGravityData {
@@ -16,4 +17,6 @@ public interface IEntityGravityData {
 
     void updateGravityStatus();
     void forceApplyGravityChange();
+    void applyGravityStrengthEffect(double strengthMultiplier);
+    RotationAnimation getRotationAnimation();
 }

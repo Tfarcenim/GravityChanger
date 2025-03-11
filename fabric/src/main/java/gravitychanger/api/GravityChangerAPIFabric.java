@@ -5,14 +5,10 @@ import gravitychanger.DimensionGravityDataComponent;
 import gravitychanger.EntityTags;
 import gravitychanger.GravityChangerComponents;
 import gravitychanger.GravityComponent;
-import gravitychanger.RotationAnimation;
 import gravitychanger.util.RotationUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class GravityChangerAPIFabric {
     public static final ComponentKey<GravityComponent> GRAVITY_COMPONENT =
@@ -28,12 +24,6 @@ public abstract class GravityChangerAPIFabric {
     
     public static void setDimensionGravityStrength(Level world, double strength) {
         DIMENSION_DATA_COMPONENT.get(world).setDimensionGravityStrength(strength);
-    }
-
-    @Nullable
-    @Environment(EnvType.CLIENT)
-    public static RotationAnimation getRotationAnimation(Entity entity) {
-        return getGravityComponent(entity).getRotationAnimation();
     }
 
     public static GravityComponent getGravityComponent(Entity entity) {

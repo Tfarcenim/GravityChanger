@@ -1,23 +1,17 @@
 package gravitychanger;
 
 import gravitychanger.api.RotationParameters;
-import gravitychanger.command.DirectionArgumentType;
 import gravitychanger.command.GravityCommand;
-import gravitychanger.command.LocalDirectionArgumentType;
 import gravitychanger.config.GravityChangerConfig;
 import gravitychanger.init.ModCreativeTabs;
 import gravitychanger.init.ModItems;
 import gravitychanger.item.GravityAnchorItem;
-import gravitychanger.mob_effect.GravityPotion;
-import gravitychanger.mob_effect.GravityStrengthMobEffect;
+import gravitychanger.mob_effect.GravityPotions;
 import gravitychanger.plating.GravityPlatingBlock;
 import gravitychanger.plating.GravityPlatingBlockEntity;
-import gravitychanger.item.GravityChangerItemAOE;
-import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.mob_effect.GravityInvertMobEffect;
 import gravitychanger.plating.GravityPlatingItem;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -34,20 +28,17 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 
 public class GravityChangerFabric implements ModInitializer {
 
-    public static ConfigHolder<GravityChangerConfig> configHolder;
-    public static GravityChangerConfig config;
-    
     @Override
     public void onInitialize() {
         FabricEvents.init();
         
         AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
-        configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
-        configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
+        GravityChanger.configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
+        GravityChanger.configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
             RotationParameters.updateDefault();
             return InteractionResult.PASS;
         });
-        config = configHolder.getConfig();
+        GravityChanger.config = GravityChanger.configHolder.getConfig();
         
         CommandRegistrationCallback.EVENT.register(
             (dispatcher, registryAccess, environment) -> GravityCommand.register(dispatcher)
@@ -100,7 +91,7 @@ public class GravityChangerFabric implements ModInitializer {
                 Item[] potionItems = new Item[]{Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION};
                 
                 for (Item potionItem : potionItems) {
-                    for (Potion potion : GravityPotion.ALL) {
+                    for (Potion potion : GravityPotions.ALL) {
                         ItemStack stack = PotionUtils.setPotion(new ItemStack(potionItem), potion);
                         entries.accept(stack);
                     }
@@ -114,17 +105,13 @@ public class GravityChangerFabric implements ModInitializer {
                 ModCreativeTabs.GENERAL
         );
         
-        GravityDirectionMobEffect.init();
         GravityInvertMobEffect.init();
-        GravityStrengthMobEffect.init();
-        GravityPotion.init();
-        
+
         GravityPlatingBlock.init();
         GravityPlatingItem.init();
         GravityPlatingBlockEntity.init();
         
-        DirectionArgumentType.init();
-        LocalDirectionArgumentType.init();
+;
 
         GravityChanger.init();
     }

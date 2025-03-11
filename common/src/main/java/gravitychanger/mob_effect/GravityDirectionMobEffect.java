@@ -1,15 +1,10 @@
 package gravitychanger.mob_effect;
 
 import gravitychanger.GravityChanger;
-import gravitychanger.GravityComponent;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
 
 import java.util.EnumMap;
 
@@ -44,35 +39,5 @@ public class GravityDirectionMobEffect extends MobEffect {
             case WEST -> GravityChanger.id("west");
             case EAST -> GravityChanger.id("east");
         };
-    }
-    
-    public static void init() {
-        for (Direction dir : Direction.values()) {
-            Registry.register(
-                BuiltInRegistries.MOB_EFFECT, getEffectId(dir), EFFECT_MAP.get(dir)
-            );
-        }
-    
-        GravityComponent.GRAVITY_UPDATE_EVENT.register(
-            PHASE, (entity, component) -> {
-                if (!(entity instanceof LivingEntity livingEntity)) {
-                    return;
-                }
-                
-                for (GravityDirectionMobEffect dirEffect : GravityDirectionMobEffect.EFFECT_MAP.values()) {
-                    MobEffectInstance effectInstance = livingEntity.getEffect(dirEffect);
-                    if (effectInstance != null) {
-                        int amplifier = effectInstance.getAmplifier();
-                        
-                        component.applyGravityDirectionEffect(
-                            dirEffect.gravityDirection,
-                            null,
-                            amplifier + 1.0
-                        );
-                    }
-                }
-            }
-        );
-        
     }
 }

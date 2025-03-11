@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.logging.LogUtils;
 import gravitychanger.EntityTags;
-import gravitychanger.GravityChangerFabric;
+import gravitychanger.GravityChanger;
 import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.util.GCUtil;
@@ -47,16 +47,15 @@ import org.slf4j.Logger;
 public class GravityPlatingBlockEntity extends BlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     
-    public static final ResourceLocation ID = new ResourceLocation("gravity_changer:plating_block_entity");
     public static BlockEntityType<GravityPlatingBlockEntity> TYPE;
     
     private static final int MAX_LEVEL = 64;
     
     public static void init() {
-        TYPE = FabricBlockEntityTypeBuilder.create(
+        TYPE = BlockEntityType.Builder.of(
             GravityPlatingBlockEntity::new, GravityPlatingBlock.PLATING_BLOCK
-        ).build();
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ID, TYPE);
+        ).build(null);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"), TYPE);
     }
     
     public GravityPlatingBlockEntity(BlockPos pos, BlockState state) {
@@ -130,9 +129,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     if (!GravityPlatingBlock.hasDir(sideBlockState, sideDir.getOpposite())) {continue;}
                     
                     if (!(world.getBlockEntity(sidePos) instanceof GravityPlatingBlockEntity be)) {continue;}
-                    
-                    if (isAttracting != this.isAttracting) {continue;}
-                    
+
                     double sideDelta = getEffectRange();
                     switch (sideDir) {
                         case DOWN -> minY -= sideDelta;
@@ -319,7 +316,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                 }
             }
             
-            if (applies && GravityChangerFabric.config.autoJumpOnGravityPlateInnerCorner) {
+            if (applies && GravityChanger.config.autoJumpOnGravityPlateInnerCorner) {
                 tryToDoCornerAutoJump(blockState, blockPos, entity, comp);
             }
         }
