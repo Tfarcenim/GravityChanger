@@ -8,6 +8,7 @@
     "EntityMixinForge"
   ],
   "client": [
+    "client.ScreenEffectRendererMixinForge"
   ],
   "server": [
   ],

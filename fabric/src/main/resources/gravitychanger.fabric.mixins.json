@@ -43,6 +43,7 @@
     "fall_distance.ServerPlayerEntityMixin_FallDistance"
   ],
   "client": [
+    "client.ScreenEffectRendererMixinFabric"
   ],
   "server": [
   ],
