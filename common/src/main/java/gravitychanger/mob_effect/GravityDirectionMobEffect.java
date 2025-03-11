@@ -29,15 +29,4 @@ public class GravityDirectionMobEffect extends MobEffect {
             EFFECT_MAP.put(dir, effect);
         }
     }
-    
-    public static ResourceLocation getEffectId(Direction direction) {
-        return switch (direction) {
-            case DOWN -> GravityChanger.id("down");
-            case UP -> GravityChanger.id("up");
-            case NORTH -> GravityChanger.id("north");
-            case SOUTH -> GravityChanger.id("south");
-            case WEST -> GravityChanger.id("west");
-            case EAST -> GravityChanger.id("east");
-        };
-    }
 }

@@ -117,7 +117,7 @@ public class FabricEvents {
 
         for (Direction dir : Direction.values()) {
             Registry.register(
-                    BuiltInRegistries.MOB_EFFECT, GravityDirectionMobEffect.getEffectId(dir), GravityDirectionMobEffect.EFFECT_MAP.get(dir)
+                    BuiltInRegistries.MOB_EFFECT, GravityChanger.id(dir+""), GravityDirectionMobEffect.EFFECT_MAP.get(dir)
             );
         }
 

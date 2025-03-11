@@ -13,7 +13,6 @@
         "DrownedEntityMixin",
         "EndermanEntityMixin",
         "EntityAccessor",
-        "EntityMixin",
         "EntityShapeContextMixin",
         "ExperienceBottleEntityMixin",
         "ExperienceBottleItemMixin",
