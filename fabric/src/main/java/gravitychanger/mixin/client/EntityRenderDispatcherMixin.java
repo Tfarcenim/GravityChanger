@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import gravitychanger.RotationAnimation;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.util.RotationUtil;
 import gravitychanger.EntityTags;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -58,7 +59,7 @@ public abstract class EntityRenderDispatcherMixin {
             if (!this.shouldRenderShadow) return;
             
             matrices.pushPose();
-            RotationAnimation animation = GravityChangerAPI.getRotationAnimation(entity);
+            RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(entity);
             if (animation == null) {
                 return;
             }

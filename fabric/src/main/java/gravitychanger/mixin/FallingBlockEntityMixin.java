@@ -18,7 +18,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
     //@ModifyReturnValue(method = "fall", at = @At("RETURN"))
     //private static FallingBlockEntity applyGravityF(FallingBlockEntity entity, @Local BlockPos pos) {
     //    final Direction gravity = GeneralUtil.getGravityForBlockPos((ServerWorld)entity.world, pos);
-    //    GravityChangerAPI.addGravity(entity, new Gravity(gravity, 5, 2, "star_heart"));
+    //    GravityChangerAPIFabric.addGravity(entity, new Gravity(gravity, 5, 2, "star_heart"));
     //    if (gravity != Direction.DOWN) {
     //        entity.velocityDirty = true;
     //    }
@@ -28,7 +28,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
     //@Inject(method = "tick", at = @At("HEAD"))
     //private void applyGravityT(CallbackInfo ci) {
     //    GeneralUtil.setAppropriateEntityGravity(this);
-    //    if (GravityChangerAPI.getGravityDirection(this) != Direction.DOWN) {
+    //    if (GravityChangerAPIFabric.getGravityDirection(this) != Direction.DOWN) {
     //        velocityDirty = true;
     //    }
     //}
@@ -47,7 +47,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
     //@Override
     //protected Box calculateBoundingBox() {
     //    final Box original = super.calculateBoundingBox();
-    //    final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+    //    final Direction gravity = GravityChangerAPIFabric.getGravityDirection(this);
     //    if (gravity == Direction.DOWN) {
     //        return original;
     //    }

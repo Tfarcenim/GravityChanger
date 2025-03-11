@@ -3,6 +3,7 @@ package gravitychanger.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import gravitychanger.RotationAnimation;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.client.Minecraft;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;
@@ -36,7 +37,7 @@ public abstract class GameRendererMixin {
         if (this.mainCamera.getEntity() != null) {
             Entity focusedEntity = this.mainCamera.getEntity();
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
-            RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
+            RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(focusedEntity);
             if (animation == null) {
                 return;
             }

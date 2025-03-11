@@ -47,7 +47,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 //            )
 //    )
 //    private double redirect_onPlayerMove_getY_3(ServerPlayerEntity serverPlayerEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(serverPlayerEntity);
 //        if(gravityDirection == Direction.DOWN) {
 //            return serverPlayerEntity.getY();
 //        }
@@ -64,7 +64,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 //            )
 //    )
 //    private double redirect_onPlayerMove_getY_7(ServerPlayerEntity serverPlayerEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(serverPlayerEntity);
 //        if(gravityDirection == Direction.DOWN) {
 //            return serverPlayerEntity.getY();
 //        }
@@ -82,7 +82,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 //            ordinal = 0
 //    )
 //    private boolean modify_onPlayerMove_boolean_0(boolean value, PlayerMoveC2SPacket packet) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return value;
 //        }
@@ -106,7 +106,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 //            ordinal = 10
 //    )
 //    private double modify_onPlayerMove_double_12(double value) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return value;
 //        }
@@ -124,7 +124,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 //            index = 1
 //    )
 //    private Vec3d modify_onPlayerMove_move_0(Vec3d vec3d) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }
@@ -208,7 +208,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     //        ),ordinal = 0
     //)
     //private double modify_onVehicleMove_double_12(double value) {
-    //    Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+    //    Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
     //    if(gravityDirection == Direction.DOWN) {
     //        return value;
     //    }

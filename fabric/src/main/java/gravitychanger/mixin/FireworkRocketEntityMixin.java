@@ -30,10 +30,10 @@ public abstract class FireworkRocketEntityMixin extends Entity {
     public Direction gravitychanger$getAppliedGravityDirection() {
         Entity vehicle = this.getVehicle();
         if(vehicle != null) {
-            return GravityChangerAPI.getGravityDirection(vehicle);
+            return GravityChangerAPIFabric.getGravityDirection(vehicle);
         }
 
-        return GravityChangerAPI.getGravityDirection((FireworkRocketEntity)(Object)this);
+        return GravityChangerAPIFabric.getGravityDirection((FireworkRocketEntity)(Object)this);
     }*/
     @ModifyVariable(
         method = "Lnet/minecraft/world/entity/projectile/FireworkRocketEntity;tick()V",

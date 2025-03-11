@@ -87,10 +87,10 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
     public Direction gravitychanger$getAppliedGravityDirection() {
         Entity vehicle = this.getVehicle();
         if(vehicle != null) {
-            return GravityChangerAPI.getGravityDirection(vehicle);
+            return GravityChangerAPIFabric.getGravityDirection(vehicle);
         }
 
-        return GravityChangerAPI.getGravityDirection((AreaEffectCloudEntity)(Object)this);
+        return GravityChangerAPIFabric.getGravityDirection((AreaEffectCloudEntity)(Object)this);
     }*/
 //
 //

@@ -5,6 +5,8 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.IGravityData;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
 import gravitychanger.util.GCUtil;
@@ -42,7 +44,7 @@ import org.slf4j.Logger;
  * (The client player's gravity attributes are separately computed.
  * Other client entities' are synced from server.)
  */
-public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent {
+public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent, IGravityData {
     
     public interface GravityUpdateCallback {
         void update(Entity entity, GravityComponent component);
@@ -215,7 +217,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChangerAPIFabric.getDimensionGravityStrength(entity.level());
             currGravityStrength *= GravityChangerFabric.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
@@ -551,7 +553,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     /**
      * Not needed in normal cases.
-     * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
+     * Only used in {@link GravityChangerAPIFabric#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
     public void forceApplyGravityChange() {

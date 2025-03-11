@@ -3,13 +3,13 @@ package gravitychanger.mixin.client;
 import java.util.Map;
 import java.util.UUID;
 
+import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

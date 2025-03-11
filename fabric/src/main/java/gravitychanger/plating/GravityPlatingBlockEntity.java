@@ -7,7 +7,7 @@ import com.mojang.logging.LogUtils;
 import gravitychanger.EntityTags;
 import gravitychanger.GravityChangerFabric;
 import gravitychanger.GravityComponent;
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -269,7 +269,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         for (Entity entity : entities) {
             boolean applies = false;
             
-            GravityComponent comp = GravityChangerAPI.getGravityComponent(entity);
+            GravityComponent comp = GravityChangerAPIFabric.getGravityComponent(entity);
             Direction entityGravityDir = comp.getCurrGravityDirection();
             
             for (Direction plateDir : Direction.values()) {
@@ -353,7 +353,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     continue;
                 }
                 
-                Vec3 worldVelocity = GravityChangerAPI.getWorldVelocity(entity);
+                Vec3 worldVelocity = GravityChangerAPIFabric.getWorldVelocity(entity);
                 if (worldVelocity.dot(plateDirVec) < 0.01) {
                     continue;
                 }
@@ -368,9 +368,9 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                         entityGravityVec.scale(-strengthSqrt * 0.4)
                             .add(plateDirVec.scale(0.08));
                     
-                    GravityChangerAPI.setWorldVelocity(
+                    GravityChangerAPIFabric.setWorldVelocity(
                         entity,
-                        GravityChangerAPI.getWorldVelocity(entity).add(deltaWorldVelocity)
+                        GravityChangerAPIFabric.getWorldVelocity(entity).add(deltaWorldVelocity)
                     );
                     
                     if (entity.level().isClientSide()) {

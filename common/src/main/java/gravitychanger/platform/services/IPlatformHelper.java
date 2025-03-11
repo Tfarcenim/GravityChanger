@@ -1,5 +1,8 @@
 package gravitychanger.platform.services;
 
+import gravitychanger.api.IGravityData;
+import net.minecraft.world.entity.Entity;
+
 public interface IPlatformHelper {
 
     /**
@@ -33,4 +36,6 @@ public interface IPlatformHelper {
 
         return isDevelopmentEnvironment() ? "development" : "production";
     }
+
+    IGravityData getGravityData(Entity entity);
 }

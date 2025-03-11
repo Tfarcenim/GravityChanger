@@ -198,7 +198,7 @@ public abstract class LivingEntityMixin extends Entity {
 //            cancellable = true
 //    )
 //    private void inject_updateLimbs(LivingEntity entity, boolean flutter, CallbackInfo ci) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(entity);
 //        if(gravityDirection == Direction.DOWN) return;
 //
 //        ci.cancel();
@@ -526,7 +526,7 @@ public abstract class LivingEntityMixin extends Entity {
 //        index = 0
 //    )
 //    private Vec3 modify_blockedByShield_relativize_0(Vec3 vec3d) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity)(Object)this);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection((Entity)(Object)this);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }
@@ -544,7 +544,7 @@ public abstract class LivingEntityMixin extends Entity {
 //        ordinal = 2
 //    )
 //    private Vec3 modify_blockedByShield_Vec3d_2(Vec3 vec3d) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity)(Object)this);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection((Entity)(Object)this);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }

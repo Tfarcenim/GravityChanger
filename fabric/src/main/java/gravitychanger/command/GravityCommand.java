@@ -2,6 +2,7 @@ package gravitychanger.command;
 
 import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
 import com.mojang.brigadier.CommandDispatcher;
@@ -53,14 +54,14 @@ public class GravityCommand {
             .executes(context -> {
                 Entity entity = context.getSource().getEntity();
                 Validate.isTrue(entity != null);
-                GravityChangerAPI.resetGravity(entity);
+                GravityChangerAPIFabric.resetGravity(entity);
                 return 1;
             })
             .then(Commands.argument("entities", EntityArgument.entities())
                 .executes(context -> {
                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                     for (Entity entity : entities) {
-                        GravityChangerAPI.resetGravity(entity);
+                        GravityChangerAPIFabric.resetGravity(entity);
                     }
                     return entities.size();
                 })
@@ -89,7 +90,7 @@ public class GravityCommand {
             .executes(context -> {
                 Entity entity = context.getSource().getEntity();
                 
-                GravityComponent component = GravityChangerAPI.getGravityComponent(entity);
+                GravityComponent component = GravityChangerAPIFabric.getGravityComponent(entity);
                 
                 context.getSource().sendSuccess(
                     () -> Component.translatable(
@@ -155,7 +156,7 @@ public class GravityCommand {
                 .executes(context -> {
                     ServerLevel world = context.getSource().getLevel();
                     double strength = DoubleArgumentType.getDouble(context, "strength");
-                    GravityChangerAPI.setDimensionGravityStrength(world, strength);
+                    GravityChangerAPIFabric.setDimensionGravityStrength(world, strength);
                     return 0;
                 })
             )
@@ -164,7 +165,7 @@ public class GravityCommand {
         builder.then(Commands.literal("view_dimension_info")
             .executes(context -> {
                 ServerLevel world = context.getSource().getLevel();
-                double strength = GravityChangerAPI.getDimensionGravityStrength(world);
+                double strength = GravityChangerAPIFabric.getDimensionGravityStrength(world);
                 context.getSource().sendSuccess(
                     () -> Component.translatable("gravity_changer.command.dimension_info", strength), false
                 );
@@ -177,7 +178,7 @@ public class GravityCommand {
     
     private static int executeSetBaseStrength(Collection<? extends Entity> entities, double strength) {
         for (Entity entity : entities) {
-            GravityChangerAPI.setBaseGravityStrength(entity, strength);
+            GravityChangerAPIFabric.setBaseGravityStrength(entity, strength);
         }
         return entities.size();
     }

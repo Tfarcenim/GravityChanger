@@ -26,7 +26,7 @@ public abstract class ThrownEntityMixin {
 
     /*@Override
     public Direction gravitychanger$getAppliedGravityDirection() {
-        return GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this);
+        return GravityChangerAPIFabric.getGravityDirection((ThrownEntity)(Object)this);
     }*/
     
     @ModifyVariable(
