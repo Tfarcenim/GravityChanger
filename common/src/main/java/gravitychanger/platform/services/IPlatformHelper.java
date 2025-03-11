@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -45,8 +46,10 @@ public interface IPlatformHelper {
         return isDevelopmentEnvironment() ? "development" : "production";
     }
 
+    @Nullable
     IEntityGravityData getGravityData(Entity entity);
 
+    @Nullable
     ILevelGravityData getLevelGravityData(Level level);
 
 

@@ -5,8 +5,10 @@ import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.ILevelGravityData;
 import gravitychanger.command.GravityCommand;
 import gravitychanger.network.S2CEntityGravityPacket;
+import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +20,9 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(GravityChanger.MOD_ID)
 public class GravityChangerForge {
@@ -30,6 +34,7 @@ public class GravityChangerForge {
         // project.
 
         bus.addListener(this::registerCaps);
+        bus.addListener(this::setup);
         // Use Forge to bootstrap the Common mod.
         GravityChanger.init();
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntity);
@@ -37,15 +42,63 @@ public class GravityChangerForge {
         MinecraftForge.EVENT_BUS.addListener(this::login);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
         MinecraftForge.EVENT_BUS.addListener(this::tracking);
+        MinecraftForge.EVENT_BUS.addListener(this::respawn);
+        MinecraftForge.EVENT_BUS.addListener(this::dimensionChange);
+        ForgeEvents.init();
+    }
+
+    void register(RegisterEvent event) {
+
+    }
+
+    void setup(FMLCommonSetupEvent event) {
+        Services.PLATFORM.registerClientPacket(S2CEntityGravityPacket.class,S2CEntityGravityPacket::new);
+        Services.PLATFORM.registerClientPacket(S2CLevelGravityPacket.class,S2CLevelGravityPacket::new);
     }
 
     void login(PlayerEvent.PlayerLoggedInEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
+        ServerLevel level = player.serverLevel();
         //                Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity, serializeNBT()), entity, true);
+
+        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+            CompoundTag data = new CompoundTag();
+            entityGravityAttachment.toNbt(data);
+            Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
+        });
+
         player.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(entityGravityAttachment -> {
             CompoundTag data = new CompoundTag();
             entityGravityAttachment.toNbt(data);
             Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player,data),player,true);
+        });
+    }
+
+    void respawn(PlayerEvent.PlayerRespawnEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        ServerLevel level = player.serverLevel();
+
+        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+            CompoundTag data = new CompoundTag();
+            entityGravityAttachment.toNbt(data);
+            Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
+        });
+
+        player.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(entityGravityAttachment -> {
+            CompoundTag data = new CompoundTag();
+            entityGravityAttachment.toNbt(data);
+            Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player,data),player,true);
+        });
+    }
+
+
+    void dimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        ServerLevel level = player.server.getLevel(event.getTo());
+        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+            CompoundTag data = new CompoundTag();
+            entityGravityAttachment.toNbt(data);
+            Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
         });
     }
 

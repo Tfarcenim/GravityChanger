@@ -5,18 +5,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 
-public class S2CEntityGravityPacket implements S2CModPacket{
+public class S2CLevelGravityPacket implements S2CModPacket{
 
-    public final int entityID;
     public final CompoundTag data;
 
-    public S2CEntityGravityPacket(FriendlyByteBuf buf) {
-        entityID = buf.readInt();
+    public S2CLevelGravityPacket(FriendlyByteBuf buf) {
         data = buf.readNbt();
     }
 
-    public S2CEntityGravityPacket(Entity about, CompoundTag data) {
-        this.entityID = about.getId();
+    public S2CLevelGravityPacket(CompoundTag data) {
         this.data = data;
     }
 
@@ -27,7 +24,6 @@ public class S2CEntityGravityPacket implements S2CModPacket{
 
     @Override
     public void write(FriendlyByteBuf to) {
-        to.writeInt(entityID);
         to.writeNbt(data);
     }
 }

@@ -1,11 +1,13 @@
 package gravitychanger;
 
 import gravitychanger.api.GravityChangerAPIForge;
+import gravitychanger.api.GravityUpdateEvent;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,12 +26,14 @@ public class EntityGravityCapability extends EntityGravityData implements ICapab
 
     @Override
     public CompoundTag serializeNBT() {
-        return null;
+        CompoundTag tag = new CompoundTag();
+        toNbt(tag);
+        return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-
+        fromNbt(tag);
     }
 ////////////////
     @Override
@@ -44,6 +48,6 @@ public class EntityGravityCapability extends EntityGravityData implements ICapab
 
     @Override
     protected void postEvent() {
-
+        MinecraftForge.EVENT_BUS.post(new GravityUpdateEvent(entity,this));
     }
 }

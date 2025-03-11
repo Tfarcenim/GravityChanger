@@ -1,5 +1,6 @@
 package gravitychanger.platform;
 
+import gravitychanger.api.GravityChangerAPIForge;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.ILevelGravityData;
 import gravitychanger.network.C2SModPacket;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -37,13 +39,14 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    @Nullable
     public IEntityGravityData getGravityData(Entity entity) {
-        return null;
+        return entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).orElse(null);
     }
 
     @Override
     public ILevelGravityData getLevelGravityData(Level level) {
-        return null;
+        return level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).orElse(null);
     }
 
     int i;
