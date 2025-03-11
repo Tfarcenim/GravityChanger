@@ -58,58 +58,15 @@ public class GravityComponent extends EntityGravityData implements Component, Au
     public GravityComponent(Entity entity) {
         super(entity);
     }
-    
+
     @Override
-    public void readFromNbt(CompoundTag tag) {
-        if (tag.contains("baseGravityDirection")) {
-            baseGravityDirection = Direction.byName(tag.getString("baseGravityDirection"));
-        }
-        else {
-            baseGravityDirection = Direction.DOWN;
-        }
-        
-        if (tag.contains("baseGravityStrength")) {
-            baseGravityStrength = tag.getDouble("baseGravityStrength");
-        }
-        else {
-            baseGravityStrength = 1.0;
-        }
-        
-        // the current gravity is serialized to avoid unnecessary gravity rotation when entering world
-        // do not deserialize it when for client player when not initializing
-        if (!initialized || shouldAcceptServerSync()) {
-            if (tag.contains("currentGravityDirection")) {
-                currGravityDirection = Direction.byName(tag.getString("currentGravityDirection"));
-            }
-            else {
-                currGravityDirection = Direction.DOWN;
-            }
-            
-            if (tag.contains("currentGravityStrength")) {
-                currGravityStrength = tag.getDouble("currentGravityStrength");
-            }
-            else {
-                currGravityStrength = 1.0;
-            }
-        }
-        
-        if (!initialized) {
-            prevGravityDirection = currGravityDirection;
-            prevGravityStrength = currGravityStrength;
-            initialized = true;
-            applyGravityDirectionChange(
-                prevGravityDirection, currGravityDirection, currentRotationParameters, true
-            );
-        }
+    public void writeToNbt(CompoundTag tag) {
+        toNbt(tag);
     }
-    
+
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
-        tag.putString("baseGravityDirection", baseGravityDirection.getName());
-        tag.putString("currentGravityDirection", currGravityDirection.getName());
-        
-        tag.putDouble("baseGravityStrength", baseGravityStrength);
-        tag.putDouble("currentGravityStrength", currGravityStrength);
+    public void readFromNbt(CompoundTag nbt) {
+        fromNbt(nbt);
     }
     
     @Override

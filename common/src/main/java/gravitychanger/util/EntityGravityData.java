@@ -9,6 +9,7 @@ import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -450,6 +451,59 @@ public abstract class EntityGravityData implements IEntityGravityData {
         if (changed) {
             sendSyncPacketToOtherPlayers();
         }
+    }
+
+    @Override
+    public void fromNbt(CompoundTag tag) {
+        if (tag.contains("baseGravityDirection")) {
+            baseGravityDirection = Direction.byName(tag.getString("baseGravityDirection"));
+        }
+        else {
+            baseGravityDirection = Direction.DOWN;
+        }
+
+        if (tag.contains("baseGravityStrength")) {
+            baseGravityStrength = tag.getDouble("baseGravityStrength");
+        }
+        else {
+            baseGravityStrength = 1.0;
+        }
+
+        // the current gravity is serialized to avoid unnecessary gravity rotation when entering world
+        // do not deserialize it when for client player when not initializing
+        if (!initialized || shouldAcceptServerSync()) {
+            if (tag.contains("currentGravityDirection")) {
+                currGravityDirection = Direction.byName(tag.getString("currentGravityDirection"));
+            }
+            else {
+                currGravityDirection = Direction.DOWN;
+            }
+
+            if (tag.contains("currentGravityStrength")) {
+                currGravityStrength = tag.getDouble("currentGravityStrength");
+            }
+            else {
+                currGravityStrength = 1.0;
+            }
+        }
+
+        if (!initialized) {
+            prevGravityDirection = currGravityDirection;
+            prevGravityStrength = currGravityStrength;
+            initialized = true;
+            applyGravityDirectionChange(
+                    prevGravityDirection, currGravityDirection, currentRotationParameters, true
+            );
+        }
+    }
+
+    @Override
+    public void toNbt(@NotNull CompoundTag tag) {
+        tag.putString("baseGravityDirection", baseGravityDirection.getName());
+        tag.putString("currentGravityDirection", currGravityDirection.getName());
+
+        tag.putDouble("baseGravityStrength", baseGravityStrength);
+        tag.putDouble("currentGravityStrength", currGravityStrength);
     }
 
     protected boolean shouldAcceptServerSync() {

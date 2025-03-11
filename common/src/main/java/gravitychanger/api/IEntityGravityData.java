@@ -2,6 +2,7 @@ package gravitychanger.api;
 
 import gravitychanger.RotationAnimation;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,4 +28,7 @@ public interface IEntityGravityData {
             @Nullable RotationParameters rotationParameters,
             double priority
     );
+
+    void toNbt(CompoundTag tag);
+    void fromNbt(CompoundTag tag);
 }

@@ -7,10 +7,10 @@ import com.mojang.logging.LogUtils;
 import gravitychanger.EntityTags;
 import gravitychanger.GravityChanger;
 import gravitychanger.GravityComponent;
+import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -21,7 +21,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -350,7 +349,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     continue;
                 }
                 
-                Vec3 worldVelocity = GravityChangerAPIFabric.getWorldVelocity(entity);
+                Vec3 worldVelocity = GravityChangerAPI.getWorldVelocity(entity);
                 if (worldVelocity.dot(plateDirVec) < 0.01) {
                     continue;
                 }
@@ -365,9 +364,9 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                         entityGravityVec.scale(-strengthSqrt * 0.4)
                             .add(plateDirVec.scale(0.08));
                     
-                    GravityChangerAPIFabric.setWorldVelocity(
+                    GravityChangerAPI.setWorldVelocity(
                         entity,
-                        GravityChangerAPIFabric.getWorldVelocity(entity).add(deltaWorldVelocity)
+                        GravityChangerAPI.getWorldVelocity(entity).add(deltaWorldVelocity)
                     );
                     
                     if (entity.level().isClientSide()) {
