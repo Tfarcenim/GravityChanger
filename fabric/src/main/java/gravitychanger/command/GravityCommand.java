@@ -54,14 +54,14 @@ public class GravityCommand {
             .executes(context -> {
                 Entity entity = context.getSource().getEntity();
                 Validate.isTrue(entity != null);
-                GravityChangerAPIFabric.resetGravity(entity);
+                GravityChangerAPI.resetGravity(entity);
                 return 1;
             })
             .then(Commands.argument("entities", EntityArgument.entities())
                 .executes(context -> {
                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                     for (Entity entity : entities) {
-                        GravityChangerAPIFabric.resetGravity(entity);
+                        GravityChangerAPI.resetGravity(entity);
                     }
                     return entities.size();
                 })
@@ -178,7 +178,7 @@ public class GravityCommand {
     
     private static int executeSetBaseStrength(Collection<? extends Entity> entities, double strength) {
         for (Entity entity : entities) {
-            GravityChangerAPIFabric.setBaseGravityStrength(entity, strength);
+            GravityChangerAPI.setBaseGravityStrength(entity, strength);
         }
         return entities.size();
     }

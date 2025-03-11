@@ -1,16 +1,20 @@
 package gravitychanger.api;
 
+import gravitychanger.EntityTags;
 import gravitychanger.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import org.apache.commons.lang3.Validate;
 
 public interface GravityChangerAPI {
 
-    static IGravityData getGravityData(Entity entity) {
+    static IEntityGravityData getGravityData(Entity entity) {
         return Services.PLATFORM.getGravityData(entity);
     }
 
-
+    static double getBaseGravityStrength(Entity entity) {
+        return getGravityData(entity).getBaseGravityStrength();
+    }
     /**
      * Returns the applied gravity direction for the given entity
      */
@@ -26,7 +30,43 @@ public interface GravityChangerAPI {
     static void setBaseGravityDirection(
             Entity entity, Direction gravityDirection
     ) {
-        IGravityData component = getGravityData(entity);
+        IEntityGravityData component = getGravityData(entity);
         component.setBaseGravityDirection(gravityDirection);
+    }
+
+    /**
+     * Returns the main gravity direction for the given entity
+     * This may not be the applied gravity direction for the player, see GravityChangerAPIFabric#getAppliedGravityDirection
+     */
+    static Direction getBaseGravityDirection(Entity entity) {
+        return getGravityData(entity).getBaseGravityDirection();
+    }
+
+    static void setBaseGravityStrength(Entity entity, double strength) {
+        IEntityGravityData component = getGravityData(entity);
+        component.setBaseGravityStrength(strength);
+    }
+
+    static void resetGravity(Entity entity) {
+        if (!EntityTags.canChangeGravity(entity)) {return;}
+
+        getGravityData(entity).reset();
+    }
+
+    /**
+     * Instantly set gravity direction on client side without performing animation.
+     * Not needed in normal cases.
+     * (Used by ImmPtl)
+     */
+    static void instantlySetClientBaseGravityDirection(Entity entity, Direction direction) {
+        Validate.isTrue(entity.level().isClientSide(), "should only be used on client");
+
+        IEntityGravityData component = getGravityData(entity);
+
+        component.setBaseGravityDirection(direction);
+
+        component.updateGravityStatus();
+
+        component.forceApplyGravityChange();
     }
 }

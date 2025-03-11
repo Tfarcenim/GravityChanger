@@ -1,6 +1,6 @@
 package gravitychanger.platform;
 
-import gravitychanger.api.IGravityData;
+import gravitychanger.api.IEntityGravityData;
 import gravitychanger.platform.services.IPlatformHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.fml.ModList;
@@ -27,7 +27,7 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public IGravityData getGravityData(Entity entity) {
+    public IEntityGravityData getGravityData(Entity entity) {
         return null;
     }
 }
