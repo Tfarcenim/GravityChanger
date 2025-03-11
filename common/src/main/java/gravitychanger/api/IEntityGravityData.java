@@ -1,7 +1,10 @@
 package gravitychanger.api;
 
 import gravitychanger.RotationAnimation;
+import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IEntityGravityData {
     double getBaseGravityStrength();
@@ -19,4 +22,10 @@ public interface IEntityGravityData {
     void forceApplyGravityChange();
     void applyGravityStrengthEffect(double strengthMultiplier);
     RotationAnimation getRotationAnimation();
+
+    void applyGravityDirectionEffect(
+            @NotNull Direction direction,
+            @Nullable RotationParameters rotationParameters,
+            double priority
+    );
 }

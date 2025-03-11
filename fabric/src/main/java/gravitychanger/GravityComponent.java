@@ -1,18 +1,15 @@
 package gravitychanger;
 
-import com.mojang.logging.LogUtils;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.api.GravityChangerAPIFabric;
-import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
+import gravitychanger.util.EntityGravityData;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.core.Direction;
@@ -31,7 +28,6 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import org.slf4j.Logger;
 
 /**
  * The gravity is determined by the follows:
@@ -44,14 +40,12 @@ import org.slf4j.Logger;
  * (The client player's gravity attributes are separately computed.
  * Other client entities' are synced from server.)
  */
-public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent, IEntityGravityData {
+public class GravityComponent extends EntityGravityData implements Component, AutoSyncedComponent, CommonTickingComponent {
     
     public interface GravityUpdateCallback {
         void update(Entity entity, GravityComponent component);
     }
-    
-    private static final Logger LOGGER = LogUtils.getLogger();
-    
+
     /**
      * Fired every tick for every entity, both on client and server.
      * <p>
@@ -75,51 +69,10 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
                 }
             }
         );
-    
-    boolean initialized = false;
-    
-    // not synchronized
-    private Direction prevGravityDirection = Direction.DOWN;
-    private double prevGravityStrength = 1.0;
-    
-    // the base gravity direction
-    Direction baseGravityDirection = Direction.DOWN;
-    
-    // the base gravity strength
-    double baseGravityStrength = 1.0;
-    
-    @Nullable RotationParameters currentRotationParameters = RotationParameters.getDefault();
-    
-    // Only used on client, not synchronized.
-    @Nullable
-    public final RotationAnimation animation;
-    
-    public final Entity entity;
-    
-    private Direction currGravityDirection = Direction.DOWN;
-    private double currGravityStrength = 1.0;
-    private double currentEffectPriority = Double.MIN_VALUE;
-    
-    private boolean isFiringUpdateEvent = false;
-    
-    private @Nullable GravityComponent.GravityDirEffect delayApplyDirEffect = null;
-    private double delayApplyStrengthEffect = 1.0;
-    
-    // if it equals entity.tickCount,
-    // it means that the gravity update event has already fired in this tick
-    private long lastUpdateTickCount = 0;
-    
-    // only used on server side
-    private boolean needsSync = false;
-    
+
+
     public GravityComponent(Entity entity) {
-        this.entity = entity;
-        if (entity.level().isClientSide()) {
-            animation = new RotationAnimation();
-        }
-        else {
-            animation = null;
-        }
+        super(entity);
     }
     
     @Override
@@ -260,6 +213,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         GravityChangerComponents.GRAVITY_COMP_KEY.sync(entity, this, p -> p != entity);
     }
     
+    @Override
     public void applyGravityDirectionEffect(
         @NotNull Direction direction,
         @Nullable RotationParameters rotationParameters,
@@ -281,7 +235,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             // but there is no guarantee for ticking order between entities.
             // (the ticking order does not change according to EntityTickList)
             if (delayApplyDirEffect == null || priority > delayApplyDirEffect.priority()) {
-                delayApplyDirEffect = new GravityDirEffect(
+                delayApplyDirEffect = new EntityGravityData.GravityDirEffect(
                     direction, rotationParameters, priority
                 );
             }
@@ -570,12 +524,5 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         prevGravityDirection = currGravityDirection;
         prevGravityStrength = currGravityStrength;
     }
-    
-    private record GravityDirEffect(
-        @NotNull Direction direction,
-        @Nullable RotationParameters rotationParameters,
-        double priority
-    ) {
-    
-    }
+
 }
