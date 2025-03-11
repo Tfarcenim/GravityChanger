@@ -17,9 +17,4 @@ public class GravityInvertMobEffect extends MobEffect {
         super(MobEffectCategory.NEUTRAL, COLOR);
     }
     
-    public static void init() {
-
-    }
-    
-    
 }

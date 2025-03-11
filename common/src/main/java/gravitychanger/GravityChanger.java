@@ -1,8 +1,12 @@
 package gravitychanger;
 
+import gravitychanger.api.RotationParameters;
 import gravitychanger.config.GravityChangerConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +26,13 @@ public class GravityChanger {
     // write the majority of your code here and load it from your loader specific projects. This example has some
     // code that gets invoked by the entry point of the loader specific projects.
     public static void init() {
+        AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
+        GravityChanger.configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
+        GravityChanger.configHolder.registerSaveListener((configHolder, gravityChangerConfig) -> {
+            RotationParameters.updateDefault();
+            return InteractionResult.PASS;
+        });
+        GravityChanger.config = GravityChanger.configHolder.getConfig();
     }
 
     public static ResourceLocation id(String path) {

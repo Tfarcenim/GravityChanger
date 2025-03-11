@@ -52,7 +52,7 @@ public class FabricEvents {
 
         for (Direction direction : Direction.values()) {
             Registry.register(
-                BuiltInRegistries.ITEM, GravityAnchorItem.getItemId(direction), GravityAnchorItem.ITEM_MAP.get(direction)
+                BuiltInRegistries.ITEM,  GravityChanger.id( "gravity_anchor_" + direction.getName()), GravityAnchorItem.ITEM_MAP.get(direction)
             );
         }
 

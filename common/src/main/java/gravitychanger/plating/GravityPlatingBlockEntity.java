@@ -6,15 +6,12 @@ import java.util.List;
 import com.mojang.logging.LogUtils;
 import gravitychanger.EntityTags;
 import gravitychanger.GravityChanger;
-import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.IEntityGravityData;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,16 +43,11 @@ import org.slf4j.Logger;
 public class GravityPlatingBlockEntity extends BlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     
-    public static BlockEntityType<GravityPlatingBlockEntity> TYPE;
+    public static BlockEntityType<GravityPlatingBlockEntity> TYPE= BlockEntityType.Builder.of(
+            GravityPlatingBlockEntity::new, GravityPlatingBlock.PLATING_BLOCK
+    ).build(null);
     
     private static final int MAX_LEVEL = 64;
-    
-    public static void init() {
-        TYPE = BlockEntityType.Builder.of(
-            GravityPlatingBlockEntity::new, GravityPlatingBlock.PLATING_BLOCK
-        ).build(null);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"), TYPE);
-    }
     
     public GravityPlatingBlockEntity(BlockPos pos, BlockState state) {
         super(TYPE, pos, state);
@@ -265,7 +257,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         for (Entity entity : entities) {
             boolean applies = false;
             
-            GravityComponent comp = GravityChangerAPIFabric.getGravityComponent(entity);
+            IEntityGravityData comp = GravityChangerAPI.getGravityData(entity);
             Direction entityGravityDir = comp.getCurrGravityDirection();
             
             for (Direction plateDir : Direction.values()) {
@@ -323,8 +315,8 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     
     // when approaching an inward corner, do auto-jump to make it smoothly go forward
     private static void tryToDoCornerAutoJump(
-        BlockState blockState, BlockPos blockPos,
-        Entity entity, GravityComponent comp
+            BlockState blockState, BlockPos blockPos,
+            Entity entity, IEntityGravityData comp
     ) {
         if (!entity.onGround()) {
             return;

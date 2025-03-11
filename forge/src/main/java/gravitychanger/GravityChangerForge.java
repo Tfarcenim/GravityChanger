@@ -4,9 +4,14 @@ import gravitychanger.api.GravityChangerAPIForge;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.ILevelGravityData;
 import gravitychanger.command.GravityCommand;
+import gravitychanger.item.GravityAnchorItem;
 import gravitychanger.network.S2CEntityGravityPacket;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,6 +40,7 @@ public class GravityChangerForge {
 
         bus.addListener(this::registerCaps);
         bus.addListener(this::setup);
+        bus.addListener(this::register);
         // Use Forge to bootstrap the Common mod.
         GravityChanger.init();
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntity);
@@ -49,6 +55,11 @@ public class GravityChangerForge {
 
     void register(RegisterEvent event) {
 
+        for (Direction direction : Direction.values()) {
+            event.register(
+                    Registries.ITEM,  GravityChanger.id( "gravity_anchor_" + direction.getName()),() -> GravityAnchorItem.ITEM_MAP.get(direction)
+            );
+        }
     }
 
     void setup(FMLCommonSetupEvent event) {

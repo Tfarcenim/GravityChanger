@@ -24,10 +24,6 @@ public class GravityAnchorItem extends Item {
             ITEM_MAP.put(direction, new GravityAnchorItem(direction, new Properties()));
         }
     }
-
-    public static ResourceLocation getItemId(Direction direction) {
-        return GravityChanger.id( "gravity_anchor_" + direction.getName());
-    }
     
     public GravityAnchorItem(Direction _direction, Properties settings) {
         super(settings);
