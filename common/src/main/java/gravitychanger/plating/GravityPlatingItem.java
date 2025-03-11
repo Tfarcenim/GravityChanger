@@ -90,8 +90,8 @@ public class GravityPlatingItem extends BlockItem {
     
     @Override
     public void appendHoverText(ItemStack itemStack, Level world, List<Component> tooltip, TooltipFlag tooltipContext) {
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.0").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gravity_changer.plating.tooltip.2").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.plating.tooltip.0").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.plating.tooltip.1").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gravitychanger.plating.tooltip.2").withStyle(ChatFormatting.GRAY));
     }
 }

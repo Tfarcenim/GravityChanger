@@ -53,11 +53,11 @@
   "item.minecraft.lingering_potion.effect.gravity_west_0": "Lingering Potion of West Gravity",
   "item.minecraft.lingering_potion.effect.gravity_east_0": "Lingering Potion of East Gravity",
 
-  "gravity_changer.gravity_changer.tooltip.0": "Changes base gravity",
-  "gravity_changer.gravity_changer.tooltip.1": "Effects can override base gravity",
+  "gravitychanger.gravity_changer.tooltip.0": "Changes base gravity",
+  "gravitychanger.gravity_changer.tooltip.1": "Effects can override base gravity",
 
-  "gravity_changer.gravity_anchor.tooltip.0": "Changes gravity when held",
-  "gravity_changer.gravity_anchor.tooltip.1": "Overrides base gravity and gravity effects",
+  "gravitychanger.gravity_anchor.tooltip.0": "Changes gravity when held",
+  "gravitychanger.gravity_anchor.tooltip.1": "Overrides base gravity and gravity effects",
 
   "effect.gravitychanger.strength_increase": "Gravity Increase",
   "effect.gravitychanger.strength_decrease": "Gravity Decrease",

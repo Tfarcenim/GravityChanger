@@ -33,7 +33,7 @@ public class GravityChangerFabric implements ModInitializer {
         );
 
         Registry.register(
-                BuiltInRegistries.ITEM, GravityChanger.id("plating"),
+                BuiltInRegistries.ITEM, GravityChanger.id("gravity_plating"),
                 GravityPlatingItem.PLATING_BLOCK_ITEM
         );
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"), GravityPlatingBlockEntity.TYPE);

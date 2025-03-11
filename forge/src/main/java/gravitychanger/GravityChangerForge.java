@@ -6,10 +6,18 @@ import gravitychanger.api.ILevelGravityData;
 import gravitychanger.command.DirectionArgumentType;
 import gravitychanger.command.GravityCommand;
 import gravitychanger.command.LocalDirectionArgumentType;
+import gravitychanger.init.ModCreativeTabs;
+import gravitychanger.init.ModItems;
 import gravitychanger.item.GravityAnchorItem;
+import gravitychanger.mob_effect.GravityDirectionMobEffect;
+import gravitychanger.mob_effect.GravityInvertMobEffect;
+import gravitychanger.mob_effect.GravityPotions;
 import gravitychanger.network.S2CEntityGravityPacket;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
+import gravitychanger.plating.GravityPlatingBlock;
+import gravitychanger.plating.GravityPlatingBlockEntity;
+import gravitychanger.plating.GravityPlatingItem;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Direction;
@@ -21,6 +29,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -32,6 +41,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
+
+import static gravitychanger.mob_effect.GravityStrengthMobEffect.*;
 
 @Mod(GravityChanger.MOD_ID)
 public class GravityChangerForge {
@@ -77,12 +88,107 @@ public class GravityChangerForge {
                     return info;
                 });
 
+        if (event.getRegistryKey() == Registries.ITEM) {
 
-        for (Direction direction : Direction.values()) {
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_down_aoe"),() -> ModItems.GRAVITY_CHANGER_DOWN_AOE);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_up_aoe"),() ->  ModItems.GRAVITY_CHANGER_UP_AOE);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_north_aoe"),() ->  ModItems.GRAVITY_CHANGER_NORTH_AOE);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_south_aoe"),() ->  ModItems.GRAVITY_CHANGER_SOUTH_AOE);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_west_aoe"),() ->  ModItems.GRAVITY_CHANGER_WEST_AOE);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_east_aoe"),() ->  ModItems.GRAVITY_CHANGER_EAST_AOE);
+
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_down"),() ->  ModItems.GRAVITY_CHANGER_DOWN);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_up"),() ->  ModItems.GRAVITY_CHANGER_UP);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_north"),() ->  ModItems.GRAVITY_CHANGER_NORTH);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_south"),() ->  ModItems.GRAVITY_CHANGER_SOUTH);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_west"),() ->  ModItems.GRAVITY_CHANGER_WEST);
+            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_east"),() ->  ModItems.GRAVITY_CHANGER_EAST);
+
+            for (Direction direction : Direction.values()) {
+                event.register(
+                        Registries.ITEM, GravityChanger.id("gravity_anchor_" + direction.getName()), () -> GravityAnchorItem.ITEM_MAP.get(direction)
+                );
+            }
+        } else if (event.getRegistryKey() == Registries.MOB_EFFECT) {
             event.register(
-                    Registries.ITEM,  GravityChanger.id( "gravity_anchor_" + direction.getName()),() -> GravityAnchorItem.ITEM_MAP.get(direction)
+                    Registries.MOB_EFFECT,
+                    GravityChanger.id("strength_increase"),
+                    () -> INCREASE
             );
+
+            event.register(
+                    Registries.MOB_EFFECT,
+                    GravityChanger.id("strength_decrease"),
+                    () -> DECREASE
+            );
+
+            event.register(
+                    Registries.MOB_EFFECT,
+                    GravityChanger.id("strength_reverse"),
+                    () -> REVERSE
+            );
+
+            event.register(
+                    Registries.MOB_EFFECT,GravityChanger.id("invert"), () -> GravityInvertMobEffect.INSTANCE
+            );
+
+            for (Direction dir : Direction.values()) {
+                event.register(
+                        Registries.MOB_EFFECT, GravityChanger.id(dir+""),() ->  GravityDirectionMobEffect.EFFECT_MAP.get(dir)
+                );
+            }
+
+        } else if (event.getRegistryKey() == Registries.POTION) {
+            event.register(
+                    Registries.POTION,
+                    GravityChanger.id("gravity_decr_0"),
+                    () -> GravityPotions.STRENGTH_DECR_POTION_0
+            );
+
+            event.register(
+                    Registries.POTION,
+                    GravityChanger.id("gravity_decr_1"),
+                    ()-> GravityPotions.STRENGTH_DECR_POTION_1
+            );
+
+            event.register(
+                    Registries.POTION,
+                    GravityChanger.id("gravity_incr_0"),
+                    () -> GravityPotions.STRENGTH_INCR_POTION_0
+            );
+
+            event.register(
+                    Registries.POTION,
+                    GravityChanger.id("gravity_incr_1"),
+                    () -> GravityPotions.STRENGTH_INCR_POTION_1
+            );
+
+            for (Direction direction : Direction.values()) {
+                Potion potion = GravityPotions.DIR_POTIONS.get(direction);
+                event.register(
+                        Registries.POTION,
+                        GravityPotions.getPotionId(direction),
+                        () -> potion
+                );
+            }
         }
+
+
+        event.register(
+                Registries.CREATIVE_MODE_TAB, GravityChanger.id("general"),
+                () -> ModCreativeTabs.GENERAL
+        );
+
+        event.register(
+                Registries.BLOCK, GravityChanger.id("gravity_plating"), () -> GravityPlatingBlock.PLATING_BLOCK
+        );
+
+        event.register(
+                Registries.ITEM, GravityChanger.id("gravity_plating"),
+                () -> GravityPlatingItem.PLATING_BLOCK_ITEM
+        );
+        event.register(Registries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"),() -> GravityPlatingBlockEntity.TYPE);
+
     }
 
     void setup(FMLCommonSetupEvent event) {
