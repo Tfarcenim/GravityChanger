@@ -12,6 +12,9 @@
     "ItemMixin",
     "ItemUsageContextMixin",
     "LivingEntityMixin",
+    "LookAtEntityGoalMixin",
+    "LookControlMixin",
+    "MobEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "fall_distance.ServerPlayerEntityMixin_FallDistance"

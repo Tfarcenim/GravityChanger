@@ -543,10 +543,7 @@ public abstract class LivingEntityMixin extends Entity {
 //        return RotationUtil.vecWorldToPlayer(vec3d, gravityDirection);
 //    }
     
-    @ModifyConstant(method = "travel(Lnet/minecraft/world/phys/Vec3;)V", constant = @Constant(doubleValue = 0.08))
-    private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
-    }
+
     
     @ModifyVariable(method = "calculateFallDamage(FF)I", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float diminishFallDamage(float value) {

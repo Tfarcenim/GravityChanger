@@ -27,12 +27,14 @@ public interface GravityChangerAPI {
      * Returns the applied gravity direction for the given entity
      */
     static Direction getGravityDirection(Entity entity) {
-        return getGravityData(entity).getCurrGravityDirection();
+        IEntityGravityData data = getGravityData(entity);
+        return data == null ? Direction.DOWN : data.getCurrGravityDirection();
         //return getGravityComponent(entity).getCurrGravityDirection();
     }
 
     static double getGravityStrength(Entity entity) {
-        return getGravityData(entity).getCurrGravityStrength();
+        IEntityGravityData data = getGravityData(entity);
+        return data == null ? 1 : data.getCurrGravityStrength();
     }
 
     static void setBaseGravityDirection(
@@ -80,7 +82,8 @@ public interface GravityChangerAPI {
 
     @Nullable
     static RotationAnimation getRotationAnimation(Entity entity) {
-        return getGravityData(entity).getRotationAnimation();
+        IEntityGravityData data = getGravityData(entity);
+        return data == null ? null :data.getRotationAnimation();
     }
 
     static double getDimensionGravityStrength(Level world) {

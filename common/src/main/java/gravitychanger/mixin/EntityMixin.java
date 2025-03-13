@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import gravitychanger.GravityChanger;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.IEntityGravityData;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,9 +39,6 @@ import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-
-    @Unique
-    boolean constructing = true;
 
 
     @Shadow
@@ -143,11 +141,12 @@ public abstract class EntityMixin {
         // cardinal components initializes the component container in the end of constructor
         // but bounding box calculation can happen inside constructor
         // see dev.onyxstudios.cca.mixin.entity.common.MixinEntity
-        if (constructing) {
-            return;
-        }
+
+        IEntityGravityData data = GravityChangerAPI.getGravityData((Entity)(Object)this);
+
+        if (data == null)return;
         
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        Direction gravityDirection = data.getCurrGravityDirection();
         if (gravityDirection == Direction.DOWN) return;
         
         AABB box = cir.getReturnValue().move(this.position.reverse());
@@ -157,11 +156,6 @@ public abstract class EntityMixin {
         cir.setReturnValue(RotationUtil.boxPlayerToWorld(box, gravityDirection).move(this.position));
     }
 
-    @Inject(method = "<init>",at = @At("RETURN"))
-    private void fin(CallbackInfo ci) {
-        constructing = false;
-    }
-    
     @Inject(
         method = "getBoundingBoxForPose(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/phys/AABB;",
         at = @At("RETURN"),
