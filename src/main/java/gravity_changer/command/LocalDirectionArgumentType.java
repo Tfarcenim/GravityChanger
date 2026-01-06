@@ -8,11 +8,10 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +23,7 @@ public class LocalDirectionArgumentType implements ArgumentType<LocalDirection> 
     
     public static final DynamicCommandExceptionType exceptionType =
         new DynamicCommandExceptionType(object ->
-            Component.literal("Invalid Local Direction " + object)
+            Text.literal("Invalid Local Direction " + object)
         );
     
     public static LocalDirection getDirection(CommandContext<?> context, String str) {
@@ -47,7 +46,7 @@ public class LocalDirectionArgumentType implements ArgumentType<LocalDirection> 
     
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(
+        return CommandSource.suggestMatching(
             Arrays.stream(LocalDirection.values())
                 .map(d -> d.name().toLowerCase())
                 .collect(Collectors.toList()),
@@ -63,9 +62,9 @@ public class LocalDirectionArgumentType implements ArgumentType<LocalDirection> 
     
     public static void init() {
         ArgumentTypeRegistry.registerArgumentType(
-            new ResourceLocation("gravity_changer:local_direction"),
+            Identifier.of("gravity_changer:local_direction"),
             LocalDirectionArgumentType.class,
-            SingletonArgumentInfo.contextFree(() -> LocalDirectionArgumentType.instance)
+            ConstantArgumentSerializer.of(() -> LocalDirectionArgumentType.instance)
         );
     }
 }

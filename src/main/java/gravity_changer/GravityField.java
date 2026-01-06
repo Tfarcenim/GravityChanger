@@ -1,12 +1,12 @@
 package gravity_changer;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 
 public class GravityField {
     public static boolean isOnField(Entity entity) {
-        BlockState feedBlockState = entity.level().getBlockState(entity.getOnPos());
+        BlockState feedBlockState = entity.getWorld().getBlockState(entity.getSteppingPos());
         return feedBlockState.getBlock() == Blocks.GLOWSTONE;
     }
     

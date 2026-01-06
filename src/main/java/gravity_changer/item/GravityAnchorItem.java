@@ -1,19 +1,18 @@
 package gravity_changer.item;
 
 import gravity_changer.GravityComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-
 import java.util.EnumMap;
 import java.util.List;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
 // based on AmethystGravity
 public class GravityAnchorItem extends Item {
@@ -23,49 +22,53 @@ public class GravityAnchorItem extends Item {
     
     static {
         for (Direction direction : Direction.values()) {
-            ITEM_MAP.put(direction, new GravityAnchorItem(direction, new Properties()));
+            ITEM_MAP.put(direction, new GravityAnchorItem(direction, new Settings()));
         }
     }
     
     public static void init() {
         for (Direction direction : Direction.values()) {
             Registry.register(
-                BuiltInRegistries.ITEM, getItemId(direction), ITEM_MAP.get(direction)
+                Registries.ITEM, getItemId(direction), ITEM_MAP.get(direction)
             );
         }
-        
+
+        //TODO: Verify that this does not create problems,
+        // this use of the event should only apply to things with hands
         GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
-            for (ItemStack handSlot : entity.getHandSlots()) {
-                Item item = handSlot.getItem();
-                if (item instanceof GravityAnchorItem anchorItem) {
-                    component.applyGravityDirectionEffect(
-                        anchorItem.direction,
-                        null, 1000000
-                    );
+            if(entity instanceof LivingEntity) {
+                for (ItemStack handSlot : ((LivingEntity) entity).getHandItems()) {
+                    Item item = handSlot.getItem();
+                    if (item instanceof GravityAnchorItem anchorItem) {
+                        component.applyGravityDirectionEffect(
+                                anchorItem.direction,
+                                null, 1000000
+                        );
+                    }
                 }
             }
         });
     }
     
-    public static ResourceLocation getItemId(Direction direction) {
-        return new ResourceLocation("gravity_changer", "gravity_anchor_" + direction.getName());
+    public static Identifier getItemId(Direction direction) {
+        return Identifier.of("gravity_changer", "gravity_anchor_" + direction.getName());
     }
     
-    public GravityAnchorItem(Direction _direction, Properties settings) {
+    public GravityAnchorItem(Direction _direction, Settings settings) {
         super(settings);
         direction = _direction;
     }
     
     @Override
-    public void appendHoverText(ItemStack itemStack, Level world, List<Component> tooltip, TooltipFlag tooltipContext) {
+    public void appendTooltip(ItemStack itemStack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_anchor.tooltip.0")
-                .withStyle(ChatFormatting.GRAY)
+            Text.translatable("gravity_changer.gravity_anchor.tooltip.0")
+                .formatted(Formatting.GRAY)
         );
         
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_anchor.tooltip.1")
-                .withStyle(ChatFormatting.GRAY)
+            Text.translatable("gravity_changer.gravity_anchor.tooltip.1")
+                .formatted(Formatting.GRAY)
         );
     }
 }

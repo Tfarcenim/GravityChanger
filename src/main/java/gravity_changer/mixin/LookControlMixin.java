@@ -1,21 +1,22 @@
 package gravity_changer.mixin;
 
-
 import gravity_changer.api.GravityChangerAPI;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.control.LookControl;
+import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LookControl.class)
 public abstract class LookControlMixin {
+    //TODO: NOT WORKING FOR ZOMBIES WHEN THEY ARE ROTATED, MIGHT NOT WORK FOR ANY MOB WHEN THEY ARE ROTATED
+
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;getWantedY(Lnet/minecraft/world/entity/Entity;)D",
+        method = "getLookingHeightFor(Lnet/minecraft/entity/Entity;)D",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
+            target = "Lnet/minecraft/entity/Entity;getEyeY()D",
             ordinal = 0
         )
     )
@@ -25,14 +26,14 @@ public abstract class LookControlMixin {
             return entity.getEyeY();
         }
         
-        return entity.getEyePosition().y;
+        return entity.getEyePos().y;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;)V",
+        method = "lookAt(Lnet/minecraft/entity/Entity;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getX()D",
+            target = "Lnet/minecraft/entity/Entity;getX()D",
             ordinal = 0
         )
     )
@@ -42,14 +43,14 @@ public abstract class LookControlMixin {
             return entity.getX();
         }
         
-        return entity.getEyePosition().x;
+        return entity.getEyePos().x;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;)V",
+        method = "lookAt(Lnet/minecraft/entity/Entity;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getZ()D",
+            target = "Lnet/minecraft/entity/Entity;getZ()D",
             ordinal = 0
         )
     )
@@ -59,14 +60,14 @@ public abstract class LookControlMixin {
             return entity.getZ();
         }
         
-        return entity.getEyePosition().z;
+        return entity.getEyePos().z;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
+        method = "lookAt(Lnet/minecraft/entity/Entity;FF)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getX()D",
+            target = "Lnet/minecraft/entity/Entity;getX()D",
             ordinal = 0
         )
     )
@@ -76,14 +77,14 @@ public abstract class LookControlMixin {
             return entity.getX();
         }
         
-        return entity.getEyePosition().x;
+        return entity.getEyePos().x;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/entity/ai/control/LookControl;setLookAt(Lnet/minecraft/world/entity/Entity;FF)V",
+        method = "lookAt(Lnet/minecraft/entity/Entity;FF)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getZ()D",
+            target = "Lnet/minecraft/entity/Entity;getZ()D",
             ordinal = 0
         )
     )
@@ -93,6 +94,6 @@ public abstract class LookControlMixin {
             return entity.getZ();
         }
         
-        return entity.getEyePosition().z;
+        return entity.getEyePos().z;
     }
 }

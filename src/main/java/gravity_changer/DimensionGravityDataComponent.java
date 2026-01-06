@@ -1,16 +1,17 @@
 package gravity_changer;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 
 public class DimensionGravityDataComponent implements Component, AutoSyncedComponent {
     double dimensionGravityStrength = 1;
     
-    private final Level currentWorld;
+    private final World currentWorld;
     
-    public DimensionGravityDataComponent(Level world) {
+    public DimensionGravityDataComponent(World world) {
         this.currentWorld = world;
     }
     
@@ -19,19 +20,29 @@ public class DimensionGravityDataComponent implements Component, AutoSyncedCompo
     }
     
     public void setDimensionGravityStrength(double strength) {
-        if (!currentWorld.isClientSide) {
+        if (!currentWorld.isClient) {
             dimensionGravityStrength = strength;
             GravityChangerComponents.DIMENSION_COMP_KEY.sync(currentWorld);
         }
     }
     
-    @Override
-    public void readFromNbt(CompoundTag tag) {
+    /*@Override
+    public void readFromNbt(NbtCompound tag) {
         dimensionGravityStrength = tag.getDouble("DimensionGravityStrength");
     }
     
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(NbtCompound tag) {
         tag.putDouble("DimensionGravityStrength", dimensionGravityStrength);
+    }*/
+
+    @Override
+    public void readFromNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
+        dimensionGravityStrength = nbtCompound.getDouble("DimensionGravityStrength");
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
+        nbtCompound.putDouble("DimensionGravityStrength", dimensionGravityStrength);
     }
 }

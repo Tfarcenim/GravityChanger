@@ -1,7 +1,7 @@
 package gravity_changer.api;
 
 import gravity_changer.GravityChangerMod;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public record RotationParameters(
     boolean rotateVelocity,
@@ -32,15 +32,15 @@ public record RotationParameters(
         );
     }
     
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
         tag.putBoolean("RotateVelocity", rotateVelocity);
         tag.putBoolean("RotateView", rotateView);
         tag.putInt("RotationTimeMS", rotationTimeMS);
         return tag;
     }
     
-    public static RotationParameters fromTag(CompoundTag tag) {
+    public static RotationParameters fromTag(NbtCompound tag) {
         return new RotationParameters(
             tag.getBoolean("RotateVelocity"),
             tag.getBoolean("RotateView"),

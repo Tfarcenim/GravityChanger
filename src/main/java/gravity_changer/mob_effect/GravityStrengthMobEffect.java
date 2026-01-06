@@ -1,15 +1,15 @@
 package gravity_changer.mob_effect;
 
 import gravity_changer.GravityComponent;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 
-public class GravityStrengthMobEffect extends MobEffect {
+public class GravityStrengthMobEffect extends StatusEffect {
     
     public final double base;
     public final int signum;
@@ -24,7 +24,7 @@ public class GravityStrengthMobEffect extends MobEffect {
         new GravityStrengthMobEffect(0x98D982, 1.0, -1);
     
     protected GravityStrengthMobEffect(int color, double base, int signum) {
-        super(MobEffectCategory.NEUTRAL, color);
+        super(StatusEffectCategory.NEUTRAL, color);
         this.base = base;
         this.signum = signum;
     }
@@ -34,7 +34,9 @@ public class GravityStrengthMobEffect extends MobEffect {
     }
     
     private void apply(LivingEntity entity, GravityComponent component) {
-        MobEffectInstance effectInstance = entity.getEffect(this);
+        //TODO: probably wrong practice to change this to Registries.STATUS_EFFECT.getEntry(this)
+        // aka I should probably be using something else, so look at example mod status effect later
+        StatusEffectInstance effectInstance = entity.getStatusEffect(Registries.STATUS_EFFECT.getEntry(this));
         
         if (effectInstance == null) {
             return;
@@ -55,20 +57,20 @@ public class GravityStrengthMobEffect extends MobEffect {
         });
         
         Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_increase"),
+            Registries.STATUS_EFFECT,
+            Identifier.of("gravity_changer:strength_increase"),
             INCREASE
         );
         
         Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_decrease"),
+            Registries.STATUS_EFFECT,
+            Identifier.of("gravity_changer:strength_decrease"),
             DECREASE
         );
         
         Registry.register(
-            BuiltInRegistries.MOB_EFFECT,
-            new ResourceLocation("gravity_changer:strength_reverse"),
+            Registries.STATUS_EFFECT,
+            Identifier.of("gravity_changer:strength_reverse"),
             REVERSE
         );
     }

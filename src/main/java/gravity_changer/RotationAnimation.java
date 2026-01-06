@@ -2,12 +2,12 @@ package gravity_changer;
 
 import gravity_changer.util.QuaternionUtil;
 import gravity_changer.util.RotationUtil;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.Validate;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -16,7 +16,7 @@ public class RotationAnimation {
     private boolean inAnimation = false;
     private Quaternionf startGravityRotation;
     private Quaternionf endGravityRotation;
-    private Vec3 relativeRotationCenter = Vec3.ZERO;
+    private Vec3d relativeRotationCenter = Vec3d.ZERO;
     
     private long startTimeMs;
     private long endTimeMs;
@@ -24,7 +24,7 @@ public class RotationAnimation {
     public void startRotationAnimation(
         Direction newGravity, Direction prevGravity,
         long durationTimeMs, Entity entity, long timeMs,
-        boolean rotateView, Vec3 relativeRotationCenter
+        boolean rotateView, Vec3d relativeRotationCenter
     ) {
         if (durationTimeMs == 0) {
             inAnimation = false;
@@ -33,9 +33,9 @@ public class RotationAnimation {
         
         Validate.notNull(entity);
         
-        Vec3 newLookingDirection = getNewLookingDirection(newGravity, prevGravity, entity, rotateView);
+        Vec3d newLookingDirection = getNewLookingDirection(newGravity, prevGravity, entity, rotateView);
         
-        Quaternionf oldViewRotation = QuaternionUtil.getViewRotation(entity.getXRot(), entity.getYRot());
+        Quaternionf oldViewRotation = QuaternionUtil.getViewRotation(entity.getPitch(), entity.getYaw());
         
         update(timeMs);
         Quaternionf currentAnimatedGravityRotation = getCurrentGravityRotation(prevGravity, timeMs);
@@ -45,25 +45,25 @@ public class RotationAnimation {
         
         Quaternionf newEndGravityRotation = RotationUtil.getWorldRotationQuaternion(newGravity);
         
-        Vec2 newYawAndPitch = RotationUtil.vecToRot(
+        Vec2f newYawAndPitch = RotationUtil.vecToRot(
             RotationUtil.vecWorldToPlayer(newLookingDirection, newGravity)
         );
         float newPitch = newYawAndPitch.y;
         float newYaw = newYawAndPitch.x;
-        float deltaYaw = newYaw - entity.getYRot();
-        float deltaPitch = newPitch - entity.getXRot();
-        entity.setYRot(entity.getYRot() + deltaYaw);
-        entity.setXRot(entity.getXRot() + deltaPitch);
-        entity.yRotO += deltaYaw;
-        entity.xRotO += deltaPitch;
+        float deltaYaw = newYaw - entity.getYaw();
+        float deltaPitch = newPitch - entity.getPitch();
+        entity.setYaw(entity.getYaw() + deltaYaw);
+        entity.setPitch(entity.getPitch() + deltaPitch);
+        entity.prevYaw += deltaYaw;
+        entity.prevPitch += deltaPitch;
         if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.yBodyRot += deltaYaw;
-            livingEntity.yBodyRotO += deltaYaw;
-            livingEntity.yHeadRot += deltaYaw;
-            livingEntity.yHeadRotO += deltaYaw;
+            livingEntity.bodyYaw += deltaYaw;
+            livingEntity.prevBodyYaw += deltaYaw;
+            livingEntity.headYaw += deltaYaw;
+            livingEntity.prevHeadYaw += deltaYaw;
         }
         
-        Quaternionf newViewRotation = QuaternionUtil.getViewRotation(entity.getXRot(), entity.getYRot());
+        Quaternionf newViewRotation = QuaternionUtil.getViewRotation(entity.getPitch(), entity.getYaw());
         
         // gravity rotation = (view rotation^-1) * camera rotation
         Quaternionf animationStartGravityRotation = new Quaternionf().set(newViewRotation).conjugate().mul(currentAnimatedCameraRotation);
@@ -76,12 +76,12 @@ public class RotationAnimation {
         endTimeMs = timeMs + durationTimeMs;
     }
     
-    private Vec3 getNewLookingDirection(
+    private Vec3d getNewLookingDirection(
         Direction newGravity, Direction prevGravity, Entity player,
         boolean rotateView
     ) {
-        Vec3 oldLookingDirection = RotationUtil.vecPlayerToWorld(
-            RotationUtil.rotToVec(player.getYRot(), player.getXRot()),
+        Vec3d oldLookingDirection = RotationUtil.vecPlayerToWorld(
+            RotationUtil.rotToVec(player.getYaw(), player.getPitch()),
             prevGravity
         );
     
@@ -90,17 +90,17 @@ public class RotationAnimation {
         }
         
         if (newGravity == prevGravity.getOpposite()) {
-            return oldLookingDirection.scale(-1);
+            return oldLookingDirection.multiply(-1);
         }
         
         Quaternionf deltaRotation = QuaternionUtil.getRotationBetween(
-            Vec3.atLowerCornerOf(prevGravity.getNormal()),
-            Vec3.atLowerCornerOf(newGravity.getNormal())
+            Vec3d.of(prevGravity.getVector()),
+            Vec3d.of(newGravity.getVector())
         );
         
         Vector3f lookingDirection = new Vector3f((float) oldLookingDirection.x, (float) oldLookingDirection.y, (float) oldLookingDirection.z);
         lookingDirection.rotate(deltaRotation);
-        Vec3 newLookingDirection = new Vec3(lookingDirection);
+        Vec3d newLookingDirection = new Vec3d(lookingDirection);
         return newLookingDirection;
     }
     
@@ -136,26 +136,26 @@ public class RotationAnimation {
      *
      * Note when rotateView is false, it will cause non-smooth eye offset change
      */
-    public Vec3 getEyeOffset(
-        Quaternionf gravityRot, Vec3 localEyeOffset, Direction newGravity
+    public Vec3d getEyeOffset(
+        Quaternionf gravityRot, Vec3d localEyeOffset, Direction newGravity
     ) {
         Quaternionf gravityRotForEntity = new Quaternionf(gravityRot).conjugate();
         
-        if (!inAnimation || relativeRotationCenter.equals(Vec3.ZERO)) {
+        if (!inAnimation || relativeRotationCenter.equals(Vec3d.ZERO)) {
             return QuaternionUtil.rotate(localEyeOffset, gravityRotForEntity);
         }
         
-        Vec3 rotationCenterOffset = RotationUtil.vecPlayerToWorld(relativeRotationCenter, newGravity);
+        Vec3d rotationCenterOffset = RotationUtil.vecPlayerToWorld(relativeRotationCenter, newGravity);
         
-        Vec3 eyeOffsetFromRotationCenter = localEyeOffset.subtract(relativeRotationCenter);
-        Vec3 rotatedEyeOffsetFromRotationCenter =
+        Vec3d eyeOffsetFromRotationCenter = localEyeOffset.subtract(relativeRotationCenter);
+        Vec3d rotatedEyeOffsetFromRotationCenter =
             QuaternionUtil.rotate(eyeOffsetFromRotationCenter, gravityRotForEntity);
         
         return rotationCenterOffset.add(rotatedEyeOffsetFromRotationCenter);
     }
     
     private static float mapProgress(float delta) {
-        return Mth.clamp((delta * delta * (3 - 2 * delta)), 0, 1);
+        return MathHelper.clamp((delta * delta * (3 - 2 * delta)), 0, 1);
     }
     
     public boolean isInAnimation() {

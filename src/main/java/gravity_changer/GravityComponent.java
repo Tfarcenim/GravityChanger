@@ -1,9 +1,11 @@
 package gravity_changer;
 
 import com.mojang.logging.LogUtils;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.api.RotationParameters;
 import gravity_changer.mixin.EntityAccessor;
@@ -13,18 +15,18 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.decoration.EndCrystalEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +45,7 @@ import org.slf4j.Logger;
  * Other client entities' are synced from server.)
  */
 public class GravityComponent implements Component, AutoSyncedComponent, CommonTickingComponent {
-    
+
     public static interface GravityUpdateCallback {
         void update(Entity entity, GravityComponent component);
     }
@@ -112,7 +114,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     public GravityComponent(Entity entity) {
         this.entity = entity;
-        if (entity.level().isClientSide()) {
+        if (entity.getWorld().isClient()) {
             animation = new RotationAnimation();
         }
         else {
@@ -121,16 +123,16 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     }
     
     @Override
-    public void readFromNbt(CompoundTag tag) {
-        if (tag.contains("baseGravityDirection")) {
-            baseGravityDirection = Direction.byName(tag.getString("baseGravityDirection"));
+    public void readFromNbt(NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
+        if (nbtCompound.contains("baseGravityDirection")) {
+            baseGravityDirection = Direction.byName(nbtCompound.getString("baseGravityDirection"));
         }
         else {
             baseGravityDirection = Direction.DOWN;
         }
         
-        if (tag.contains("baseGravityStrength")) {
-            baseGravityStrength = tag.getDouble("baseGravityStrength");
+        if (nbtCompound.contains("baseGravityStrength")) {
+            baseGravityStrength = nbtCompound.getDouble("baseGravityStrength");
         }
         else {
             baseGravityStrength = 1.0;
@@ -139,15 +141,15 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         // the current gravity is serialized to avoid unnecessary gravity rotation when entering world
         // do not deserialize it when for client player when not initializing
         if (!initialized || shouldAcceptServerSync()) {
-            if (tag.contains("currentGravityDirection")) {
-                currGravityDirection = Direction.byName(tag.getString("currentGravityDirection"));
+            if (nbtCompound.contains("currentGravityDirection")) {
+                currGravityDirection = Direction.byName(nbtCompound.getString("currentGravityDirection"));
             }
             else {
                 currGravityDirection = Direction.DOWN;
             }
             
-            if (tag.contains("currentGravityStrength")) {
-                currGravityStrength = tag.getDouble("currentGravityStrength");
+            if (nbtCompound.contains("currentGravityStrength")) {
+                currGravityStrength = nbtCompound.getDouble("currentGravityStrength");
             }
             else {
                 currGravityStrength = 1.0;
@@ -165,16 +167,16 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     }
     
     private boolean shouldAcceptServerSync() {
-        return entity.level().isClientSide() && !GCUtil.isClientPlayer(entity);
+        return entity.getWorld().isClient() && !GCUtil.isClientPlayer(entity);
     }
     
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
-        tag.putString("baseGravityDirection", baseGravityDirection.getName());
-        tag.putString("currentGravityDirection", currGravityDirection.getName());
-        
-        tag.putDouble("baseGravityStrength", baseGravityStrength);
-        tag.putDouble("currentGravityStrength", currGravityStrength);
+    public void writeToNbt(@NotNull NbtCompound nbtCompound, RegistryWrapper.WrapperLookup wrapperLookup) {
+        nbtCompound.putString("baseGravityDirection", baseGravityDirection.getName());
+        nbtCompound.putString("currentGravityDirection", currGravityDirection.getName());
+
+        nbtCompound.putDouble("baseGravityStrength", baseGravityStrength);
+        nbtCompound.putDouble("currentGravityStrength", currGravityStrength);
     }
     
     @Override
@@ -187,7 +189,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         
         applyGravityChange();
         
-        if (!entity.level().isClientSide()) {
+        if (!entity.getWorld().isClient()) {
             if (needsSync) {
                 needsSync = false;
                 GravityChangerComponents.GRAVITY_COMP_KEY.sync(entity);
@@ -215,7 +217,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.getWorld());
             currGravityStrength *= GravityChangerMod.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
@@ -243,7 +245,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
                 currentRotationParameters = RotationParameters.getDefault();
             }
             
-            lastUpdateTickCount = entity.tickCount;
+            lastUpdateTickCount = entity.age;
         }
         
         if (sendPacketIfNecessary) {
@@ -297,17 +299,28 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             delayApplyStrengthEffect *= strengthMultiplier;
         }
     }
-    
+
     @Override
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(RegistryByteBuf buf) {
         AutoSyncedComponent.super.applySyncPacket(buf);
-        
-        if (entity.level().isClientSide()) {
+
+        if (entity.getWorld().isClient()) {
             // the packet should be handled on client thread
             // start the gravity animation (doing that during ticking is too late)
             applyGravityChange();
         }
     }
+
+    /*@Override
+    public void applySyncPacket(PacketByteBuf buf) {
+        AutoSyncedComponent.super.applySyncPacket(buf);
+
+        if (entity.getWorld().isClient()) {
+            // the packet should be handled on client thread
+            // start the gravity animation (doing that during ticking is too late)
+            applyGravityChange();
+        }
+    }*/
     
     public void applyGravityDirectionChange(
         Direction oldGravity, Direction newGravity,
@@ -318,10 +331,10 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         }
         
         // update bounding box
-        entity.setBoundingBox(((EntityAccessor) entity).gc_makeBoundingBox());
+        entity.setBoundingBox(((EntityAccessor) entity).gc_calculateBoundingBox());
         
         // A weird thing is that,
-        // using `entity.setPos(entity.position())` to a painting on client side
+        // using `entity.setPos(entity.getPos())` to a painting on client side
         // make the painting move wrongly, because Painting overrides `trackingPosition()`.
         // No entity other than Painting overrides that method.
         // It seems to be legacy code from early versions of Minecraft.
@@ -332,29 +345,29 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         
         entity.fallDistance = 0;
         
-        long timeMs = entity.level().getGameTime() * 50;
+        long timeMs = entity.getWorld().getTime() * 50;
         
-        Vec3 relativeRotationCenter = getLocalRotationCenter(
+        Vec3d relativeRotationCenter = getLocalRotationCenter(
             entity, oldGravity, newGravity, rotationParameters
         );
-        Vec3 oldPos = entity.position();
-        Vec3 oldLastTickPos = new Vec3(entity.xOld, entity.yOld, entity.zOld);
-        Vec3 rotationCenter = oldPos.add(RotationUtil.vecPlayerToWorld(relativeRotationCenter, oldGravity));
-        Vec3 newPos = rotationCenter.subtract(RotationUtil.vecPlayerToWorld(relativeRotationCenter, newGravity));
-        Vec3 posTranslation = newPos.subtract(oldPos);
-        Vec3 newLastTickPos = oldLastTickPos.add(posTranslation);
+        Vec3d oldPos = entity.getPos();
+        Vec3d oldLastTickPos = new Vec3d(entity.lastRenderX, entity.lastRenderY, entity.lastRenderZ);
+        Vec3d rotationCenter = oldPos.add(RotationUtil.vecPlayerToWorld(relativeRotationCenter, oldGravity));
+        Vec3d newPos = rotationCenter.subtract(RotationUtil.vecPlayerToWorld(relativeRotationCenter, newGravity));
+        Vec3d posTranslation = newPos.subtract(oldPos);
+        Vec3d newLastTickPos = oldLastTickPos.add(posTranslation);
         
-        entity.setPos(newPos);
-        entity.xo = newLastTickPos.x;
-        entity.yo = newLastTickPos.y;
-        entity.zo = newLastTickPos.z;
-        entity.xOld = newLastTickPos.x;
-        entity.yOld = newLastTickPos.y;
-        entity.zOld = newLastTickPos.z;
+        entity.setPosition(newPos);
+        entity.prevX = newLastTickPos.x;
+        entity.prevY = newLastTickPos.y;
+        entity.prevZ = newLastTickPos.z;
+        entity.lastRenderX = newLastTickPos.x;
+        entity.lastRenderY = newLastTickPos.y;
+        entity.lastRenderZ = newLastTickPos.z;
         
         adjustEntityPosition(oldGravity, newGravity, entity.getBoundingBox());
         
-        if (entity.level().isClientSide()) {
+        if (entity.getWorld().isClient()) {
             Validate.notNull(animation, "gravity animation is null");
             
             int rotationTimeMS = rotationParameters.rotationTimeMS();
@@ -367,61 +380,61 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             );
         }
         
-        Vec3 realWorldVelocity = getRealWorldVelocity(entity, oldGravity);
+        Vec3d realWorldVelocity = getRealWorldVelocity(entity, oldGravity);
         if (rotationParameters.rotateVelocity()) {
             // Rotate velocity with gravity, this will cause things to appear to take a sharp turn
             Vector3f worldSpaceVec = realWorldVelocity.toVector3f();
             worldSpaceVec.rotate(RotationUtil.getRotationBetween(oldGravity, newGravity));
-            entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(new Vec3(worldSpaceVec), newGravity));
+            entity.setVelocity(RotationUtil.vecWorldToPlayer(new Vec3d(worldSpaceVec), newGravity));
         }
         else {
             // Velocity will be conserved relative to the world, will result in more natural motion
-            entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(realWorldVelocity, newGravity));
+            entity.setVelocity(RotationUtil.vecWorldToPlayer(realWorldVelocity, newGravity));
         }
     }
     
     // getVelocity() does not return the actual velocity. It returns the velocity plus acceleration.
     // Even if the entity is standing still, getVelocity() will still give a downwards vector.
-    // The real velocity is this tick position subtract last tick position
-    private static Vec3 getRealWorldVelocity(Entity entity, Direction prevGravityDirection) {
-        if (entity.isControlledByLocalInstance()) {
-            return new Vec3(
-                entity.getX() - entity.xo,
-                entity.getY() - entity.yo,
-                entity.getZ() - entity.zo
+    // The real velocity is this tick getPos subtract last tick getPos
+    private static Vec3d getRealWorldVelocity(Entity entity, Direction prevGravityDirection) {
+        if (entity.isLogicalSideForUpdatingMovement()) {
+            return new Vec3d(
+                entity.getX() - entity.prevX,
+                entity.getY() - entity.prevY,
+                entity.getZ() - entity.prevZ
             );
         }
         
-        return RotationUtil.vecPlayerToWorld(entity.getDeltaMovement(), prevGravityDirection);
+        return RotationUtil.vecPlayerToWorld(entity.getVelocity(), prevGravityDirection);
     }
     
     @NotNull
-    private static Vec3 getLocalRotationCenter(
+    private static Vec3d getLocalRotationCenter(
         Entity entity,
         Direction oldGravity, Direction newGravity, RotationParameters rotationParameters
     ) {
-        if (entity instanceof EndCrystal) {
+        if (entity instanceof EndCrystalEntity) {
             //In the middle of the block below
-            return new Vec3(0, -0.5, 0);
+            return new Vec3d(0, -0.5, 0);
         }
         
         EntityDimensions dimensions = entity.getDimensions(entity.getPose());
         if (newGravity.getOpposite() == oldGravity) {
             // In the center of the hit-box
-            return new Vec3(0, dimensions.height / 2, 0);
+            return new Vec3d(0, dimensions.height() / 2, 0);
         }
         else {
-            return Vec3.ZERO;
+            return Vec3d.ZERO;
         }
     }
     
-    // Adjust position to avoid suffocation in blocks when changing gravity
-    private void adjustEntityPosition(Direction oldGravity, Direction newGravity, AABB entityBoundingBox) {
+    // Adjust getPos to avoid suffocation in blocks when changing gravity
+    private void adjustEntityPosition(Direction oldGravity, Direction newGravity, Box entityBoundingBox) {
         if (!GravityChangerMod.config.adjustPositionAfterChangingGravity) {
             return;
         }
         
-        if (entity instanceof AreaEffectCloud || entity instanceof AbstractArrow || entity instanceof EndCrystal) {
+        if (entity instanceof AreaEffectCloudEntity || entity instanceof PersistentProjectileEntity || entity instanceof EndCrystalEntity) {
             return;
         }
         
@@ -429,55 +442,55 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         // if gravity changed from down to up, also move up
         Direction movingDirection = oldGravity.getOpposite();
         
-        Iterable<VoxelShape> collisions = entity.level().getCollisions(
+        Iterable<VoxelShape> collisions = entity.getWorld().getCollisions(
             entity,
-            entityBoundingBox.inflate(-0.01) // shrink to avoid floating point error
+            entityBoundingBox.expand(-0.01) // shrink to avoid floating point error
         );
-        AABB totalCollisionBox = null;
+        Box totalCollisionBox = null;
         for (VoxelShape collision : collisions) {
             if (!collision.isEmpty()) {
-                AABB boundingBox = collision.bounds();
+                Box boundingBox = collision.getBoundingBox();
                 if (totalCollisionBox == null) {
                     totalCollisionBox = boundingBox;
                 }
                 else {
-                    totalCollisionBox = totalCollisionBox.minmax(boundingBox);
+                    totalCollisionBox = totalCollisionBox.union(boundingBox);
                 }
             }
         }
         
         if (totalCollisionBox != null) {
-            Vec3 positionAdjustmentOffset = getPositionAdjustmentOffset(
+            Vec3d positionAdjustmentOffset = getPositionAdjustmentOffset(
                 entityBoundingBox, totalCollisionBox, movingDirection
             );
-            if (entity instanceof Player) {
-                LOGGER.info("Adjusting player position {} {}", positionAdjustmentOffset, entity);
+            if (entity instanceof PlayerEntity) {
+                LOGGER.info("Adjusting player getPos {} {}", positionAdjustmentOffset, entity);
             }
-            entity.setPos(entity.position().add(positionAdjustmentOffset));
+            entity.setPosition(entity.getPos().add(positionAdjustmentOffset));
         }
     }
     
-    private static Vec3 getPositionAdjustmentOffset(
-        AABB entityBoundingBox, AABB nearbyCollisionUnion, Direction movingDirection
+    private static Vec3d getPositionAdjustmentOffset(
+        Box entityBoundingBox, Box nearbyCollisionUnion, Direction movingDirection
     ) {
         Direction.Axis axis = movingDirection.getAxis();
         double offset = 0;
-        if (movingDirection.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
-            double pushing = nearbyCollisionUnion.max(axis);
-            double pushed = entityBoundingBox.min(axis);
+        if (movingDirection.getDirection() == Direction.AxisDirection.POSITIVE) {
+            double pushing = nearbyCollisionUnion.getMax(axis);
+            double pushed = entityBoundingBox.getMin(axis);
             if (pushing > pushed) {
                 offset = pushing - pushed;
             }
         }
         else {
-            double pushing = nearbyCollisionUnion.min(axis);
-            double pushed = entityBoundingBox.max(axis);
+            double pushing = nearbyCollisionUnion.getMin(axis);
+            double pushed = entityBoundingBox.getMax(axis);
             if (pushing < pushed) {
                 offset = pushed - pushing;
             }
         }
         
-        return new Vec3(movingDirection.step()).scale(offset);
+        return new Vec3d(movingDirection.getUnitVector()).multiply(offset);
     }
     
     public double getBaseGravityStrength() {

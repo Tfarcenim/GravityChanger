@@ -1,24 +1,24 @@
 package gravity_changer.util;
 
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.player.RemotePlayer;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.OtherClientPlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.Direction;
 
 public class GCUtil {
-    public static MutableComponent getLinkText(String link) {
-        return Component.literal(link).withStyle(
+    public static MutableText getLinkText(String link) {
+        return Text.literal(link).styled(
             style -> style.withClickEvent(new ClickEvent(
                 ClickEvent.Action.OPEN_URL, link
-            )).withUnderlined(true)
+            )).withUnderline(true)
         );
     }
     
-    public static MutableComponent getDirectionText(Direction gravityDirection) {
-        return Component.translatable("direction." + gravityDirection.getName());
+    public static MutableText getDirectionText(Direction gravityDirection) {
+        return Text.translatable("direction." + gravityDirection.getName());
     }
     
     public static double distanceToRange(double value, double rangeStart, double rangeEnd) {
@@ -34,15 +34,15 @@ public class GCUtil {
     }
     
     public static boolean isClientPlayer(Entity entity) {
-        if (entity.level().isClientSide()) {
-            return entity instanceof LocalPlayer;
+        if (entity.getWorld().isClient()) {
+            return entity instanceof ClientPlayerEntity;
         }
         return false;
     }
     
     public static boolean isRemotePlayer(Entity entity) {
-        if (entity.level().isClientSide()) {
-            return entity instanceof RemotePlayer;
+        if (entity.getWorld().isClient()) {
+            return entity instanceof OtherClientPlayerEntity;
         }
         return false;
     }

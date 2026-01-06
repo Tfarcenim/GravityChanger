@@ -2,42 +2,35 @@ package gravity_changer.plating;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,130 +43,130 @@ import java.util.stream.Collectors;
 /**
  * Based on code from AmethystGravity (by CyborgCabbage)
  */
-public class GravityPlatingBlock extends BaseEntityBlock {
-    public static final MapCodec<GravityPlatingBlock> CODEC = simpleCodec(GravityPlatingBlock::new);
+public class GravityPlatingBlock extends BlockWithEntity {
+    public static final MapCodec<GravityPlatingBlock> CODEC = createCodec(GravityPlatingBlock::new);
     
     // in a corner, multiple faces of plates can occupy the same block
     
-    public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
-    public static final BooleanProperty EAST = BlockStateProperties.EAST;
-    public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
-    public static final BooleanProperty WEST = BlockStateProperties.WEST;
-    public static final BooleanProperty UP = BlockStateProperties.UP;
-    public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final BooleanProperty NORTH = Properties.NORTH;
+    public static final BooleanProperty EAST = Properties.EAST;
+    public static final BooleanProperty SOUTH = Properties.SOUTH;
+    public static final BooleanProperty WEST = Properties.WEST;
+    public static final BooleanProperty UP = Properties.UP;
+    public static final BooleanProperty DOWN = Properties.DOWN;
     
-    protected static final VoxelShape DOWN_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
-    protected static final VoxelShape UP_SHAPE = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape NORTH_SHAPE = Block.box(0.0, 0.0, 15.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape SOUTH_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 1.0);
-    protected static final VoxelShape WEST_SHAPE = Block.box(15.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape EAST_SHAPE = Block.box(0.0, 0.0, 0.0, 1.0, 16.0, 16.0);
+    protected static final VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
+    protected static final VoxelShape UP_SHAPE = Block.createCuboidShape(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
+    protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 15.0, 16.0, 16.0, 16.0);
+    protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 1.0);
+    protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(15.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 1.0, 16.0, 16.0);
     private final Map<BlockState, VoxelShape> shapesByState;
-    
+
     public static final Block PLATING_BLOCK = new GravityPlatingBlock(
-        FabricBlockSettings.of().noOcclusion().noCollission().instabreak()
+        Settings.create().nonOpaque().noCollision().breakInstantly()
     );
     
     public static void init() {
         Registry.register(
-            BuiltInRegistries.BLOCK, new ResourceLocation("gravity_changer:plating"), PLATING_BLOCK
+            Registries.BLOCK, Identifier.of("gravity_changer:plating"), PLATING_BLOCK
         );
     }
     
-    public GravityPlatingBlock(Properties settings) {
+    public GravityPlatingBlock(Settings settings) {
         super(settings);
-        registerDefaultState(getStateDefinition().any()
-            .setValue(NORTH, false)
-            .setValue(EAST, false)
-            .setValue(SOUTH, false)
-            .setValue(WEST, false)
-            .setValue(UP, false)
-            .setValue(DOWN, false)
+        setDefaultState(getStateManager().getDefaultState()
+            .with(NORTH, false)
+            .with(EAST, false)
+            .with(SOUTH, false)
+            .with(WEST, false)
+            .with(UP, false)
+            .with(DOWN, false)
         );
         this.shapesByState =
             ImmutableMap.copyOf(
-                this.stateDefinition.getPossibleStates().stream()
+                this.stateManager.getStates().stream()
                     .collect(Collectors.toMap(Function.identity(), GravityPlatingBlock::getShapeForState))
             );
     }
     
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected @NotNull MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;
     }
     
     private static VoxelShape getShapeForState(BlockState state) {
-        VoxelShape voxelShape = Shapes.empty();
-        if (state.getValue(UP)) {
+        VoxelShape voxelShape = VoxelShapes.empty();
+        if (state.get(UP)) {
             voxelShape = UP_SHAPE;
         }
-        if (state.getValue(NORTH)) {
-            voxelShape = Shapes.or(voxelShape, SOUTH_SHAPE);
+        if (state.get(NORTH)) {
+            voxelShape = VoxelShapes.union(voxelShape, SOUTH_SHAPE);
         }
-        if (state.getValue(SOUTH)) {
-            voxelShape = Shapes.or(voxelShape, NORTH_SHAPE);
+        if (state.get(SOUTH)) {
+            voxelShape = VoxelShapes.union(voxelShape, NORTH_SHAPE);
         }
-        if (state.getValue(EAST)) {
-            voxelShape = Shapes.or(voxelShape, WEST_SHAPE);
+        if (state.get(EAST)) {
+            voxelShape = VoxelShapes.union(voxelShape, WEST_SHAPE);
         }
-        if (state.getValue(WEST)) {
-            voxelShape = Shapes.or(voxelShape, EAST_SHAPE);
+        if (state.get(WEST)) {
+            voxelShape = VoxelShapes.union(voxelShape, EAST_SHAPE);
         }
-        if (state.getValue(DOWN)) {
-            voxelShape = Shapes.or(voxelShape, DOWN_SHAPE);
+        if (state.get(DOWN)) {
+            voxelShape = VoxelShapes.union(voxelShape, DOWN_SHAPE);
         }
-        return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
+        return voxelShape.isEmpty() ? VoxelShapes.fullCube() : voxelShape;
     }
     
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.shapesByState.get(state);
     }
     
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(UP, DOWN, NORTH, SOUTH, EAST, WEST);
     }
     
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (hasDir(state, direction) && !canPlaceOn(world, pos.relative(direction), direction.getOpposite())) {
-            state = state.setValue(directionToProperty(direction), false);
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (hasDir(state, direction) && !canPlaceOn(world, pos.offset(direction), direction.getOpposite())) {
+            state = state.with(directionToProperty(direction), false);
             if (getDirections(state).size() == 0) {
-                return Blocks.AIR.defaultBlockState();
+                return Blocks.AIR.getDefaultState();
             }
             else {
                 return state;
             }
         }
         else {
-            return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
         }
     }
     
     @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180 -> {
-                return (((state.setValue(NORTH, state.getValue(SOUTH))).setValue(EAST, state.getValue(WEST))).setValue(SOUTH, state.getValue(NORTH))).setValue(WEST, state.getValue(EAST));
+                return (((state.with(NORTH, state.get(SOUTH))).with(EAST, state.get(WEST))).with(SOUTH, state.get(NORTH))).with(WEST, state.get(EAST));
             }
             case COUNTERCLOCKWISE_90 -> {
-                return (((state.setValue(NORTH, state.getValue(EAST))).setValue(EAST, state.getValue(SOUTH))).setValue(SOUTH, state.getValue(WEST))).setValue(WEST, state.getValue(NORTH));
+                return (((state.with(NORTH, state.get(EAST))).with(EAST, state.get(SOUTH))).with(SOUTH, state.get(WEST))).with(WEST, state.get(NORTH));
             }
             case CLOCKWISE_90 -> {
-                return (((state.setValue(NORTH, state.getValue(WEST))).setValue(EAST, state.getValue(NORTH))).setValue(SOUTH, state.getValue(EAST))).setValue(WEST, state.getValue(SOUTH));
+                return (((state.with(NORTH, state.get(WEST))).with(EAST, state.get(NORTH))).with(SOUTH, state.get(EAST))).with(WEST, state.get(SOUTH));
             }
         }
         return state;
     }
     
     @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT -> {
-                return (state.setValue(NORTH, state.getValue(SOUTH))).setValue(SOUTH, state.getValue(NORTH));
+                return (state.with(NORTH, state.get(SOUTH))).with(SOUTH, state.get(NORTH));
             }
             case FRONT_BACK -> {
-                return (state.setValue(EAST, state.getValue(WEST))).setValue(WEST, state.getValue(EAST));
+                return (state.with(EAST, state.get(WEST))).with(WEST, state.get(EAST));
             }
         }
         return super.mirror(state, mirror);
@@ -181,58 +174,58 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new GravityPlatingBlockEntity(pos, state);
     }
     
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public BlockRenderType getRenderType(BlockState state) {
         // With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
-        return RenderShape.MODEL;
+        return BlockRenderType.MODEL;
     }
     
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClientSide)
-            return createTickerHelper(type, GravityPlatingBlockEntity.TYPE, GravityPlatingBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient)
+            return validateTicker(type, GravityPlatingBlockEntity.TYPE, GravityPlatingBlockEntity::tick);
         else
-            return createTickerHelper(type, GravityPlatingBlockEntity.TYPE, GravityPlatingBlockEntity::tick);
+            return validateTicker(type, GravityPlatingBlockEntity.TYPE, GravityPlatingBlockEntity::tick);
     }
     
     @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-        if (!context.isSecondaryUseActive() && context.getItemInHand().getItem() == this.asItem()) {
-            return !hasDir(state, context.getClickedFace().getOpposite());
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
+        if (!context.shouldCancelInteraction() && context.getStack().getItem() == this.asItem()) {
+            return !hasDir(state, context.getSide().getOpposite());
         }
-        return super.canBeReplaced(state, context);
+        return super.canReplace(state, context);
     }
     
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockState blockState = ctx.getLevel().getBlockState(ctx.getClickedPos());
-        if (blockState.is(this)) {
-            return blockState.setValue(directionToProperty(ctx.getClickedFace().getOpposite()), true);
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockState blockState = ctx.getWorld().getBlockState(ctx.getBlockPos());
+        if (blockState.isOf(this)) {
+            return blockState.with(directionToProperty(ctx.getSide().getOpposite()), true);
         }
-        return defaultBlockState().setValue(directionToProperty(ctx.getClickedFace().getOpposite()), true);
+        return getDefaultState().with(directionToProperty(ctx.getSide().getOpposite()), true);
     }
     
-    private boolean canPlaceOn(BlockGetter world, BlockPos pos, Direction side) {
+    private boolean canPlaceOn(BlockView world, BlockPos pos, Direction side) {
         BlockState blockState = world.getBlockState(pos);
-        return blockState.isFaceSturdy(world, pos, side);
+        return blockState.isSideSolidFullSquare(world, pos, side);
     }
     
     @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         ArrayList<Direction> directions = getDirections(state);
         if (directions.size() == 1) {
-            return canPlaceOn(world, pos.relative(directions.get(0)), directions.get(0).getOpposite());
+            return canPlaceOn(world, pos.offset(directions.get(0)), directions.get(0).getOpposite());
         }
         //Placing inside an existing plating
         if (directions.size() > 1) {
             for (Direction dir : getDirections(world.getBlockState(pos))) {
                 directions.remove(dir);
             }
-            return canPlaceOn(world, pos.relative(directions.get(0)), directions.get(0).getOpposite());
+            return canPlaceOn(world, pos.offset(directions.get(0)), directions.get(0).getOpposite());
         }
         return false;
     }
@@ -250,7 +243,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     
     // Note: the direction is gravity field direction. the facing is the opposite
     public static boolean hasDir(BlockState blockState, Direction dir) {
-        return blockState.getValue(directionToProperty(dir));
+        return blockState.get(directionToProperty(dir));
     }
     
     public static ArrayList<Direction> getDirections(BlockState blockState) {
@@ -258,7 +251,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
         //Iterate directions
         for (int directionId = 0; directionId < 6; directionId++) {
             //Convert ID to Direction
-            Direction direction = Direction.from3DDataValue(directionId);
+            Direction direction = Direction.byId(directionId);
             //If the plate has this direction
             if (hasDir(blockState, direction)) {
                 list.add(direction);
@@ -268,37 +261,35 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     }
     
     @Override
-    public InteractionResult use(
-        BlockState state, Level level, BlockPos pos, Player player,
-        InteractionHand hand, BlockHitResult hit
-    ) {
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+    public ActionResult onUse(
+        BlockState state, World level, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (level.isClient()) {
+            return ActionResult.SUCCESS;
         }
         
-        Direction hitDir = hit.getDirection();
+        Direction hitDir = hit.getSide();
         Direction plateDir = hitDir.getOpposite();
         
         BlockEntity blockEntity = level.getBlockEntity(pos);
         
         if (!(blockEntity instanceof GravityPlatingBlockEntity be)) {
-            return InteractionResult.FAIL;
+            return ActionResult.FAIL;
         }
         
-        return be.interact(level, pos, plateDir, player, hand);
+        return be.interact(level, pos, plateDir, player);
     }
     
     /**
-     * Similar to {@link ShulkerBoxBlock#playerWillDestroy(Level, BlockPos, BlockState, Player)}
+     * Similar to {@link ShulkerBoxBlock#onBreak(World, BlockPos, BlockState, PlayerEntity)}
      * Make it drop in creative mode.
      *
      * @return
      */
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    /*@Override
+    public BlockState onBreak(World level, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof GravityPlatingBlockEntity be &&
-            !level.isClientSide && player.isCreative()
+            !level.isClient && player.isCreative()
         ) {
             List<ItemStack> drops = be.getDrops();
         
@@ -308,21 +299,21 @@ public class GravityPlatingBlock extends BaseEntityBlock {
                     (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5,
                     itemStack
                 );
-                itemEntity.setDefaultPickUpDelay();
-                level.addFreshEntity(itemEntity);
+                itemEntity.setToDefaultPickupDelay();
+                level.spawnEntity(itemEntity);
             }
         }
         
-        return super.playerWillDestroy(level, pos, state, player);
-    }
+        return super.onBreak(level, pos, state, player);
+    }*/
     
-    @Override
-    public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
-        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+    /*@Override
+    public List<ItemStack> getDroppedStacks(BlockState blockState, LootContextParameterSet.Builder builder) {
+        BlockEntity blockEntity = builder.getOptional(LootContextParameters.BLOCK_ENTITY);
         if (blockEntity instanceof GravityPlatingBlockEntity be) {
             return be.getDrops();
         }
         
         return List.of();
-    }
+    }*/
 }

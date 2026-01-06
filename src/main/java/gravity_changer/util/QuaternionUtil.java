@@ -1,6 +1,6 @@
 package gravity_changer.util;
 
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -13,11 +13,11 @@ public abstract class QuaternionUtil {
     }
     
     // NOTE the "from" and "to" cannot be opposite
-    public static Quaternionf getRotationBetween(Vec3 from, Vec3 to) {
+    public static Quaternionf getRotationBetween(Vec3d from, Vec3d to) {
         from = from.normalize();
         to = to.normalize();
-        Vec3 axis = from.cross(to).normalize();
-        double cos = from.dot(to);
+        Vec3d axis = from.crossProduct(to).normalize();
+        double cos = from.dotProduct(to);
         double angle = Math.acos(cos);
         return new Quaternionf().fromAxisAngleRad(
             new Vector3f((float) axis.x, (float) axis.y, (float) axis.z),
@@ -26,9 +26,9 @@ public abstract class QuaternionUtil {
     }
     
     // using mutable objects could easily cause bugs if forget to copy
-    public static Vec3 rotate(Vec3 vec, Quaternionf quaternionf) {
+    public static Vec3d rotate(Vec3d vec, Quaternionf quaternionf) {
         Vector3f vector3f = vec.toVector3f();
         vector3f.rotate(quaternionf);
-        return new Vec3(vector3f);
+        return new Vec3d(vector3f);
     }
 }

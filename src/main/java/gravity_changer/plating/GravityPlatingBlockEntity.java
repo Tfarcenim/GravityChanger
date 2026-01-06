@@ -7,33 +7,33 @@ import gravity_changer.GravityComponent;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.GCUtil;
 import gravity_changer.util.RotationUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerChunkManager;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -44,19 +44,21 @@ import java.util.List;
 /**
  * Based on code from AmethystGravity (by CyborgCabbage)
  */
+
 public class GravityPlatingBlockEntity extends BlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     
-    public static final ResourceLocation ID = new ResourceLocation("gravity_changer:plating_block_entity");
+    public static final Identifier ID = Identifier.of("gravity_changer:plating_block_entity");
     public static BlockEntityType<GravityPlatingBlockEntity> TYPE;
     
     private static final int MAX_LEVEL = 64;
     
     public static void init() {
-        TYPE = FabricBlockEntityTypeBuilder.create(
+
+        TYPE = BlockEntityType.Builder.create(
             GravityPlatingBlockEntity::new, GravityPlatingBlock.PLATING_BLOCK
         ).build();
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ID, TYPE);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, ID, TYPE);
     }
     
     public GravityPlatingBlockEntity(BlockPos pos, BlockState state) {
@@ -67,7 +69,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         public boolean isAttracting = true;
         public int level = 1;
         
-        public @Nullable AABB effectBoxCache = null;
+        public @Nullable Box effectBoxCache = null;
         
         public SideData(boolean isAttracting, int level) {
             this.isAttracting = isAttracting;
@@ -78,19 +80,19 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             return new SideData(true, 1);
         }
         
-        public static SideData fromTag(CompoundTag tag) {
+        public static SideData fromTag(NbtCompound tag) {
             boolean isAttracting_ = tag.getBoolean("isAttracting");
-            int level_ = tag.getInt("level");
+            int level_ = tag.getInt("world");
             
-            level_ = Mth.clamp(level_, 1, MAX_LEVEL);
+            level_ = MathHelper.clamp(level_, 1, MAX_LEVEL);
             
             return new SideData(isAttracting_, level_);
         }
         
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
+        public NbtCompound toTag() {
+            NbtCompound tag = new NbtCompound();
             tag.putBoolean("isAttracting", isAttracting);
-            tag.putInt("level", level);
+            tag.putInt("world", level);
             return tag;
         }
         
@@ -98,7 +100,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             return level - 0.1;
         }
         
-        public AABB getEffectBox(BlockPos blockPos, Direction plateDir, Level world) {
+        public Box getEffectBox(BlockPos blockPos, Direction plateDir, World world) {
             if (effectBoxCache == null) {
                 double expand = 0.001;
                 
@@ -119,11 +121,11 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     case EAST -> minX -= delta;
                 }
                 
-                BlockPos wallPos = blockPos.relative(plateDir);
+                BlockPos wallPos = blockPos.offset(plateDir);
                 for (Direction sideDir : Direction.values()) {
                     if (sideDir.getAxis() == plateDir.getAxis()) {continue;}
                     
-                    BlockPos sidePos = wallPos.relative(sideDir);
+                    BlockPos sidePos = wallPos.offset(sideDir);
                     BlockState sideBlockState = world.getBlockState(sidePos);
                     if (!(sideBlockState.getBlock() instanceof GravityPlatingBlock sidePlatingBlock)) {continue;}
                     
@@ -144,7 +146,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     }
                 }
                 
-                effectBoxCache = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+                effectBoxCache = new Box(minX, minY, minZ, maxX, maxY, maxZ);
             }
             
             return effectBoxCache;
@@ -153,25 +155,25 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     
     private @Nullable SideData[] sideData = null;
     
-    private @Nullable AABB roughAreaBoxCache = null;
+    private @Nullable Box roughAreaBoxCache = null;
     
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(tag, registries);
         
         sideData = new SideData[6];
         for (Direction dir : Direction.values()) {
             String dirName = dir.getName();
             if (tag.contains(dirName)) {
-                CompoundTag sideTag = tag.getCompound(dirName);
+                NbtCompound sideTag = tag.getCompound(dirName);
                 sideData[dir.ordinal()] = SideData.fromTag(sideTag);
             }
         }
     }
     
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(tag, registries);
         
         if (sideData != null) {
             for (Direction dir : Direction.values()) {
@@ -183,22 +185,20 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             }
         }
     }
-    
+
     @Nullable
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
-    
+
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
-        return tag;
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
-    
+
     public void refreshCache() {
-        Level world = getLevel();
+        World world = getWorld();
         
         if (world == null) {
             LOGGER.error("Refreshing cache when world is null {}", this);
@@ -209,7 +209,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             sideData = new SideData[6];
         }
         
-        BlockState blockState = world.getBlockState(this.getBlockPos());
+        BlockState blockState = world.getBlockState(this.getPos());
         for (Direction dir : Direction.values()) {
             if (GravityPlatingBlock.hasDir(blockState, dir)) {
                 if (sideData[dir.ordinal()] == null) {
@@ -221,7 +221,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             }
         }
         
-        if (this.worldPosition.hashCode() % 5 == world.getGameTime() % 5) {
+        if (this.pos.hashCode() % 5 == world.getTime() % 5) {
             roughAreaBoxCache = null;
             for (SideData sideDatum : sideData) {
                 if (sideDatum != null) {
@@ -231,7 +231,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         }
     }
     
-    private AABB getRoughEffectBox() {
+    private Box getRoughEffectBox() {
         if (roughAreaBoxCache == null) {
             double maxRange = 0;
             for (SideData sideDatum : sideData) {
@@ -240,10 +240,10 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                 }
             }
             
-            BlockPos blockPos = this.getBlockPos();
+            BlockPos blockPos = this.getPos();
             double expand = 0.001;
             double delta = maxRange + expand;
-            return new AABB(
+            return new Box(
                 blockPos.getX() - delta, blockPos.getY() - delta, blockPos.getZ() - delta,
                 blockPos.getX() + 1 + delta, blockPos.getY() + 1 + delta, blockPos.getZ() + 1 + delta
             );
@@ -251,16 +251,16 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         return roughAreaBoxCache;
     }
     
-    public static void tick(Level world, BlockPos blockPos, BlockState blockState, GravityPlatingBlockEntity be) {
+    public static void tick(World world, BlockPos blockPos, BlockState blockState, GravityPlatingBlockEntity be) {
         if (!(blockState.getBlock() instanceof GravityPlatingBlock gravityPlatingBlock)) {
             return;
         }
         
         be.refreshCache();
         
-        AABB roughBox = be.getRoughEffectBox();
+        Box roughBox = be.getRoughEffectBox();
         
-        List<Entity> entities = world.getEntitiesOfClass(
+        List<Entity> entities = world.getEntitiesByClass(
             Entity.class,
             roughBox,
             e -> EntityTags.canChangeGravity(e)
@@ -280,29 +280,29 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     // when the player has no gravity effect and is touching the plate with their eyes,
                     // test the eye pos
                     boolean isOpposite = (entityGravityDir == gravityEffectDir.getOpposite());
-                    Vec3 testingPos = isOpposite ? entity.getEyePosition() : entity.position();
+                    Vec3d testingPos = isOpposite ? entity.getEyePos() : entity.getPos();
                     
-                    AABB gravityEffectBox = sideDatum.getEffectBox(blockPos, plateDir, world);
+                    Box gravityEffectBox = sideDatum.getEffectBox(blockPos, plateDir, world);
                     if (!gravityEffectBox.contains(testingPos)) {
                         continue;
                     }
                     
-                    Vec3 plateDirVec = Vec3.atLowerCornerOf(plateDir.getNormal());
-                    Vec3 effectCenter = Vec3.atCenterOf(blockPos).add(plateDirVec.scale(0.5));
+                    Vec3d plateDirVec = Vec3d.of(plateDir.getVector());
+                    Vec3d effectCenter = Vec3d.ofCenter(blockPos).add(plateDirVec.multiply(0.5));
                     
                     // move the center out a little
                     // to make the distance to sharing edge different to different plates
                     double adjustment = 0.1;
-                    Vec3 effectCenterAdjusted = effectCenter.add(plateDirVec.scale(-adjustment));
+                    Vec3d effectCenterAdjusted = effectCenter.add(plateDirVec.multiply(-adjustment));
                     
-                    Vec3 deltaVec = testingPos.subtract(effectCenterAdjusted);
+                    Vec3d deltaVec = testingPos.subtract(effectCenterAdjusted);
                     
-                    double distanceToPlane = -deltaVec.dot(plateDirVec);
+                    double distanceToPlane = -deltaVec.dotProduct(plateDirVec);
                     if (distanceToPlane < -adjustment - 0.001) {
                         continue;
                     }
                     
-                    Vec3 localVec = RotationUtil.vecWorldToPlayer(deltaVec, plateDir);
+                    Vec3d localVec = RotationUtil.vecWorldToPlayer(deltaVec, plateDir);
                     double dx = GCUtil.distanceToRange(localVec.x, -0.5, 0.5);
                     double dz = GCUtil.distanceToRange(localVec.z, -0.5, 0.5);
                     double distanceToPlate = Math.sqrt(dx * dx + dz * dz + distanceToPlane * distanceToPlane);
@@ -330,7 +330,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         BlockState blockState, BlockPos blockPos,
         Entity entity, GravityComponent comp
     ) {
-        if (!entity.onGround()) {
+        if (!entity.isOnGround()) {
             return;
         }
         
@@ -344,36 +344,36 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                     continue;
                 }
                 
-                Vec3 plateDirVec = Vec3.atLowerCornerOf(plateDir.getNormal());
+                Vec3d plateDirVec = Vec3d.of(plateDir.getVector());
                 
-                Vec3 effectCenter = Vec3.atCenterOf(blockPos).add(plateDirVec.scale(0.5));
-                Vec3 offset = effectCenter.subtract(entity.position());
-                if (offset.dot(Vec3.atLowerCornerOf(entityGravityDir.getNormal())) > 0) {
+                Vec3d effectCenter = Vec3d.ofCenter(blockPos).add(plateDirVec.multiply(0.5));
+                Vec3d offset = effectCenter.subtract(entity.getPos());
+                if (offset.dotProduct(Vec3d.of(entityGravityDir.getVector())) > 0) {
                     // that plate is lower than entity
                     continue;
                 }
                 
-                Vec3 worldVelocity = GravityChangerAPI.getWorldVelocity(entity);
-                if (worldVelocity.dot(plateDirVec) < 0.01) {
+                Vec3d worldVelocity = GravityChangerAPI.getWorldVelocity(entity);
+                if (worldVelocity.dotProduct(plateDirVec) < 0.01) {
                     continue;
                 }
                 
-                double distanceToPlate = Math.abs(entity.position().subtract(effectCenter).dot(plateDirVec));
+                double distanceToPlate = Math.abs(entity.getPos().subtract(effectCenter).dotProduct(plateDirVec));
                 if (distanceToPlate < 0.8) {
                     double strengthSqrt = Math.sqrt(comp.getCurrGravityStrength());
                     
-                    Vec3 entityGravityVec = Vec3.atLowerCornerOf(entityGravityDir.getNormal());
+                    Vec3d entityGravityVec = Vec3d.of(entityGravityDir.getVector());
                     
-                    Vec3 deltaWorldVelocity =
-                        entityGravityVec.scale(-strengthSqrt * 0.4)
-                            .add(plateDirVec.scale(0.08));
+                    Vec3d deltaWorldVelocity =
+                        entityGravityVec.multiply(-strengthSqrt * 0.4)
+                            .add(plateDirVec.multiply(0.08));
                     
                     GravityChangerAPI.setWorldVelocity(
                         entity,
                         GravityChangerAPI.getWorldVelocity(entity).add(deltaWorldVelocity)
                     );
                     
-                    if (entity.level().isClientSide()) {
+                    if (entity.getWorld().isClient()) {
                         LOGGER.info("Client entity auto-jump on gravity plate corner {}", entity);
                     }
                     return;
@@ -382,10 +382,15 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         }
         
     }
-    
-    public InteractionResult interact(Level level, BlockPos pos, Direction plateDir, Player player, InteractionHand hand) {
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+
+    /*@Override
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+
+    }*/
+
+    public ActionResult interact(World level, BlockPos pos, Direction plateDir, PlayerEntity player) {
+        if (level.isClient()) {
+            return ActionResult.SUCCESS;
         }
         
         refreshCache();
@@ -393,16 +398,16 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         SideData sideDatum = sideData[plateDir.ordinal()];
         
         if (sideDatum == null) {
-            return InteractionResult.FAIL;
+            return ActionResult.FAIL;
         }
         
-        ItemStack handItem = player.getItemInHand(hand);
+        ItemStack handItem = player.getStackInHand(Hand.MAIN_HAND);
         if (handItem.getItem() == Items.AIR) {
-            // reducing level
+            // reducing world
             if (sideDatum.level != 1) {
                 sideDatum.level -= 1;
                 if (!player.isCreative()) {
-                    player.getInventory().add(new ItemStack(Items.AMETHYST_CLUSTER));
+                    player.getInventory().insertStack(new ItemStack(Items.AMETHYST_CLUSTER));
                 }
             }
             else {
@@ -411,7 +416,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         }
         else if (handItem.getItem() == Items.AMETHYST_CLUSTER) {
             if (!player.isCreative()) {
-                handItem.shrink(1);
+                handItem.decrement(1);
             }
             
             sideDatum.level += 1;
@@ -421,18 +426,18 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             }
         }
         else {
-            ((ServerPlayer) player).sendSystemMessage(
-                Component.translatable("gravity_changer.plate.wrong_interaction"),
+            ((ServerPlayerEntity) player).sendMessageToClient(
+                Text.translatable("gravity_changer.plate.wrong_interaction"),
                 true // on overlay (wrong parchment name)
             );
-            return InteractionResult.FAIL;
+            return ActionResult.FAIL;
         }
         
         sync();
         
         boolean isAttracting = sideDatum.isAttracting;
-        ((ServerPlayer) player).sendSystemMessage(
-            Component.translatable(
+        ((ServerPlayerEntity) player).sendMessageToClient(
+            Text.translatable(
                 "gravity_changer.plate.status",
                 GCUtil.getDirectionText(plateDir.getOpposite()),
                 sideDatum.level,
@@ -441,26 +446,26 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             true // on overlay (wrong parchment name)
         );
         
-        return InteractionResult.SUCCESS;
+        return ActionResult.SUCCESS;
     }
-    
-    public static MutableComponent getForceText(boolean isAttracting) {
-        return Component.translatable(
+
+    public static MutableText getForceText(boolean isAttracting) {
+        return Text.translatable(
             isAttracting ?
                 "gravity_changer.plate.force.attract" : "gravity_changer.plate.force.repulse"
         );
     }
     
     public void sync() {
-        Level world = getLevel();
+        World world = getWorld();
         Validate.notNull(world);
-        Validate.isTrue(!world.isClientSide());
+        Validate.isTrue(!world.isClient());
         
-        setChanged();
+        markDirty();
         
         // make the packet to be sent from ChunkHolder, so the packet will be redirected by ImmPtl
         // don't directly send update packet
-        ((ServerChunkCache) world.getChunkSource()).blockChanged(this.getBlockPos());
+        ((ServerChunkManager) world.getChunkManager()).markForUpdate(this.getPos());
     }
     
     public void onPlacing(Direction side, SideData sideData) {

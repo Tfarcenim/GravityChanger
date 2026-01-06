@@ -1,7 +1,7 @@
 package gravity_changer.api;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentProvider;
 import gravity_changer.DimensionGravityDataComponent;
 import gravity_changer.EntityTags;
 import gravity_changer.GravityChangerComponents;
@@ -10,10 +10,10 @@ import gravity_changer.RotationAnimation;
 import gravity_changer.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,11 +52,11 @@ public abstract class GravityChangerAPI {
         component.setBaseGravityStrength(strength);
     }
     
-    public static double getDimensionGravityStrength(Level world) {
+    public static double getDimensionGravityStrength(World world) {
         return DIMENSION_DATA_COMPONENT.get(world).getDimensionGravityStrength();
     }
     
-    public static void setDimensionGravityStrength(Level world, double strength) {
+    public static void setDimensionGravityStrength(World world, double strength) {
         DIMENSION_DATA_COMPONENT.get(world).setDimensionGravityStrength(strength);
     }
     
@@ -93,7 +93,7 @@ public abstract class GravityChangerAPI {
      * (Used by iPortal)
      */
     public static void instantlySetClientBaseGravityDirection(Entity entity, Direction direction) {
-        Validate.isTrue(entity.level().isClientSide(), "should only be used on client");
+        Validate.isTrue(entity.getWorld().isClient(), "should only be used on client");
         
         GravityComponent component = getGravityComponent(entity);
         
@@ -111,7 +111,7 @@ public abstract class GravityChangerAPI {
     /**
      * cardinal components initializes the component container in the end of constructor
      * but bounding box calculation can happen inside constructor
-     * see {@link dev.onyxstudios.cca.mixin.entity.common.MixinEntity}
+     * see {@link org.ladysnake.cca.mixin.entity.common.MixinEntity}
      */
     @SuppressWarnings({"ConstantValue", "UnstableApiUsage", "DataFlowIssue"})
     public static @Nullable GravityComponent getGravityComponentEarly(Entity entity) {
@@ -125,23 +125,23 @@ public abstract class GravityChangerAPI {
      * Returns the world relative velocity for the given entity
      * Using minecraft's methods to get the velocity will return entity local velocity
      */
-    public static Vec3 getWorldVelocity(Entity entity) {
-        return RotationUtil.vecPlayerToWorld(entity.getDeltaMovement(), getGravityDirection(entity));
+    public static Vec3d getWorldVelocity(Entity entity) {
+        return RotationUtil.vecPlayerToWorld(entity.getVelocity(), getGravityDirection(entity));
     }
     
     /**
      * Sets the world relative velocity for the given player
      * Using minecraft's methods to set the velocity of an entity will set player relative velocity
      */
-    public static void setWorldVelocity(Entity entity, Vec3 worldVelocity) {
-        entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity)));
+    public static void setWorldVelocity(Entity entity, Vec3d worldVelocity) {
+        entity.setVelocity(RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity)));
     }
     
     /**
-     * Returns eye position offset from feet position for the given entity
+     * Returns eye getPos offset from feet getPos for the given entity
      */
-    public static Vec3 getEyeOffset(Entity entity) {
-        return RotationUtil.vecPlayerToWorld(0, (double) entity.getEyeHeight(), 0, getGravityDirection(entity));
+    public static Vec3d getEyeOffset(Entity entity) {
+        return RotationUtil.vecPlayerToWorld(0, (double) entity.getStandingEyeHeight(), 0, getGravityDirection(entity));
     }
     
     public static boolean canChangeGravity(Entity entity) {

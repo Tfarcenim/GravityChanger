@@ -1,5 +1,6 @@
 package gravity_changer;
 
+import com.mojang.logging.LogUtils;
 import gravity_changer.api.RotationParameters;
 import gravity_changer.command.DirectionArgumentType;
 import gravity_changer.command.GravityCommand;
@@ -22,17 +23,16 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,24 +40,27 @@ public class GravityChangerMod implements ModInitializer {
     public static final String NAMESPACE = "gravity_changer";
     public static final Logger LOGGER = LogManager.getLogger(GravityChangerMod.class);
     
-    public static CreativeModeTab GravityChangerGroup;
+    public static ItemGroup GravityChangerGroup;
     
     public static ConfigHolder<GravityChangerConfig> configHolder;
     public static GravityChangerConfig config;
-    
+
     @Override
     public void onInitialize() {
         GravityChangerItem.init();
         GravityChangerItemAOE.init();
         GravityAnchorItem.init();
+        //TODO: Rewrite Gravity Plates to use components, not worth it for
+        // the current version when I'm going to throw them out anyways (in favor of amethyst gravity)
+        //ModComponents.initialize();
         
         AutoConfig.register(GravityChangerConfig.class, GsonConfigSerializer::new);
         configHolder = AutoConfig.getConfigHolder(GravityChangerConfig.class);
         configHolder.registerSaveListener(new ConfigSerializeEvent.Save<GravityChangerConfig>() {
             @Override
-            public InteractionResult onSave(ConfigHolder<GravityChangerConfig> configHolder, GravityChangerConfig gravityChangerConfig) {
+            public ActionResult onSave(ConfigHolder<GravityChangerConfig> configHolder, GravityChangerConfig gravityChangerConfig) {
                 RotationParameters.updateDefault();
-                return InteractionResult.PASS;
+                return ActionResult.PASS;
             }
         });
         config = configHolder.getConfig();
@@ -68,69 +71,70 @@ public class GravityChangerMod implements ModInitializer {
         
         GravityChangerGroup = FabricItemGroup.builder()
             .icon(() -> new ItemStack(GravityChangerItem.GRAVITY_CHANGER_UP))
-            .displayItems((enabledFeatures, entries) -> {
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_UP));
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_DOWN));
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_EAST));
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_WEST));
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_NORTH));
-                entries.accept(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_SOUTH));
+            .entries((enabledFeatures, entries) -> {
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_UP));
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_DOWN));
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_EAST));
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_WEST));
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_NORTH));
+                entries.add(new ItemStack(GravityChangerItem.GRAVITY_CHANGER_SOUTH));
                 
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_UP_AOE));
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_DOWN_AOE));
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_EAST_AOE));
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_WEST_AOE));
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_NORTH_AOE));
-                entries.accept(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_SOUTH_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_UP_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_DOWN_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_EAST_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_WEST_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_NORTH_AOE));
+                entries.add(new ItemStack(GravityChangerItemAOE.GRAVITY_CHANGER_SOUTH_AOE));
                 
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(true, 1)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                /*entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(true, 2)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(true, 8)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(true, 32)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(true, 64)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(false, 8)
                 ));
-                entries.accept(GravityPlatingItem.createStack(
+                entries.add(GravityPlatingItem.createStack(
                     new GravityPlatingBlockEntity.SideData(false, 32)
-                ));
+                ));*/
                 
                 for (GravityAnchorItem item : GravityAnchorItem.ITEM_MAP.values()) {
-                    entries.accept(new ItemStack(item));
+                    entries.add(new ItemStack(item));
                 }
                 
                 // gravity potions are both in food tab and gravity changer tab
-                Item[] potionItems = new Item[]{Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION};
-                
-                for (Item potionItem : potionItems) {
+                //Item[] potionItems = new Item[]{Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION};
+
+                //TODO: Implement potion items, old way was removed
+                /*for (Item potionItem : potionItems) {
                     for (Potion potion : GravityPotion.ALL) {
-                        ItemStack stack = PotionUtils.setPotion(new ItemStack(potionItem), potion);
-                        entries.accept(stack);
+                        ItemStack stack = PotionUtil.setPotion(new ItemStack(potionItem), potion);
+                        entries.add(stack);
                     }
-                }
+                }*/
             })
-            .title(Component.translatable("itemGroup.gravity_changer.general"))
+            .displayName(Text.translatable("itemGroup.gravity_changer.general"))
             .build();
         
         Registry.register(
-            BuiltInRegistries.CREATIVE_MODE_TAB, id("general"),
+            Registries.ITEM_GROUP, id("general"),
             GravityChangerGroup
         );
         
         GravityDirectionMobEffect.init();
         GravityInvertMobEffect.init();
         GravityStrengthMobEffect.init();
-        GravityPotion.init();
+        //GravityPotion.init();
         
         GravityPlatingBlock.init();
         GravityPlatingItem.init();
@@ -140,7 +144,7 @@ public class GravityChangerMod implements ModInitializer {
         LocalDirectionArgumentType.init();
     }
     
-    public static ResourceLocation id(String path) {
-        return new ResourceLocation(NAMESPACE, path);
+    public static Identifier id(String path) {
+        return Identifier.of(NAMESPACE, path);
     }
 }

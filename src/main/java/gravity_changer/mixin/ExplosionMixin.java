@@ -1,14 +1,13 @@
 package gravity_changer.mixin;
 
-
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -16,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = Explosion.class, priority = 1001)
 public abstract class ExplosionMixin {
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "collectBlocksAndDamageEntities()V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
+            target = "Lnet/minecraft/entity/Entity;getEyeY()D",
             ordinal = 0
         )
     )
@@ -29,14 +28,14 @@ public abstract class ExplosionMixin {
             return entity.getEyeY();
         }
         
-        return entity.getEyePosition().y;
+        return entity.getEyePos().y;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "collectBlocksAndDamageEntities()V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getX()D",
+            target = "Lnet/minecraft/entity/Entity;getX()D",
             ordinal = 0
         )
     )
@@ -46,14 +45,14 @@ public abstract class ExplosionMixin {
             return entity.getX();
         }
         
-        return entity.getEyePosition().x;
+        return entity.getEyePos().x;
     }
     
     @Redirect(
-        method = "Lnet/minecraft/world/level/Explosion;explode()V",
+        method = "collectBlocksAndDamageEntities()V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getZ()D",
+            target = "Lnet/minecraft/entity/Entity;getZ()D",
             ordinal = 0
         )
     )
@@ -63,18 +62,18 @@ public abstract class ExplosionMixin {
             return entity.getZ();
         }
         
-        return entity.getEyePosition().z;
+        return entity.getEyePos().z;
     }
     
     @WrapOperation(
-        method = "explode",
+        method = "collectBlocksAndDamageEntities",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
+            target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
             ordinal = 0
         )
     )
-    private Vec3 wrapOperation_collectBlocksAndDamageEntities_getVelocity_0(Entity entity, Operation<Vec3> original) {
+    private Vec3d wrapOperation_collectBlocksAndDamageEntities_getVelocity_0(Entity entity, Operation<Vec3d> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return original.call(entity);
@@ -84,14 +83,14 @@ public abstract class ExplosionMixin {
     }
     
     @WrapOperation(
-        method = "explode",
+        method = "collectBlocksAndDamageEntities",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V",
+            target = "Lnet/minecraft/entity/Entity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V",
             ordinal = 0
         )
     )
-    private void wrapOperation_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3 vec3d, Operation<Void> original) {
+    private void wrapOperation_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3d vec3d, Operation<Void> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             original.call(entity, vec3d);

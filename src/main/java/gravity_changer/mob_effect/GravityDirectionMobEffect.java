@@ -1,26 +1,25 @@
 package gravity_changer.mob_effect;
 
 import gravity_changer.GravityComponent;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
-
 import java.util.EnumMap;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
-public class GravityDirectionMobEffect extends MobEffect {
+public class GravityDirectionMobEffect extends StatusEffect {
     public static final int COLOR = 0x98D982;
     
-    public static final ResourceLocation PHASE = new ResourceLocation("gravity_changer:dir_mob_effect_phase");
+    public static final Identifier PHASE = Identifier.of("gravity_changer:dir_mob_effect_phase");
     
     public final Direction gravityDirection;
     
     public GravityDirectionMobEffect(Direction gravityDirection) {
-        super(MobEffectCategory.NEUTRAL, COLOR);
+        super(StatusEffectCategory.NEUTRAL, COLOR);
         this.gravityDirection = gravityDirection;
     }
     
@@ -34,21 +33,23 @@ public class GravityDirectionMobEffect extends MobEffect {
         }
     }
     
-    public static ResourceLocation getEffectId(Direction direction) {
+    public static Identifier getEffectId(Direction direction) {
         return switch (direction) {
-            case DOWN -> new ResourceLocation("gravity_changer:down");
-            case UP -> new ResourceLocation("gravity_changer:up");
-            case NORTH -> new ResourceLocation("gravity_changer:north");
-            case SOUTH -> new ResourceLocation("gravity_changer:south");
-            case WEST -> new ResourceLocation("gravity_changer:west");
-            case EAST -> new ResourceLocation("gravity_changer:east");
+            case DOWN -> Identifier.of("gravity_changer:down");
+            case UP -> Identifier.of("gravity_changer:up");
+            case NORTH -> Identifier.of("gravity_changer:north");
+            case SOUTH -> Identifier.of("gravity_changer:south");
+            case WEST -> Identifier.of("gravity_changer:west");
+            case EAST -> Identifier.of("gravity_changer:east");
         };
     }
-    
+
+    //TODO: probably wrong practice to change dirEffect to Registries.STATUS_EFFECT.getEntry(dirEffect)
+    // aka I should probably be using something else, so look at example mod status effect later
     public static void init() {
         for (Direction dir : Direction.values()) {
             Registry.register(
-                BuiltInRegistries.MOB_EFFECT, getEffectId(dir), EFFECT_MAP.get(dir)
+                Registries.STATUS_EFFECT, getEffectId(dir), EFFECT_MAP.get(dir)
             );
         }
     
@@ -59,7 +60,7 @@ public class GravityDirectionMobEffect extends MobEffect {
                 }
                 
                 for (GravityDirectionMobEffect dirEffect : GravityDirectionMobEffect.EFFECT_MAP.values()) {
-                    MobEffectInstance effectInstance = livingEntity.getEffect(dirEffect);
+                    StatusEffectInstance effectInstance = livingEntity.getStatusEffect(Registries.STATUS_EFFECT.getEntry(dirEffect));
                     if (effectInstance != null) {
                         int amplifier = effectInstance.getAmplifier();
                         

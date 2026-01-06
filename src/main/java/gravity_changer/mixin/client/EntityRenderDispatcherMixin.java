@@ -1,26 +1,23 @@
 package gravity_changer.mixin.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import gravity_changer.EntityTags;
 import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.WorldView;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,152 +28,156 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//TODO: Probably fine, into testing
 @Mixin(EntityRenderDispatcher.class)
 public abstract class EntityRenderDispatcherMixin {
     @Shadow
     @Final
-    private static RenderType SHADOW_RENDER_TYPE;
+    private static RenderLayer SHADOW_LAYER;
     
     @Shadow
-    private boolean shouldRenderShadow;
-    
+    private boolean renderShadows;
+
     @Shadow
-    private static void shadowVertex(PoseStack.Pose entry, VertexConsumer vertices, float alpha, float x, float y, float z, float u, float v) {}
-    
+    private static void drawShadowVertex(MatrixStack.Entry entry, VertexConsumer vertices, int alpha, float x, float y, float z, float u, float v) {}
+
     @Inject(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;render(Lnet/minecraft/world/entity/Entity;DDDFFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        method = "render(Lnet/minecraft/entity/Entity;DDDFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+            target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V",
             ordinal = 0,
             shift = At.Shift.AFTER
         )
     )
-    private void inject_render_0(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-        if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
+    private void inject_render_0(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && EntityTags.allowGravityTransformationInRendering(entity)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-            if (!this.shouldRenderShadow) return;
+            if (!this.renderShadows) return;
             
-            matrices.pushPose();
+            matrices.push();
             RotationAnimation animation = GravityChangerAPI.getRotationAnimation(entity);
             if (animation == null) {
                 return;
             }
-            long timeMs = entity.level().getGameTime() * 50 + (long) (tickDelta * 50);
-            matrices.mulPose(new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs)).conjugate());
+            long timeMs = entity.getWorld().getTime() * 50 + (long) (tickDelta * 50);
+            matrices.multiply(new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs)).conjugate());
         }
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;render(Lnet/minecraft/world/entity/Entity;DDDFFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        method = "render(Lnet/minecraft/entity/Entity;DDDFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+            target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V",
             ordinal = 1
         )
     )
-    private void inject_render_1(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-        if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
+    private void inject_render_1(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && EntityTags.allowGravityTransformationInRendering(entity)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-            if (!this.shouldRenderShadow) return;
+            if (!this.renderShadows) return;
             
-            matrices.popPose();
+            matrices.pop();
         }
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;render(Lnet/minecraft/world/entity/Entity;DDDFFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        method = "render(Lnet/minecraft/entity/Entity;DDDFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V",
+            target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V",
             ordinal = 1,
             shift = At.Shift.AFTER
         )
     )
-    private void inject_render_2(Entity entity, double x, double y, double z, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-        if (!(entity instanceof Projectile) && !(entity instanceof ExperienceOrb) && EntityTags.allowGravityTransformationInRendering(entity)) {
+    private void inject_render_2(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && EntityTags.allowGravityTransformationInRendering(entity)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
             if (gravityDirection == Direction.DOWN) return;
-            if (!this.shouldRenderShadow) return;
+            if (!this.renderShadows) return;
             
-            matrices.mulPose(RotationUtil.getCameraRotationQuaternion(gravityDirection));
+            matrices.multiply(RotationUtil.getCameraRotationQuaternion(gravityDirection));
         }
     }
     
     @Inject(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;renderShadow(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/entity/Entity;FFLnet/minecraft/world/level/LevelReader;F)V",
+        method = "renderShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/entity/Entity;FFLnet/minecraft/world/WorldView;F)V",
         at = @At("HEAD"),
         cancellable = true
     )
-    private static void inject_renderShadow(PoseStack matrices, MultiBufferSource vertexConsumers, Entity entity, float opacity, float tickDelta, LevelReader world, float radius, CallbackInfo ci) {
+    private static void inject_renderShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) return;
         
         ci.cancel();
         
-        double x = Mth.lerp(tickDelta, entity.xOld, entity.getX());
-        double y = Mth.lerp(tickDelta, entity.yOld, entity.getY());
-        double z = Mth.lerp(tickDelta, entity.zOld, entity.getZ());
-        Vec3 minShadowPos = RotationUtil.vecPlayerToWorld((double) -radius, (double) -radius, (double) -radius, gravityDirection).add(x, y, z);
-        Vec3 maxShadowPos = RotationUtil.vecPlayerToWorld((double) radius, 0.0D, (double) radius, gravityDirection).add(x, y, z);
-        PoseStack.Pose entry = matrices.last();
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(SHADOW_RENDER_TYPE);
+        double x = MathHelper.lerp(tickDelta, entity.lastRenderX, entity.getX());
+        double y = MathHelper.lerp(tickDelta, entity.lastRenderY, entity.getY());
+        double z = MathHelper.lerp(tickDelta, entity.lastRenderZ, entity.getZ());
+        Vec3d minShadowPos = RotationUtil.vecPlayerToWorld((double) -radius, (double) -radius, (double) -radius, gravityDirection).add(x, y, z);
+        Vec3d maxShadowPos = RotationUtil.vecPlayerToWorld((double) radius, 0.0D, (double) radius, gravityDirection).add(x, y, z);
+        MatrixStack.Entry entry = matrices.peek();
+        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(SHADOW_LAYER);
         
-        for (BlockPos blockPos : BlockPos.betweenClosed(BlockPos.containing(minShadowPos), BlockPos.containing(maxShadowPos))) {
+        for (BlockPos blockPos : BlockPos.iterate(BlockPos.ofFloored(minShadowPos), BlockPos.ofFloored(maxShadowPos))) {
             gravitychanger$renderShadowPartPlayer(entry, vertexConsumer, world, blockPos, x, y, z, radius, opacity, gravityDirection);
         }
     }
     
-    private static void gravitychanger$renderShadowPartPlayer(PoseStack.Pose entry, VertexConsumer vertices, LevelReader world, BlockPos pos, double x, double y, double z, float radius, float opacity, Direction gravityDirection) {
-        BlockPos posBelow = pos.relative(gravityDirection);
+    private static void gravitychanger$renderShadowPartPlayer(MatrixStack.Entry entry, VertexConsumer vertices, WorldView world, BlockPos pos, double x, double y, double z, float radius, float opacity, Direction gravityDirection) {
+        BlockPos posBelow = pos.offset(gravityDirection);
         BlockState blockStateBelow = world.getBlockState(posBelow);
-        if (blockStateBelow.getRenderShape() != RenderShape.INVISIBLE && world.getMaxLocalRawBrightness(pos) > 3) {
-            if (blockStateBelow.isCollisionShapeFullBlock(world, posBelow)) {
-                VoxelShape voxelShape = blockStateBelow.getShape(world, posBelow);
+        if (blockStateBelow.getRenderType() != BlockRenderType.INVISIBLE && world.getLightLevel(pos) > 3) {
+            if (blockStateBelow.isFullCube(world, posBelow)) {
+                VoxelShape voxelShape = blockStateBelow.getOutlineShape(world, posBelow);
                 if (!voxelShape.isEmpty()) {
-                    Vec3 playerPos = RotationUtil.vecWorldToPlayer(x, y, z, gravityDirection);
-                    float alpha = (float) (((double) opacity - (playerPos.y - (RotationUtil.vecWorldToPlayer(Vec3.atCenterOf(pos), gravityDirection).y - 0.5D)) / 2.0D) * 0.5D * (double) world.getLightLevelDependentMagicValue(pos));
+                    Vec3d playerPos = RotationUtil.vecWorldToPlayer(x, y, z, gravityDirection);
+                    float alpha = (float) (((double) opacity - (playerPos.y - (RotationUtil.vecWorldToPlayer(Vec3d.ofCenter(pos), gravityDirection).y - 0.5D)) / 2.0D) * 0.5D * (double) world.getBrightness(pos));
                     if (alpha >= 0.0F) {
                         if (alpha > 1.0F) {
                             alpha = 1.0F;
                         }
+
+                        int i = ColorHelper.Argb.getArgb(MathHelper.floor(alpha * 255.0F), 255, 255, 255);
+
+                        Vec3d centerPos = Vec3d.ofCenter(pos);
+                        Vec3d playerCenterPos = RotationUtil.vecWorldToPlayer(centerPos, gravityDirection);
                         
-                        Vec3 centerPos = Vec3.atCenterOf(pos);
-                        Vec3 playerCenterPos = RotationUtil.vecWorldToPlayer(centerPos, gravityDirection);
+                        Vec3d playerRelNN = playerCenterPos.add(-0.5D, -0.5D, -0.5D).subtract(playerPos);
+                        Vec3d playerRelPP = playerCenterPos.add(0.5D, -0.5D, 0.5D).subtract(playerPos);
                         
-                        Vec3 playerRelNN = playerCenterPos.add(-0.5D, -0.5D, -0.5D).subtract(playerPos);
-                        Vec3 playerRelPP = playerCenterPos.add(0.5D, -0.5D, 0.5D).subtract(playerPos);
-                        
-                        Vec3 relNN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3 relNP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3 relPN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3 relPP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relNN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relNP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relPN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relPP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
                         
                         float minU = -(float) playerRelNN.x / 2.0F / radius + 0.5F;
                         float maxU = -(float) playerRelPP.x / 2.0F / radius + 0.5F;
                         float minV = -(float) playerRelNN.z / 2.0F / radius + 0.5F;
                         float maxV = -(float) playerRelPP.z / 2.0F / radius + 0.5F;
-                        
-                        shadowVertex(entry, vertices, alpha, (float) relNN.x, (float) relNN.y, (float) relNN.z, minU, minV);
-                        shadowVertex(entry, vertices, alpha, (float) relNP.x, (float) relNP.y, (float) relNP.z, minU, maxV);
-                        shadowVertex(entry, vertices, alpha, (float) relPP.x, (float) relPP.y, (float) relPP.z, maxU, maxV);
-                        shadowVertex(entry, vertices, alpha, (float) relPN.x, (float) relPN.y, (float) relPN.z, maxU, minV);
+
+                        drawShadowVertex(entry, vertices, i, (float) relNN.x, (float) relNN.y, (float) relNN.z, minU, minV);
+                        drawShadowVertex(entry, vertices, i, (float) relNP.x, (float) relNP.y, (float) relNP.z, minU, maxV);
+                        drawShadowVertex(entry, vertices, i, (float) relPP.x, (float) relPP.y, (float) relPP.z, maxU, maxV);
+                        drawShadowVertex(entry, vertices, i, (float) relPN.x, (float) relPN.y, (float) relPN.z, maxU, minV);
                     }
                 }
             }
         }
     }
-    
+
+    //TODO: I don't think this works, but Idk what it was even originally supposed to do, draw rotated dragon hitboxes?
     @ModifyVariable(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;F)V",
+        method = "renderHitbox",
         at = @At(
             value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/world/phys/AABB;move(DDD)Lnet/minecraft/world/phys/AABB;",
+            target = "Lnet/minecraft/util/math/Box;offset(DDD)Lnet/minecraft/util/math/Box;",
             ordinal = 0
         ),
         ordinal = 0
     )
-    private static AABB modify_renderHitbox_Box_0(AABB box, PoseStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
+    private static Box modify_renderHitbox_Box_0(Box box, MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return box;
@@ -186,20 +187,20 @@ public abstract class EntityRenderDispatcherMixin {
     }
     
     @Redirect(
-        method = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;F)V",
+        method = "renderHitbox",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;",
+            target = "Lnet/minecraft/entity/Entity;getRotationVec(F)Lnet/minecraft/util/math/Vec3d;",
             ordinal = 0
         )
     )
-    private static Vec3 redirectViewVector(Entity instance, float partialTicks) {
-        Vec3 viewVector = instance.getViewVector(partialTicks);
+    private static Vec3d redirectRotationVec(Entity instance, float partialTicks) {
+        Vec3d rotationVec = instance.getRotationVec(partialTicks);
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(instance);
         if (gravityDirection == Direction.DOWN) {
-            return viewVector;
+            return rotationVec;
         }
         
-        return RotationUtil.vecWorldToPlayer(viewVector, gravityDirection);
+        return RotationUtil.vecWorldToPlayer(rotationVec, gravityDirection);
     }
 }
