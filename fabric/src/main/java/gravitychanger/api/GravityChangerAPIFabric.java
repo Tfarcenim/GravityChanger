@@ -1,6 +1,7 @@
 package gravitychanger.api;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import gravitychanger.DimensionGravityDataComponent;
 import gravitychanger.GravityChangerComponents;
 import gravitychanger.GravityComponent;
@@ -16,6 +17,10 @@ public abstract class GravityChangerAPIFabric {
 
 
     public static GravityComponent getGravityComponent(Entity entity) {
+        //noinspection ConstantConditions
+        if (((ComponentProvider) entity).getComponentContainer() == null) {
+            return null;
+        }
         return GRAVITY_COMPONENT.get(entity);
     }
 

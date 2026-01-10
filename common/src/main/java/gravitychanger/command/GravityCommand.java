@@ -87,7 +87,7 @@ public class GravityCommand {
         
         builder.then(Commands.literal("view")
             .executes(context -> {
-                Entity entity = context.getSource().getEntity();
+                Entity entity = context.getSource().getEntityOrException();
                 
                 IEntityGravityData component = GravityChangerAPI.getGravityData(entity);
                 
