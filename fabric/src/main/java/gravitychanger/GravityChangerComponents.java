@@ -21,14 +21,11 @@ public class GravityChangerComponents implements EntityComponentInitializer, Wor
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(
             GRAVITY_COMP_KEY, GravityComponent::new,
-            new RespawnCopyStrategy<GravityComponent>() {
-                @Override
-                public void copyForRespawn(GravityComponent from, GravityComponent to, boolean lossless, boolean keepInventory, boolean sameCharacter) {
+                (from, to, lossless, keepInventory, sameCharacter) -> {
                     if (lossless || !GravityChanger.config.resetGravityOnRespawn) {
                         RespawnCopyStrategy.copy(from, to);
                     }
                 }
-            }
         );
         registry.registerFor(Entity.class, GRAVITY_COMP_KEY, GravityComponent::new);
     }
