@@ -1,5 +1,7 @@
 package gravitychanger.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.particles.ParticleOptions;
@@ -189,14 +191,14 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
     //  }
     
     
-    @ModifyArgs(
+    @WrapOperation(
         method = "tick",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;addAlwaysVisibleParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
         )
     )
-    private void modify_move_multiply_0(Args args) {
+    private void modify_move_multiply_0(Level instance, ParticleOptions particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original) {
         boolean bl = this.isWaiting();
         float f = this.getRadius();
         
@@ -219,10 +221,8 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
         e = modify.y;
         l = modify.z + (double) (Mth.sin(h) * k);
         modify = RotationUtil.vecPlayerToWorld(d, e, l, GravityChangerAPI.getGravityDirection(this));
-        
-        args.set(1, modify.x);
-        args.set(2, modify.y);
-        args.set(3, modify.z);
+
+        original.call(instance,particleData,modify.x,modify.y,modify.z,xSpeed,ySpeed,zSpeed);
     }
     
     

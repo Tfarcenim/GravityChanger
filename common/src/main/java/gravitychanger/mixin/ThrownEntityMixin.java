@@ -14,9 +14,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ThrowableProjectile.class)
 public abstract class ThrownEntityMixin {
@@ -46,7 +44,7 @@ public abstract class ThrownEntityMixin {
         return modify;
     }
     
-    @ModifyArgs(
+    /*@ModifyArgs(todo fix
         method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
         at = @At(
             value = "INVOKE",
@@ -62,7 +60,7 @@ public abstract class ThrownEntityMixin {
         args.set(1, pos.x);
         args.set(2, pos.y);
         args.set(3, pos.z);
-    }
+    }*/
     
     @ModifyReturnValue(method = "getGravity", at = @At("RETURN"))
     private float multiplyGravity(float original) {

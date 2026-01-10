@@ -3,17 +3,16 @@ package gravitychanger.mixin;
 
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(AbstractArrow.class)
 public abstract class PersistentProjectileEntityMixin extends Entity {
@@ -39,7 +38,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     }
     
     
-    @ModifyArgs(
+    /*@WrapOperation(todo fix
         method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
         at = @At(
             value = "INVOKE",
@@ -54,7 +53,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         args.set(1, pos.x);
         args.set(2, pos.y);
         args.set(3, pos.z);
-    }
+    }*/
     
     @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = 0.05000000074505806))
     private double multiplyGravity(double constant) {
