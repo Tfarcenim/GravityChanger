@@ -9,11 +9,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
+import org.spongepowered.asm.mixin.injection.*;
 @Mixin(AbstractArrow.class)
 public abstract class PersistentProjectileEntityMixin extends Entity {
     
@@ -38,7 +34,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     }
     
     
-    /*@WrapOperation(todo fix
+   /* @ModifyArgs(
         method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
         at = @At(
             value = "INVOKE",
@@ -54,6 +50,25 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         args.set(2, pos.y);
         args.set(3, pos.z);
     }*/
+
+    @ModifyArg(
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
+
+            ),index = 1
+    )
+    private static double modifyargs_init_init_0x(
+            EntityType<? extends AbstractArrow> entityType, double x, double y, double z, Level level) {
+        /*Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        if (gravityDirection == Direction.DOWN) return;
+
+        Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        args.set(1, pos.x);
+        args.set(2, pos.y);
+        args.set(3, pos.z);*/
+    }
     
     @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = 0.05000000074505806))
     private double multiplyGravity(double constant) {
