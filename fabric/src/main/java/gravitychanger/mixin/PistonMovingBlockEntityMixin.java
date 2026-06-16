@@ -1,7 +1,7 @@
 package gravitychanger.mixin;
 
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
@@ -21,7 +21,7 @@ public abstract class PistonMovingBlockEntityMixin {
         )
     )
     private static Vec3 redirect_moveEntity_Vec3d_0(double x, double y, double z, Direction direction, Entity entity, double d, Direction direction2) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return new Vec3(x, y, z);
         }

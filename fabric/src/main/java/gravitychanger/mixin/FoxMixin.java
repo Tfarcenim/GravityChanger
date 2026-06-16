@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public class FoxMixin {
 //    @ModifyVariable(method = "Lnet/minecraft/world/entity/animal/Fox;calculateFallDamage(FF)I", at = @At("HEAD"), ordinal = 0, argsOnly = true)
 //    private float diminishFallDamage(float value) {
-//        return value * (float) Math.sqrt(GravityChangerAPI.getGravityStrength(((Entity) (Object) this)));
+//        return value * (float) Math.sqrt(GravityChangerAPIFabric.getGravityStrength(((Entity) (Object) this)));
 //    }
 }

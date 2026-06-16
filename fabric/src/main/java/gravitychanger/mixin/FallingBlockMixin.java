@@ -1,6 +1,6 @@
 package gravitychanger.mixin;
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -18,7 +18,7 @@ public abstract class FallingBlockMixin extends Entity {
     //@ModifyReturnValue(method = "fall", at = @At("RETURN"))
     //private static FallingBlockEntity applyGravityF(FallingBlockEntity entity, @Local BlockPos pos) {
     //    final Direction gravity = GeneralUtil.getGravityForBlockPos((ServerWorld)entity.world, pos);
-    //    GravityChangerAPI.addGravity(entity, new Gravity(gravity, 5, 2, "star_heart"));
+    //    GravityChangerAPIFabric.addGravity(entity, new Gravity(gravity, 5, 2, "star_heart"));
     //    if (gravity != Direction.DOWN) {
     //        entity.velocityDirty = true;
     //    }
@@ -28,7 +28,7 @@ public abstract class FallingBlockMixin extends Entity {
     //@Inject(method = "tick", at = @At("HEAD"))
     //private void applyGravityT(CallbackInfo ci) {
     //    GeneralUtil.setAppropriateEntityGravity(this);
-    //    if (GravityChangerAPI.getGravityDirection(this) != Direction.DOWN) {
+    //    if (GravityChangerAPIFabric.getGravityDirection(this) != Direction.DOWN) {
     //        velocityDirty = true;
     //    }
     //}
@@ -47,7 +47,7 @@ public abstract class FallingBlockMixin extends Entity {
     //@Override
     //protected Box calculateBoundingBox() {
     //    final Box original = super.calculateBoundingBox();
-    //    final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+    //    final Direction gravity = GravityChangerAPIFabric.getGravityDirection(this);
     //    if (gravity == Direction.DOWN) {
     //        return original;
     //    }
@@ -63,6 +63,6 @@ public abstract class FallingBlockMixin extends Entity {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPI.getGravityStrength(this);
+        return x * GravityChangerAPIFabric.getGravityStrength(this);
     }
 }

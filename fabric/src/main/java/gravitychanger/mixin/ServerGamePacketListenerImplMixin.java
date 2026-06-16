@@ -1,7 +1,7 @@
 package gravitychanger.mixin;
 
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -50,7 +50,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 //            )
 //    )
 //    private double redirect_onPlayerMove_getY_3(ServerPlayerEntity serverPlayerEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(serverPlayerEntity);
 //        if(gravityDirection == Direction.DOWN) {
 //            return serverPlayerEntity.getY();
 //        }
@@ -67,7 +67,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 //            )
 //    )
 //    private double redirect_onPlayerMove_getY_7(ServerPlayerEntity serverPlayerEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(serverPlayerEntity);
 //        if(gravityDirection == Direction.DOWN) {
 //            return serverPlayerEntity.getY();
 //        }
@@ -85,7 +85,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 //            ordinal = 0
 //    )
 //    private boolean modify_onPlayerMove_boolean_0(boolean value, PlayerMoveC2SPacket packet) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return value;
 //        }
@@ -109,7 +109,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 //            ordinal = 10
 //    )
 //    private double modify_onPlayerMove_double_12(double value) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return value;
 //        }
@@ -127,7 +127,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 //            index = 1
 //    )
 //    private Vec3d modify_onPlayerMove_move_0(Vec3d vec3d) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }
@@ -143,7 +143,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         )
     )
     private Vec3 modify_onPlayerMove_move_1(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -194,7 +194,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         index = 1
     )
     private Vec3 modify_onVehicleMove_move_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
@@ -211,7 +211,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     //        ),ordinal = 0
     //)
     //private double modify_onVehicleMove_double_12(double value) {
-    //    Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+    //    Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
     //    if(gravityDirection == Direction.DOWN) {
     //        return value;
     //    }
@@ -228,7 +228,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         )
     )
     private void modify_onVehicleMove_move_0(Args args) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this.player);
         Vec3 argVec = new Vec3(args.get(0), args.get(1), args.get(2));
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         

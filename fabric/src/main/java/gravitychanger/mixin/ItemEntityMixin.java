@@ -1,6 +1,6 @@
 package gravitychanger.mixin;
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -17,6 +17,6 @@ public abstract class ItemEntityMixin extends Entity {
     
     @ModifyConstant(method = "tick()V", constant = @Constant())
     private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
+        return constant * GravityChangerAPIFabric.getGravityStrength(this);
     }
 }

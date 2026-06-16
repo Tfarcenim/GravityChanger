@@ -16,7 +16,7 @@ public class GravityChangerModClient implements ClientModInitializer {
     
     @Override
     public void onInitializeClient() {
-        if (GravityChangerFabric.config.showInfoOnStartUp)
+        if (GravityChanger.config.showInfoOnStartUp)
             ClientTickEvents.START_CLIENT_TICK.register(client -> {
                 if (client.player == null) {
                     return;

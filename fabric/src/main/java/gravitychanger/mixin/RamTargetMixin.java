@@ -3,7 +3,7 @@ package gravitychanger.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.RamTarget;
@@ -26,7 +26,7 @@ public abstract class RamTargetMixin {
         )
     )
     private void wrapOperation_keepRunning_takeKnockback_0(LivingEntity target, double strength, double x, double z, Operation<Void> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             original.call(target, strength, x, z);
             return;

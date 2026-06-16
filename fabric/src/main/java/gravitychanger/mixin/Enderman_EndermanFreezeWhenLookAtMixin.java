@@ -1,7 +1,7 @@
 package gravitychanger.mixin;
 
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public abstract class Enderman_EndermanFreezeWhenLookAtMixin {
         )
     )
     private double redirect_tick_getEyeY_0(LivingEntity livingEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(livingEntity);
         if (gravityDirection == Direction.DOWN) {
             return livingEntity.getEyeY();
         }
@@ -38,7 +38,7 @@ public abstract class Enderman_EndermanFreezeWhenLookAtMixin {
 //        )
 //    )
 //    private double redirect_tick_getX_0(LivingEntity livingEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(livingEntity);
 //        if (gravityDirection == Direction.DOWN) {
 //            return livingEntity.getX();
 //        }
@@ -55,7 +55,7 @@ public abstract class Enderman_EndermanFreezeWhenLookAtMixin {
 //        )
 //    )
 //    private double redirect_tick_getZ_0(LivingEntity livingEntity) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(livingEntity);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(livingEntity);
 //        if (gravityDirection == Direction.DOWN) {
 //            return livingEntity.getZ();
 //        }

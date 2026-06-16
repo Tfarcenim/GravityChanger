@@ -1,8 +1,7 @@
 package gravitychanger.api;
 
-import gravitychanger.DimensionGravityDataComponent;
-import gravitychanger.GravityChangerComponents;
-import gravitychanger.GravityComponent;
+import gravitychanger.*;
+import gravitychanger.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentProvider;
 
-public abstract class GravityChangerAPI {
+public abstract class GravityChangerAPIFabric {
     public static final ComponentKey<GravityComponent> GRAVITY_COMPONENT =
         GravityChangerComponents.GRAVITY_COMP_KEY;
     
@@ -65,7 +64,7 @@ public abstract class GravityChangerAPI {
     
     /**
      * Returns the main gravity direction for the given entity
-     * This may not be the applied gravity direction for the player, see GravityChangerAPI#getAppliedGravityDirection
+     * This may not be the applied gravity direction for the player, see GravityChangerAPIFabric#getAppliedGravityDirection
      */
     public static Direction getBaseGravityDirection(Entity entity) {
         return getGravityComponent(entity).getBaseGravityDirection();

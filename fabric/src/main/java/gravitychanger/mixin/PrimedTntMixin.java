@@ -1,6 +1,6 @@
 package gravitychanger.mixin;
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.PrimedTnt;
@@ -24,6 +24,6 @@ public abstract class PrimedTntMixin extends Entity {
         index = 1
     )
     private double multiplyGravity(double x) {
-        return x * GravityChangerAPI.getGravityStrength(this);
+        return x * GravityChangerAPIFabric.getGravityStrength(this);
     }
 }

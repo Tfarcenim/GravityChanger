@@ -58,6 +58,4 @@ public class DirectionArgumentType implements ArgumentType<Direction> {
         return Arrays.stream(Direction.values())
             .map(Enum::toString).collect(Collectors.toList());
     }
-    
-
 }

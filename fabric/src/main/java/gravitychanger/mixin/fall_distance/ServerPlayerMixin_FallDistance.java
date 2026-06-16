@@ -1,6 +1,6 @@
 package gravitychanger.mixin.fall_distance;
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +25,7 @@ public abstract class ServerPlayerMixin_FallDistance {
         double dx, double dy, double dz, boolean onGround
     ) {
         ServerPlayer this_ = (ServerPlayer) (Object) this;
-        Direction gravity = GravityChangerAPI.getGravityDirection(this_);
+        Direction gravity = GravityChangerAPIFabric.getGravityDirection(this_);
 
         Vec3 localVec = RotationUtil.vecWorldToPlayer(dx, dy, dz, gravity);
         args.set(0, localVec.y());

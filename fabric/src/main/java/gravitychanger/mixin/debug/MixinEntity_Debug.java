@@ -15,8 +15,8 @@ public class MixinEntity_Debug {
 //        if (this_ instanceof ItemEntity) {
 //            String str = "%s ItemEntity#setPosRaw(%s, %s, %s) grav %s %s".formatted(
 //                this_.level().isClientSide() ? "client" : "server", x, y, z,
-//                GravityChangerAPI.getGravityDirection(this_),
-//                GravityChangerAPI.getGravityStrength(this_)
+//                GravityChangerAPIFabric.getGravityDirection(this_),
+//                GravityChangerAPIFabric.getGravityStrength(this_)
 //            );
 //            System.out.println(str);
 //        }

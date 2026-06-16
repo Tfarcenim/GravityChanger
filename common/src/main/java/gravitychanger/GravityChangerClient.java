@@ -3,9 +3,12 @@ package gravitychanger;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import gravitychanger.util.RotationUtil;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +30,7 @@ public class GravityChangerClient {
                         if (alpha > 1.0F) {
                             alpha = 1.0F;
                         }
-
+                        int k = FastColor.ARGB32.color(Mth.floor(alpha * 255.0F), 255, 255, 255);
                         Vec3 centerPos = Vec3.atCenterOf(pos);
                         Vec3 playerCenterPos = RotationUtil.vecWorldToPlayer(centerPos, gravityDirection);
 
@@ -44,19 +47,13 @@ public class GravityChangerClient {
                         float minV = -(float) playerRelNN.z / 2.0F / radius + 0.5F;
                         float maxV = -(float) playerRelPP.z / 2.0F / radius + 0.5F;
 
-                        shadowVertex(entry, vertices, alpha, (float) relNN.x, (float) relNN.y, (float) relNN.z, minU, minV);
-                        shadowVertex(entry, vertices, alpha, (float) relNP.x, (float) relNP.y, (float) relNP.z, minU, maxV);
-                        shadowVertex(entry, vertices, alpha, (float) relPP.x, (float) relPP.y, (float) relPP.z, maxU, maxV);
-                        shadowVertex(entry, vertices, alpha, (float) relPN.x, (float) relPN.y, (float) relPN.z, maxU, minV);
+                        EntityRenderDispatcher.shadowVertex(entry, vertices, k, (float) relNN.x, (float) relNN.y, (float) relNN.z, minU, minV);
+                        EntityRenderDispatcher.shadowVertex(entry, vertices, k, (float) relNP.x, (float) relNP.y, (float) relNP.z, minU, maxV);
+                        EntityRenderDispatcher.shadowVertex(entry, vertices, k, (float) relPP.x, (float) relPP.y, (float) relPP.z, maxU, maxV);
+                        EntityRenderDispatcher.shadowVertex(entry, vertices, k, (float) relPN.x, (float) relPN.y, (float) relPN.z, maxU, minV);
                     }
                 }
             }
         }
     }
-
-    private static void shadowVertex(PoseStack.Pose matrixEntry, VertexConsumer buffer, float alpha, float x, float y, float z, float texU, float texV) {
-        Vector3f vector3f = matrixEntry.pose().transformPosition(x, y, z, new Vector3f());
-        buffer.vertex(vector3f.x(), vector3f.y(), vector3f.z(), 1.0F, 1.0F, 1.0F, alpha, texU, texV, OverlayTexture.NO_OVERLAY, 15728880, 0.0F, 1.0F, 0.0F);
-    }
-
 }

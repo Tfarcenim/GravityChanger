@@ -2,7 +2,7 @@ package gravitychanger.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,7 +20,7 @@ public class ItemMixin {
         )
     )
     private static float wrapOperation_raycast_getYaw(Player player, Operation<Float> original) {
-        Direction direction = GravityChangerAPI.getGravityDirection(player);
+        Direction direction = GravityChangerAPIFabric.getGravityDirection(player);
         if (direction == Direction.DOWN) return original.call(player);
         return RotationUtil.rotPlayerToWorld(original.call(player), player.getXRot(), direction).x;
     }
@@ -34,7 +34,7 @@ public class ItemMixin {
         )
     )
     private static float wrapOperation_raycast_getPitch(Player player, Operation<Float> original) {
-        Direction direction = GravityChangerAPI.getGravityDirection(player);
+        Direction direction = GravityChangerAPIFabric.getGravityDirection(player);
         if (direction == Direction.DOWN) return original.call(player);
         return RotationUtil.rotPlayerToWorld(player.getYRot(), original.call(player), direction).y;
     }

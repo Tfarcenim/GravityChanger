@@ -1,20 +1,29 @@
 package gravitychanger;
 
 import gravitychanger.api.RotationParameters;
+import gravitychanger.command.DirectionArgumentType;
+import gravitychanger.command.LocalDirectionArgumentType;
 import gravitychanger.config.GravityChangerConfig;
 import gravitychanger.init.ModCreativeTabs;
 import gravitychanger.init.ModItems;
 import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.mob_effect.GravityInvertMobEffect;
+import gravitychanger.mob_effect.refined.GravityPotions;
 import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
+import gravitychanger.plating.GravityPlatingBlock;
+import gravitychanger.plating.GravityPlatingBlockEntity;
 import gravitychanger.plating.GravityPlatingItem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +62,27 @@ public class GravityChanger {
         GravityDirectionMobEffect.init();
 
         ModCreativeTabs.init();
+        GravityPotions.init();
 
         ModItems.init();
         Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,"side_data", GravityPlatingItem.SIDE_DATA_COMPONENT);
+
+        ArgumentTypeInfos.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("direction").toString(),
+                DirectionArgumentType.class,SingletonArgumentInfo.contextFree(() -> DirectionArgumentType.instance));
+
+        ArgumentTypeInfos.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("local_direction").toString(),
+                LocalDirectionArgumentType.class,SingletonArgumentInfo.contextFree(() -> LocalDirectionArgumentType.instance));
+
+
+        Registry.register(
+                BuiltInRegistries.BLOCK, GravityChanger.id("gravity_plating"), GravityPlatingBlock.PLATING_BLOCK
+        );
+
+        Registry.register(BuiltInRegistries.ITEM, GravityChanger.id("gravity_plating"),
+                GravityPlatingItem.PLATING_BLOCK_ITEM
+        );
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"),GravityPlatingBlockEntity.TYPE);
+
     }
 
     public static ResourceLocation id(String path) {

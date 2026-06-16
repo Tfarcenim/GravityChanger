@@ -258,7 +258,7 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecWorldToPlayer(livingEntity.getX() - livingEntity.xo, livingEntity.getY() - livingEntity.yo, original.call(livingEntity) - livingEntity.zo, gravityDirection).z + livingEntity.zo;
     }
     
-    @Redirect(
+    /*@Redirect(
         method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z",
         at = @At(
             value = "INVOKE",
@@ -300,7 +300,7 @@ public abstract class LivingEntityMixin extends Entity {
         }
         
         return RotationUtil.vecWorldToPlayer(attacker.getEyePosition(), gravityDirection).z;
-    }
+    }*/
     
     @Redirect(
         method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z",
@@ -492,7 +492,7 @@ public abstract class LivingEntityMixin extends Entity {
         method = "isDamageSourceBlocked(Lnet/minecraft/world/damagesource/DamageSource;)Z",
         at = @At(
             value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/world/entity/LivingEntity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;",
+            target = "Lnet/minecraft/world/entity/LivingEntity;calculateViewVector(FF)Lnet/minecraft/world/phys/Vec3;",
             ordinal = 0
         ),
         ordinal = 1

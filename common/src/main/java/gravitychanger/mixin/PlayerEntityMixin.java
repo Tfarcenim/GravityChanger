@@ -5,6 +5,7 @@ import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -24,9 +25,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Player.class, priority = 1001)
@@ -39,7 +42,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     protected abstract boolean isStayingOnGroundSurface();
     
     @Shadow
-    protected abstract boolean isAboveGround();
+    protected abstract boolean isAboveGround(float f);
     
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -143,7 +146,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         
         Vec3 playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
         
-        if (!this.abilities.flying && (type == MoverType.SELF || type == MoverType.PLAYER) && this.isStayingOnGroundSurface() && this.isAboveGround()) {
+        if (!this.abilities.flying && (type == MoverType.SELF || type == MoverType.PLAYER) && this.isStayingOnGroundSurface() && this.isAboveGround(maxUpStep())) {
             double d = playerMovement.x;
             double e = playerMovement.z;
             double var7 = 0.05D;
@@ -205,17 +208,17 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         method = "isAboveGround",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/phys/AABB;move(DDD)Lnet/minecraft/world/phys/AABB;"
+            target = "Lnet/minecraft/world/entity/player/Player;canFallAtLeast(DDF)Z"
         )
     )
-    private AABB wrapOperation_method_30263_offset_0(AABB box, double x, double y, double z, Operation<AABB> original) {
+    private boolean wrapOperation_method_30263_offset_0(Player box, double x, double y, float z, Operation<Boolean> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
         if (gravityDirection == Direction.DOWN) {
             return original.call(box, x, y, z);
         }
         
         Vec3 world = RotationUtil.vecPlayerToWorld(x, y, z, gravityDirection);
-        return original.call(box, world.x, world.y, world.z);
+        return original.call(box, world.x, world.y, z);
     }
     
     @WrapOperation(
@@ -288,25 +291,34 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return RotationUtil.rotPlayerToWorld(original.call(attacker), attacker.getXRot(), gravityDirection).x;
     }
     
-    @WrapOperation(
-        method = "addParticlesAroundSelf",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
-        )
+    @Inject(
+        method = "handleEntityEvent",
+        at = @At(value = "HEAD")
     )
-    private void modify_addDeathParticless_addParticle_0(Level instance, ParticleOptions particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
-        if (gravityDirection == Direction.DOWN) return;
-        
-        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position()
-                .subtract(x,y, z), gravityDirection));
-        x = vec3d.x;
-        y=vec3d.y;
-        z=vec3d.z;
-        original.call(instance,particleData,x,y,z,xSpeed,ySpeed,zSpeed);
+    private void inject_handle(byte b, CallbackInfo ci) {
+        if (b == 43) this.addParticlesAroundSelf();
     }
-    
+
+
+    @Unique
+    private void addParticlesAroundSelf() {
+        for(int var2 = 0; var2 < 5; ++var2) {
+            double x = this.getRandomX(1.0);
+            double y = this.getRandomY() + 1.0;
+            double z = this.getRandomZ(1.0);
+            double var3 = this.random.nextGaussian() * 0.02;
+            double var5 = this.random.nextGaussian() * 0.02;
+            double var7 = this.random.nextGaussian() * 0.02;
+            Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+            if (gravityDirection == Direction.DOWN) {
+                this.level().addParticle(ParticleTypes.CLOUD, x, y, z, var3, var5, var7);
+                return;
+            }
+            Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(x, y, z), gravityDirection));
+            this.level().addParticle(ParticleTypes.CLOUD, vec3d.x,vec3d.y, vec3d.z, var3, var5, var7);
+        }
+    }
+
     @WrapOperation(
         method = "aiStep",
         at = @At(
@@ -323,5 +335,23 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         y = vec3d.y;
         z = vec3d.z;
         return original.call(instance,x,y,z);
+    }
+
+    @WrapOperation(
+            method = "canPlayerFitWithinBlocksAndEntitiesWhen",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/EntityDimensions;makeBoundingBox(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;"
+            )
+    )
+    private AABB wrapOperation_canPlayerFitWithinBlocksAndEntitiesWhen_getBoundingBox(
+            EntityDimensions dimensions, Vec3 pos, Operation<AABB> original
+    ) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        if (gravityDirection == Direction.DOWN) {
+            return original.call(dimensions, pos);
+        }
+
+        return RotationUtil.makeBoxFromDimensions(dimensions, gravityDirection, pos);
     }
 }

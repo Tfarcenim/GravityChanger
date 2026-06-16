@@ -1,7 +1,7 @@
 package gravitychanger.mixin;
 
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -20,7 +20,7 @@ public abstract class SnowGolemMixin {
         )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getX();
         }
@@ -37,7 +37,7 @@ public abstract class SnowGolemMixin {
         )
     )
     private double redirect_attack_getEyeY_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getEyeY();
         }
@@ -54,7 +54,7 @@ public abstract class SnowGolemMixin {
         )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return target.getZ();
         }
@@ -70,7 +70,7 @@ public abstract class SnowGolemMixin {
         )
     )
     private double redirect_attack_sqrt_0(double value, LivingEntity target, float pullProgress) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return Math.sqrt(value);
         }

@@ -2,7 +2,7 @@ package gravitychanger.mixin;
 
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +25,7 @@ public abstract class ThrowableProjectileMixin {
 
     /*@Override
     public Direction gravitychanger$getAppliedGravityDirection() {
-        return GravityChangerAPI.getGravityDirection((ThrownEntity)(Object)this);
+        return GravityChangerAPIFabric.getGravityDirection((ThrownEntity)(Object)this);
     }*/
     
     @ModifyVariable(
@@ -38,9 +38,9 @@ public abstract class ThrowableProjectileMixin {
     public Vec3 tick(Vec3 modify) {
         //if(this instanceof RotatableEntityAccessor) {
         modify = new Vec3(modify.x, modify.y + this.getDefaultGravity(), modify.z);
-        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
+        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPIFabric.getGravityDirection((ThrowableProjectile) (Object) this));
         modify = new Vec3(modify.x, modify.y - this.getDefaultGravity(), modify.z);
-        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
+        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPIFabric.getGravityDirection((ThrowableProjectile) (Object) this));
         // }
         return modify;
     }
@@ -54,7 +54,7 @@ public abstract class ThrowableProjectileMixin {
         )
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrowableProjectile> type, LivingEntity owner, Level world) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(owner);
         if (gravityDirection == Direction.DOWN) return;
         
         Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
@@ -65,6 +65,6 @@ public abstract class ThrowableProjectileMixin {
     
     @ModifyReturnValue(method = "getDefaultGravity", at = @At("RETURN"))
     private double multiplyGravity(double original) {
-        return original * (float) GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
+        return original * (float) GravityChangerAPIFabric.getGravityStrength(((Entity) (Object) this));
     }
 }

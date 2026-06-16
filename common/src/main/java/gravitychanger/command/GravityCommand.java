@@ -150,12 +150,12 @@ public class GravityCommand {
             )
         );
         
-       /* builder.then(Commands.literal("set_dimension_gravity_strength")
+        builder.then(Commands.literal("set_dimension_gravity_strength")
             .then(Commands.argument("strength", DoubleArgumentType.doubleArg(-20, 20))
                 .executes(context -> {
                     ServerLevel world = context.getSource().getLevel();
                     double strength = DoubleArgumentType.getDouble(context, "strength");
-                    GravityChangerAPIFabric.setDimensionGravityStrength(world, strength);
+                    GravityChangerAPI.setDimensionGravityStrength(world, strength);
                     return 0;
                 })
             )
@@ -164,13 +164,13 @@ public class GravityCommand {
         builder.then(Commands.literal("view_dimension_info")
             .executes(context -> {
                 ServerLevel world = context.getSource().getLevel();
-                double strength = GravityChangerAPIFabric.getDimensionGravityStrength(world);
+                double strength = GravityChangerAPI.getDimensionGravityStrength(world);
                 context.getSource().sendSuccess(
                     () -> Component.translatable("gravity_changer.command.dimension_info", strength), false
                 );
                 return 0;
             })
-        );*///todo
+        );
         
         dispatcher.register(builder);
     }

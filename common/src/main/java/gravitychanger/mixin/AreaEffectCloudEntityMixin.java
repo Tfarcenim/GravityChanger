@@ -6,12 +6,10 @@ import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -19,10 +17,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import java.util.List;
 import java.util.Map;
 
 @Mixin(AreaEffectCloud.class)
@@ -37,10 +32,7 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
     
     @Shadow
     public abstract ParticleOptions getParticle();
-    
-    @Shadow
-    public abstract int getColor();
-    
+
     @Shadow
     private int duration;
     @Shadow
@@ -58,11 +50,6 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
     @Shadow
     @Final
     private Map<Entity, Integer> victims;
-    @Shadow
-    private Potion potion;
-    @Shadow
-    @Final
-    private List<MobEffectInstance> effects;
     @Shadow
     private int reapplicationDelay;
     

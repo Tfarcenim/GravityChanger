@@ -1,7 +1,7 @@
 package gravitychanger.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -45,7 +45,7 @@ public abstract class LocalPlayerEntityMixin extends AbstractClientPlayer {
             at = @At("HEAD"),
             cancellable = true)
     private void inject_setAutoJumpDisableWhenChangeGravityDirection_1(CallbackInfo ci) {
-        if (GravityChangerAPI.getGravityDirection(this) != Direction.DOWN) {
+        if (GravityChangerAPIFabric.getGravityDirection(this) != Direction.DOWN) {
             ci.cancel();
         }
     }
@@ -58,7 +58,7 @@ public abstract class LocalPlayerEntityMixin extends AbstractClientPlayer {
             )
     )private void inject_setAutoJumpDisableWhenChangeGravityDirection_2(CallbackInfo ci) {
         if (this.minecraft.getCameraEntity() == this) {
-            if (GravityChangerAPI.getGravityDirection(this) != Direction.DOWN)
+            if (GravityChangerAPIFabric.getGravityDirection(this) != Direction.DOWN)
                 this.autoJumpEnabled = false;
         }
     }
@@ -72,7 +72,7 @@ public abstract class LocalPlayerEntityMixin extends AbstractClientPlayer {
         )
     )
     private AABB redirect_wouldCollideAt_new_0(double x1, double y1, double z1, double x2, double y2, double z2, BlockPos pos) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this);
         if (gravityDirection == Direction.DOWN) {
             return new AABB(x1, y1, z1, x2, y2, z2);
         }
@@ -94,7 +94,7 @@ public abstract class LocalPlayerEntityMixin extends AbstractClientPlayer {
         cancellable = true
     )
     private void inject_pushOutOfBlocks(double x, double z, CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(this);
         if (gravityDirection == Direction.DOWN) return;
         
         ci.cancel();

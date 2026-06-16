@@ -4,6 +4,9 @@ import gravitychanger.GravityChanger;
 import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.util.GCUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
@@ -34,6 +37,45 @@ public class GravityPotions {
             GCUtil.dirtyCast(GravityStrengthMobEffect.INCREASE), 9600, 1
         )
     );
+
+    static {
+        Registry.register(
+                BuiltInRegistries.POTION,
+                GravityChanger.id("gravity_decr_0"),
+                GravityPotions.STRENGTH_DECR_POTION_0
+        );
+
+        Registry.register(
+                BuiltInRegistries.POTION,
+                GravityChanger.id("gravity_decr_1"),
+                GravityPotions.STRENGTH_DECR_POTION_1
+        );
+
+        Registry.register(
+                BuiltInRegistries.POTION,
+                GravityChanger.id("gravity_incr_0"),
+                GravityPotions.STRENGTH_INCR_POTION_0
+        );
+
+        Registry.register(
+                BuiltInRegistries.POTION,
+                GravityChanger.id("gravity_incr_1"),
+                GravityPotions.STRENGTH_INCR_POTION_1
+        );
+
+        for (Direction direction : Direction.values()) {
+            Potion potion = GravityPotions.DIR_POTIONS.get(direction);
+            Registry.register(
+                    BuiltInRegistries.POTION,
+                    GravityPotions.getPotionId(direction),
+                    potion
+            );
+        }
+    }
+
+    public static void init() {
+
+    }
     
     public static final EnumMap<Direction, Potion> DIR_POTIONS = new EnumMap<>(Direction.class);
     

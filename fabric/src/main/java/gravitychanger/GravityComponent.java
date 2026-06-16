@@ -1,8 +1,7 @@
 package gravitychanger;
 
 import com.mojang.logging.LogUtils;
-import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.api.RotationParameters;
+import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.mixin.EntityAccessor;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
@@ -206,13 +205,13 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         
         Entity vehicle = entity.getVehicle();
         if (vehicle != null) {
-            currGravityDirection = GravityChangerAPI.getGravityDirection(vehicle);
-            currGravityStrength = GravityChangerAPI.getGravityStrength(vehicle);
+            currGravityDirection = GravityChangerAPIFabric.getGravityDirection(vehicle);
+            currGravityStrength = GravityChangerAPIFabric.getGravityStrength(vehicle);
         }
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChangerAPIFabric.getDimensionGravityStrength(entity.level());
             currGravityStrength *= GravityChanger.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
@@ -407,7 +406,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         EntityDimensions dimensions = entity.getDimensions(entity.getPose());
         if (newGravity.getOpposite() == oldGravity) {
             // In the center of the hit-box
-            return new Vec3(0, dimensions.height / 2, 0);
+            return new Vec3(0, dimensions.height() / 2, 0);
         }
         else {
             return Vec3.ZERO;
@@ -558,7 +557,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     /**
      * Not needed in normal cases.
-     * Only used in {@link GravityChangerAPI#instantlySetClientBaseGravityDirection(Entity, Direction)}
+     * Only used in {@link GravityChangerAPIFabric#instantlySetClientBaseGravityDirection(Entity, Direction)}
      * Used by ImmPtl.
      */
     public void forceApplyGravityChange() {

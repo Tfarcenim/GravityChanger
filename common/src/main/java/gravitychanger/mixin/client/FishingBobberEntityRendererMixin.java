@@ -36,7 +36,7 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
     private static RenderType RENDER_TYPE;
     
     @Shadow
-    private static void vertex(VertexConsumer buffer, Matrix4f matrix, Matrix3f normalMatrix, int light, float x, int y, int u, int v) {}
+    private static void vertex(VertexConsumer vertexConsumer, PoseStack.Pose pose, int light, float x, int y, int u, int v) {}
     
     @Shadow
     private static void stringVertex(float x, float y, float z, VertexConsumer buffer, PoseStack.Pose normal, float f, float g) {}
@@ -68,14 +68,14 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
         matrixStack.scale(0.5F, 0.5F, 0.5F);
         matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-        PoseStack.Pose entry = matrixStack.last();
-        Matrix4f matrix4f = entry.pose();
-        Matrix3f matrix3f = entry.normal();
+        PoseStack.Pose pose = matrixStack.last();
+        Matrix4f matrix4f = pose.pose();
+        Matrix3f matrix3f = pose.normal();
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RENDER_TYPE);
-        vertex(vertexConsumer, matrix4f, matrix3f, light, 0.0F, 0, 0, 1);
-        vertex(vertexConsumer, matrix4f, matrix3f, light, 1.0F, 0, 1, 1);
-        vertex(vertexConsumer, matrix4f, matrix3f, light, 1.0F, 1, 1, 0);
-        vertex(vertexConsumer, matrix4f, matrix3f, light, 0.0F, 1, 0, 0);
+        vertex(vertexConsumer, pose, light, 0.0F, 0, 0, 1);
+        vertex(vertexConsumer, pose, light, 1.0F, 0, 1, 1);
+        vertex(vertexConsumer, pose, light, 1.0F, 1, 1, 0);
+        vertex(vertexConsumer, pose, light, 0.0F, 1, 0, 0);
         matrixStack.popPose();
         int armOffset = playerEntity.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
         ItemStack itemStack = playerEntity.getMainHandItem();

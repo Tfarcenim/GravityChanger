@@ -1,7 +1,7 @@
 package gravitychanger.mixin;
 
 
-import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.api.GravityChangerAPIFabric;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.FishingHook;
@@ -28,7 +28,7 @@ public abstract class FishinghookMixin extends Entity {
 //        )
 //    )
 //    private void wrapOperation_init_(FishingHook fishingBobberEntity, double x, double y, double z, float yaw, float pitch, Operation<Void> original, Player thrower, Level world, int lureLevel, int luckOfTheSeaLevel) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(thrower);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(thrower);
 //        if(gravityDirection == Direction.DOWN) {
 //            original.call(fishingBobberEntity, x, y, z, yaw, pitch);
 //            return;
@@ -49,7 +49,7 @@ public abstract class FishinghookMixin extends Entity {
 //        ordinal = 0
 //    )
 //    private Vec3 modify_init_Vec3d_1(Vec3 vec3d, Player thrower, Level world, int lureLevel, int luckOfTheSeaLevel) {
-//        Direction gravityDirection = GravityChangerAPI.getGravityDirection(thrower);
+//        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(thrower);
 //        if(gravityDirection == Direction.DOWN) {
 //            return vec3d;
 //        }
@@ -59,6 +59,6 @@ public abstract class FishinghookMixin extends Entity {
     
     @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = -0.03))
     private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
+        return constant * GravityChangerAPIFabric.getGravityStrength(this);
     }
 }

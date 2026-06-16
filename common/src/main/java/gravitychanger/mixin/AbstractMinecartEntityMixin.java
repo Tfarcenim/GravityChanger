@@ -15,7 +15,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity {
         super(type, world);
     }
     
-    @ModifyArg(
+   /* @ModifyArg(
         method = "tick",
         at = @At(
             value = "INVOKE",
@@ -25,5 +25,5 @@ public abstract class AbstractMinecartEntityMixin extends Entity {
     )
     private double multiplyGravity(double x) {
         return x * GravityChangerAPI.getGravityStrength(this);
-    }
+    }*/
 }

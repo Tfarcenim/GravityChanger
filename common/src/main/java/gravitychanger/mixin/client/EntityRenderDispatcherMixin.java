@@ -121,7 +121,7 @@ public abstract class EntityRenderDispatcherMixin {
     }
 
     @ModifyVariable(
-        method = "renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;F)V",
+        method = "renderHitbox",
         at = @At(
             value = "INVOKE_ASSIGN",
             target = "Lnet/minecraft/world/phys/AABB;move(DDD)Lnet/minecraft/world/phys/AABB;",
@@ -139,7 +139,7 @@ public abstract class EntityRenderDispatcherMixin {
     }
     
     @Redirect(
-        method = "renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;F)V",
+        method = "renderHitbox",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;",

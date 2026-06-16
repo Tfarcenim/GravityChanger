@@ -72,64 +72,7 @@ public class GravityChangerNeoForge {
         if (event.getRegistry() == BuiltInRegistries.BLOCK) {
             GravityChanger.register();
         }
-        event.register(Registries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("direction"),
-                () -> {
-                    SingletonArgumentInfo<DirectionArgumentType> info = SingletonArgumentInfo.contextFree(() -> DirectionArgumentType.instance);
-                    ArgumentTypeInfos.registerByClass(DirectionArgumentType.class,info);
-                    return info;
-                });
 
-        event.register(Registries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("local_direction"),
-                () -> {
-                    SingletonArgumentInfo<LocalDirectionArgumentType> info = SingletonArgumentInfo.contextFree(() -> LocalDirectionArgumentType.instance);
-                    ArgumentTypeInfos.registerByClass(LocalDirectionArgumentType.class,info);
-                    return info;
-                });
-
-      if (event.getRegistryKey() == Registries.POTION) {
-            event.register(
-                    Registries.POTION,
-                    GravityChanger.id("gravity_decr_0"),
-                    () -> GravityPotions.STRENGTH_DECR_POTION_0
-            );
-
-            event.register(
-                    Registries.POTION,
-                    GravityChanger.id("gravity_decr_1"),
-                    ()-> GravityPotions.STRENGTH_DECR_POTION_1
-            );
-
-            event.register(
-                    Registries.POTION,
-                    GravityChanger.id("gravity_incr_0"),
-                    () -> GravityPotions.STRENGTH_INCR_POTION_0
-            );
-
-            event.register(
-                    Registries.POTION,
-                    GravityChanger.id("gravity_incr_1"),
-                    () -> GravityPotions.STRENGTH_INCR_POTION_1
-            );
-
-            for (Direction direction : Direction.values()) {
-                Potion potion = GravityPotions.DIR_POTIONS.get(direction);
-                event.register(
-                        Registries.POTION,
-                        GravityPotions.getPotionId(direction),
-                        () -> potion
-                );
-            }
-        }
-
-        event.register(
-                Registries.BLOCK, GravityChanger.id("gravity_plating"), () -> GravityPlatingBlock.PLATING_BLOCK
-        );
-
-        event.register(
-                Registries.ITEM, GravityChanger.id("gravity_plating"),
-                () -> GravityPlatingItem.PLATING_BLOCK_ITEM
-        );
-        event.register(Registries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"),() -> GravityPlatingBlockEntity.TYPE);
 
     }
 
