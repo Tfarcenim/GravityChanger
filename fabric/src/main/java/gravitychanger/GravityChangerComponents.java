@@ -9,20 +9,14 @@ import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import org.ladysnake.cca.api.v3.world.WorldComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.world.WorldComponentInitializer;
 
-public class GravityChangerComponents implements EntityComponentInitializer, WorldComponentInitializer {
+public class GravityChangerComponents implements EntityComponentInitializer{
     
     public static final ResourceLocation DATA_COMPONENT_ID =
         ResourceLocation.fromNamespaceAndPath("gravitychanger", "gravity_data");
     
     public static final org.ladysnake.cca.api.v3.component.ComponentKey<GravityComponent> GRAVITY_COMP_KEY =
         ComponentRegistry.getOrCreate(DATA_COMPONENT_ID, GravityComponent.class);
-    
-    public static final ResourceLocation DIMENSION_DATA_ID =
-        ResourceLocation.fromNamespaceAndPath("gravitychanger", "dimension_data");
-    
-    public static final org.ladysnake.cca.api.v3.component.ComponentKey<DimensionGravityDataComponent> DIMENSION_COMP_KEY =
-        ComponentRegistry.getOrCreate(DIMENSION_DATA_ID, DimensionGravityDataComponent.class);
-    
+
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(
@@ -34,10 +28,5 @@ public class GravityChangerComponents implements EntityComponentInitializer, Wor
                 }
         );
         registry.registerFor(Entity.class, GRAVITY_COMP_KEY, GravityComponent::new);
-    }
-    
-    @Override
-    public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
-        registry.register(DIMENSION_COMP_KEY, DimensionGravityDataComponent::new);
     }
 }

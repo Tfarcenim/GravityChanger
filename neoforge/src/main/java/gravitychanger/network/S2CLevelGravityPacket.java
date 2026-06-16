@@ -3,6 +3,7 @@ package gravitychanger.network;
 import gravitychanger.ClientPacketHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 
 public class S2CLevelGravityPacket implements S2CModPacket{
@@ -22,8 +23,12 @@ public class S2CLevelGravityPacket implements S2CModPacket{
         ClientPacketHandler.handle(this);
     }
 
-    @Override
     public void write(FriendlyByteBuf to) {
         to.writeNbt(data);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return null;
     }
 }

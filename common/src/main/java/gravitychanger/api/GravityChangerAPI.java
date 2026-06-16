@@ -1,8 +1,9 @@
 package gravitychanger.api;
 
+import gravitychanger.EntityDuck;
 import gravitychanger.EntityTags;
 import gravitychanger.RotationAnimation;
-import gravitychanger.platform.Services;
+import gravitychanger.attachments.DataAttachmentUtil;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -14,10 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public interface GravityChangerAPI {
 
     static IEntityGravityData getGravityData(Entity entity) {
-        return Services.PLATFORM.getGravityData(entity);
-    }
-    static ILevelGravityData getLevelGravityData(Level level) {
-        return Services.PLATFORM.getLevelGravityData(level);
+        return ((EntityDuck)entity).getGravityData();
     }
 
     static double getBaseGravityStrength(Entity entity) {
@@ -87,11 +85,11 @@ public interface GravityChangerAPI {
     }
 
     static double getDimensionGravityStrength(Level world) {
-        return getLevelGravityData(world).getDimensionGravityStrength();
+        return DataAttachmentUtil.getLevelGravityData(world);
     }
 
     static void setDimensionGravityStrength(Level world, double strength) {
-        getLevelGravityData(world).setDimensionGravityStrength(strength);
+        DataAttachmentUtil.setLevelGravityData(world,strength);
     }
 
     /**

@@ -1,7 +1,9 @@
 package gravitychanger.mixin;
 
+import gravitychanger.EntityDuck;
 import gravitychanger.GravityChanger;
 import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.util.EntityGravityData;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -35,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import java.util.List;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements EntityDuck {
     @Shadow
     private Vec3 position;
 
@@ -686,4 +689,11 @@ public abstract class EntityMixin {
         return x * GravityChangerAPI.getGravityStrength((Entity) (Object) this);
     }
 
+    @Unique
+    protected final EntityGravityData entityGravityData = new EntityGravityData((Entity)  (Object) this);
+
+    @Override
+    public EntityGravityData getGravityData() {
+        return entityGravityData;
+    }
 }

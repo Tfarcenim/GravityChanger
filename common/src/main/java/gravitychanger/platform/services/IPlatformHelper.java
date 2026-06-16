@@ -1,16 +1,14 @@
 package gravitychanger.platform.services;
 
-import gravitychanger.api.ILevelGravityData;
-import gravitychanger.api.IEntityGravityData;
+import gravitychanger.attachments.CommonDataAttachment;
 import gravitychanger.network.C2SModPacket;
 import gravitychanger.network.S2CModPacket;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 public interface IPlatformHelper {
 
@@ -46,16 +44,12 @@ public interface IPlatformHelper {
         return isDevelopmentEnvironment() ? "development" : "production";
     }
 
-    @Nullable
-    IEntityGravityData getGravityData(Entity entity);
-
-    @Nullable
-    ILevelGravityData getLevelGravityData(Level level);
+    boolean isClient();
 
 
-    <MSG extends S2CModPacket> void registerClientPacket(Class<MSG> packetLocation, Function<FriendlyByteBuf, MSG> reader);
+    <MSG extends S2CModPacket> void registerClientPlayPacket(CustomPacketPayload.Type<MSG> type, StreamCodec<RegistryFriendlyByteBuf, MSG> streamCodec);
 
-    <MSG extends C2SModPacket> void registerServerPacket(Class<MSG> packetLocation, Function<FriendlyByteBuf, MSG> reader);
+    <MSG extends C2SModPacket> void registerServerPlayPacket(CustomPacketPayload.Type<MSG> type, StreamCodec<RegistryFriendlyByteBuf, MSG> streamCodec);
 
 
     void sendToClient(S2CModPacket msg, ServerPlayer player);
@@ -63,5 +57,23 @@ public interface IPlatformHelper {
     void sendToServer(C2SModPacket msg);
 
     void sendToTracking(S2CModPacket msg, Entity entity, boolean includeSelf);
+
+
+    <T> void registerDataAttachment(CommonDataAttachment<T> attachment);
+
+    @Nullable
+    <T> T getAttachedValue(Object object, CommonDataAttachment<T> attachment);
+
+    default <T> T getOrCreateAttachedValue(Object object, CommonDataAttachment<T> attachment) {
+        T value = getAttachedValue(object, attachment);
+        if (value != null) {
+            return value;
+        }
+        value = attachment.getDefaultValueSupplier().apply(object);
+        setAttachedValue(object, attachment, value);
+        return value;
+    }
+
+    <T> void setAttachedValue(Object object, CommonDataAttachment<T> attachment, @Nullable T value);
 
 }

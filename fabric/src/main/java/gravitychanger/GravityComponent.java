@@ -1,6 +1,7 @@
 package gravitychanger;
 
 import com.mojang.logging.LogUtils;
+import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
@@ -212,7 +213,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
         else {
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
-            currGravityStrength *= GravityChangerAPIFabric.getDimensionGravityStrength(entity.level());
+            currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
             currGravityStrength *= GravityChanger.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes

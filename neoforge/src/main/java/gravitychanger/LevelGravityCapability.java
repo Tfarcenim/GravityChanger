@@ -1,11 +1,8 @@
 package gravitychanger;
 
 import gravitychanger.api.GravityChangerAPIForge;
-import gravitychanger.api.IEntityGravityData;
-import gravitychanger.api.ILevelGravityData;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
-import gravitychanger.util.LevelGravityData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;

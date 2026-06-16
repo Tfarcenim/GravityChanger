@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 
-public abstract class EntityGravityData implements IEntityGravityData {
+public class EntityGravityData implements IEntityGravityData {
 
     protected static final Logger LOGGER = LogUtils.getLogger();
     public final Entity entity;
@@ -250,7 +250,9 @@ public abstract class EntityGravityData implements IEntityGravityData {
         }
     }
 
-    protected abstract void syncEntity();
+    protected void syncEntity() {
+
+    }
 
     public void applyGravityDirectionChange(
         Direction oldGravity, Direction newGravity,
@@ -512,8 +514,12 @@ public abstract class EntityGravityData implements IEntityGravityData {
         return entity.level().isClientSide() && !GCUtil.isClientPlayer(entity);
     }
 
-    protected abstract void sendSyncPacketToOtherPlayers();
+    protected void sendSyncPacketToOtherPlayers() {
 
-    protected abstract void postEvent();
+    }
+
+    protected void postEvent() {
+
+    }
 
 }
