@@ -1,7 +1,6 @@
 package gravitychanger.mixin.client;
 
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.Direction;

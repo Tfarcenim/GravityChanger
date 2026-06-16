@@ -86,30 +86,7 @@ public class GravityChangerNeoForge {
                     return info;
                 });
 
-        if (event.getRegistryKey() == Registries.ITEM) {
-
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_down_aoe"),() -> ModItems.GRAVITY_CHANGER_DOWN_AOE);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_up_aoe"),() ->  ModItems.GRAVITY_CHANGER_UP_AOE);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_north_aoe"),() ->  ModItems.GRAVITY_CHANGER_NORTH_AOE);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_south_aoe"),() ->  ModItems.GRAVITY_CHANGER_SOUTH_AOE);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_west_aoe"),() ->  ModItems.GRAVITY_CHANGER_WEST_AOE);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_east_aoe"),() ->  ModItems.GRAVITY_CHANGER_EAST_AOE);
-
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_down"),() ->  ModItems.GRAVITY_CHANGER_DOWN);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_up"),() ->  ModItems.GRAVITY_CHANGER_UP);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_north"),() ->  ModItems.GRAVITY_CHANGER_NORTH);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_south"),() ->  ModItems.GRAVITY_CHANGER_SOUTH);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_west"),() ->  ModItems.GRAVITY_CHANGER_WEST);
-            event.register(Registries.ITEM,GravityChanger.id("gravity_changer_east"),() ->  ModItems.GRAVITY_CHANGER_EAST);
-
-            Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,"side_data",GravityPlatingItem.SIDE_DATA_COMPONENT);
-
-            for (Direction direction : Direction.values()) {
-                event.register(
-                        Registries.ITEM, GravityChanger.id("gravity_anchor_" + direction.getName()), () -> GravityAnchorItem.ITEM_MAP.get(direction)
-                );
-            }
-        } else if (event.getRegistryKey() == Registries.POTION) {
+      if (event.getRegistryKey() == Registries.POTION) {
             event.register(
                     Registries.POTION,
                     GravityChanger.id("gravity_decr_0"),

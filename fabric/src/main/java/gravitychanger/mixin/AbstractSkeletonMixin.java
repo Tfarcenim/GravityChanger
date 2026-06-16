@@ -1,7 +1,6 @@
 package gravitychanger.mixin;
 
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;

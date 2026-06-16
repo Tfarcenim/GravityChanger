@@ -2,7 +2,6 @@ package gravitychanger.mixin;
 
 
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

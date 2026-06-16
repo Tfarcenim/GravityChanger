@@ -2,13 +2,15 @@ package gravitychanger.init;
 
 import gravitychanger.GravityChanger;
 import gravitychanger.item.GravityAnchorItem;
+import gravitychanger.item.GravityChangerItem;
+import gravitychanger.item.GravityChangerItemAOE;
 import gravitychanger.mob_effect.refined.GravityPotions;
 import gravitychanger.plating.GravityPlatingBlockEntity;
 import gravitychanger.plating.GravityPlatingItem;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -19,21 +21,8 @@ import net.minecraft.world.item.alchemy.PotionContents;
 
 public class ModCreativeTabs {
     public static final CreativeModeTab GENERAL = CreativeModeTab.builder(null,-1)
-            .icon(() -> new ItemStack(ModItems.GRAVITY_CHANGER_UP))
+            .icon(() -> new ItemStack(ModItems.GRAVITY_CHANGERS.getEntry(Direction.UP)))
             .displayItems((enabledFeatures, entries) -> {
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_UP));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_DOWN));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_EAST));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_WEST));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_NORTH));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_SOUTH));
-
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_UP_AOE));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_DOWN_AOE));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_EAST_AOE));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_WEST_AOE));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_NORTH_AOE));
-                entries.accept(new ItemStack(ModItems.GRAVITY_CHANGER_SOUTH_AOE));
 
                 entries.accept(GravityPlatingItem.createStack(
                         new GravityPlatingBlockEntity.SideData(true, 1)
@@ -57,7 +46,15 @@ public class ModCreativeTabs {
                         new GravityPlatingBlockEntity.SideData(false, 32)
                 ));
 
-                for (GravityAnchorItem item : GravityAnchorItem.ITEM_MAP.values()) {
+                for (GravityAnchorItem item : ModItems.GRAVITY_ANCHORS.map().values()) {
+                    entries.accept(new ItemStack(item));
+                }
+
+                for (GravityChangerItem item : ModItems.GRAVITY_CHANGERS.map().values()) {
+                    entries.accept(new ItemStack(item));
+                }
+
+                for (GravityChangerItemAOE item : ModItems.GRAVITY_CHANGERS_AOE.map().values()) {
                     entries.accept(new ItemStack(item));
                 }
 

@@ -3,12 +3,16 @@ package gravitychanger;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.config.GravityChangerConfig;
 import gravitychanger.init.ModCreativeTabs;
+import gravitychanger.init.ModItems;
 import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.mob_effect.GravityInvertMobEffect;
 import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
+import gravitychanger.plating.GravityPlatingItem;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
@@ -49,6 +53,9 @@ public class GravityChanger {
         GravityDirectionMobEffect.init();
 
         ModCreativeTabs.init();
+
+        ModItems.init();
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,"side_data", GravityPlatingItem.SIDE_DATA_COMPONENT);
     }
 
     public static ResourceLocation id(String path) {

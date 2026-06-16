@@ -6,7 +6,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.GCUtil;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;

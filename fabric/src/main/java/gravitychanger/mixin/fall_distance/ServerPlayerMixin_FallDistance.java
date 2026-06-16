@@ -1,7 +1,6 @@
 package gravitychanger.mixin.fall_distance;
 
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;

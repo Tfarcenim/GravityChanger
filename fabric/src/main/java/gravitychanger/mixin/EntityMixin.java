@@ -2,7 +2,6 @@ package gravitychanger.mixin;
 
 import gravitychanger.GravityChangerFabric;
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;

@@ -1,30 +1,18 @@
 package gravitychanger.item;
 
-import gravitychanger.GravityChanger;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import java.util.EnumMap;
 import java.util.List;
 
 // based on AmethystGravity
 public class GravityAnchorItem extends Item {
     public final Direction direction;
-    
-    public static final EnumMap<Direction, GravityAnchorItem> ITEM_MAP = new EnumMap<>(Direction.class);
-    
-    static {
-        for (Direction direction : Direction.values()) {
-            ITEM_MAP.put(direction, new GravityAnchorItem(direction, new Properties()));
-        }
-    }
-    
+
     public GravityAnchorItem(Direction _direction, Properties settings) {
         super(settings);
         direction = _direction;

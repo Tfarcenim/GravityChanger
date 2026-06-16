@@ -32,14 +32,6 @@ public class GravityStrengthStatusEffect extends MobEffect {
     }
 
     public static void init() {
-
-        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
-            if (entity instanceof LivingEntity livingEntity) {
-                increase.apply(livingEntity, component, INCREASE_GRAVITY);
-                decrease.apply(livingEntity, component, DECREASE_GRAVITY);
-                reverse.apply(livingEntity, component, REVERSE_GRAVITY);
-            }
-        });
     }
 
     private void apply(LivingEntity entity, GravityComponent component, Holder<MobEffect> effectHolder) {

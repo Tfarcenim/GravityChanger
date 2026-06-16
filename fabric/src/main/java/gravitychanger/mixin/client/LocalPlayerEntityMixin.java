@@ -2,7 +2,6 @@ package gravitychanger.mixin.client;
 
 import com.mojang.authlib.GameProfile;
 import gravitychanger.api.GravityChangerAPI;
-import gravitychanger.util.RotationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;

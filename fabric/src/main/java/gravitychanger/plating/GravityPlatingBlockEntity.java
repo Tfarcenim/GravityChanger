@@ -5,7 +5,6 @@ import gravitychanger.GravityChangerFabric;
 import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.GCUtil;
-import gravitychanger.util.RotationUtil;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

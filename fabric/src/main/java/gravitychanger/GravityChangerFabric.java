@@ -1,10 +1,14 @@
 package gravitychanger;
 
+import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.command.DirectionArgumentType;
 import gravitychanger.command.GravityCommand;
 import gravitychanger.command.LocalDirectionArgumentType;
 import gravitychanger.config.GravityChangerConfig;
+import gravitychanger.item.GravityAnchorItem;
+import gravitychanger.item.GravityChangerItem;
+import gravitychanger.item.GravityChangerItemAOE;
 import gravitychanger.mob_effect.refined.GravityStrengthStatusEffect;
 import gravitychanger.plating.GravityPlatingBlockEntity;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -36,7 +40,6 @@ public class GravityChangerFabric implements ModInitializer {
 
         GravityChangerItem.init();
         GravityChangerItemAOE.init();
-        GravityAnchorItem.init();
         GravityChanger.LOG.info("[gravity-changer]");
 
         CommandRegistrationCallback.EVENT.register(
@@ -60,6 +63,9 @@ public class GravityChangerFabric implements ModInitializer {
         
         DirectionArgumentType.init();
         LocalDirectionArgumentType.init();
+
+        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> CommonEvents.handleGravity(entity,(IEntityGravityData)component));
+
     }
 
 }

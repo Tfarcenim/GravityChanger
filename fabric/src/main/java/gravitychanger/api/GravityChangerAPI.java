@@ -3,7 +3,6 @@ package gravitychanger.api;
 import gravitychanger.DimensionGravityDataComponent;
 import gravitychanger.GravityChangerComponents;
 import gravitychanger.GravityComponent;
-import gravitychanger.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
