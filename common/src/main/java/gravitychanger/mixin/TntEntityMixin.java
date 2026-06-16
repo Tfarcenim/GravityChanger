@@ -19,7 +19,7 @@ public abstract class TntEntityMixin extends Entity {
         method = "tick",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"
+            target = "Lnet/minecraft/world/entity/item/PrimedTnt;applyGravity()V"
         ),
         index = 1
     )

@@ -3,12 +3,8 @@ package gravitychanger.mixin;
 
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class ThrownEntityMixin {
     
     @Shadow
-    protected abstract float getGravity();
+    protected abstract double getDefaultGravity();
 
     /*@Override
     public Direction gravitychanger$getAppliedGravityDirection() {
@@ -36,9 +32,9 @@ public abstract class ThrownEntityMixin {
     )
     public Vec3 tick(Vec3 modify) {
         //if(this instanceof RotatableEntityAccessor) {
-        modify = new Vec3(modify.x, modify.y + this.getGravity(), modify.z);
+        modify = new Vec3(modify.x, modify.y + this.getDefaultGravity(), modify.z);
         modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
-        modify = new Vec3(modify.x, modify.y - this.getGravity(), modify.z);
+        modify = new Vec3(modify.x, modify.y - this.getDefaultGravity(), modify.z);
         modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection((ThrowableProjectile) (Object) this));
         // }
         return modify;
@@ -62,8 +58,8 @@ public abstract class ThrownEntityMixin {
         args.set(3, pos.z);
     }*/
     
-    @ModifyReturnValue(method = "getGravity", at = @At("RETURN"))
-    private float multiplyGravity(float original) {
-        return original * (float) GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
+    @ModifyReturnValue(method = "getDefaultGravity", at = @At("RETURN"))
+    private double multiplyGravity(double original) {
+        return original * GravityChangerAPI.getGravityStrength(((Entity) (Object) this));
     }
 }

@@ -1,6 +1,7 @@
 package gravitychanger.mixin.client;
 
-import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.GravityChangerAPI;
+import gravitychanger.util.RotationUtil;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +23,7 @@ public abstract class ScreenEffectRendererMixin {
         cancellable = true
     )
     private static void inject_getInWallBlockState(Player player, CallbackInfoReturnable<BlockState> cir) {
-        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(player);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(player);
         if (gravityDirection == Direction.DOWN) return;
         
         cir.cancel();

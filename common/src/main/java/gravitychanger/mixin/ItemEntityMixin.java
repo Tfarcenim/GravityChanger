@@ -15,7 +15,7 @@ public abstract class ItemEntityMixin extends Entity {
         super(type, world);
     }
     
-    @ModifyConstant(method = "tick()V", constant = @Constant(doubleValue = -0.04))
+    @ModifyConstant(method = "tick()V", constant = @Constant())
     private double multiplyGravity(double constant) {
         return constant * GravityChangerAPI.getGravityStrength(this);
     }

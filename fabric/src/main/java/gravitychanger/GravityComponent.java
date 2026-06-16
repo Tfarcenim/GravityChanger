@@ -2,6 +2,7 @@ package gravitychanger;
 
 import com.mojang.logging.LogUtils;
 import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
 import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;

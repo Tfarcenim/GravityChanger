@@ -3,7 +3,7 @@ package gravitychanger.mixin.item;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -27,15 +27,15 @@ public class BehaviorUtilsMixin {
         Operation<ItemEntity> operation,
         @Local float yOffset, @Local LivingEntity entity
     ) {
-        Vec3 eyeOffset = GravityChangerAPIFabric.getEyeOffset(entity);
+        Vec3 eyeOffset = GravityChangerAPI.getEyeOffset(entity);
         Vec3 offset = eyeOffset.normalize().scale(yOffset);
         Vec3 itemPos = entity.position().add(eyeOffset).subtract(offset);
         ItemEntity itemEntity = operation.call(
             level, itemPos.x(), itemPos.y(), itemPos.z(), itemStack
         );
-        GravityChangerAPIFabric.setBaseGravityDirection(
+        GravityChangerAPI.setBaseGravityDirection(
             itemEntity,
-            GravityChangerAPIFabric.getGravityDirection(entity)
+            GravityChangerAPI.getGravityDirection(entity)
         );
         return itemEntity;
     }
@@ -52,7 +52,7 @@ public class BehaviorUtilsMixin {
         Operation<Void> operation,
         @Local LivingEntity entity
     ) {
-        GravityChangerAPIFabric.setWorldVelocity(entity, deltaMovement);
+        GravityChangerAPI.setWorldVelocity(entity, deltaMovement);
     }
     
 }

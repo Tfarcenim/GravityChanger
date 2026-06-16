@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(UseOnContext.class)
-public abstract class ItemUsageContextMixin {
+public abstract class UseOnContextMixin {
     @WrapOperation(
         method = "getRotation",
         at = @At(

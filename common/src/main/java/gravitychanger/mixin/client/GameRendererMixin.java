@@ -1,7 +1,8 @@
 package gravitychanger.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import gravitychanger.api.GravityChangerAPIFabric;
+import gravitychanger.RotationAnimation;
+import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -32,8 +33,8 @@ public abstract class GameRendererMixin {
     )
     private void inject_renderWorld(DeltaTracker deltaTracker, CallbackInfo ci) {
         Entity focusedEntity = this.mainCamera.getEntity();
-        Direction gravityDirection = GravityChangerAPIFabric.getGravityDirection(focusedEntity);
-        RotationAnimation animation = GravityChangerAPIFabric.getRotationAnimation(focusedEntity);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
+        RotationAnimation animation = GravityChangerAPI.getRotationAnimation(focusedEntity);
         if (animation == null) {
             return;
         }
