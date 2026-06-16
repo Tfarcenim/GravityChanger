@@ -13,6 +13,7 @@ import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.mob_effect.GravityInvertMobEffect;
 import gravitychanger.mob_effect.refined.GravityPotions;
 import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
+import gravitychanger.network.PacketHandlerNeoForge;
 import gravitychanger.network.S2CEntityGravityPacket;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
@@ -52,6 +53,7 @@ public class GravityChangerNeoForge {
         bus.addListener(this::registerCaps);
         bus.addListener(this::setup);
         bus.addListener(this::register);
+        bus.addListener(PacketHandlerNeoForge::register);
         // Use Forge to bootstrap the Common mod.
         GravityChanger.init();
         //NeoForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntity);
