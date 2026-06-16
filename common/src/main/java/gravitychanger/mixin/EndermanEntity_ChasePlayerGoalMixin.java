@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(
     targets = "net.minecraft.world.entity.monster.EnderMan$EndermanFreezeWhenLookedAt"
 )
-public abstract class EndermanEntity$ChasePlayerGoalMixin {
+public abstract class EndermanEntity_ChasePlayerGoalMixin {
     @Redirect(
         method = "tick()V",
         at = @At(

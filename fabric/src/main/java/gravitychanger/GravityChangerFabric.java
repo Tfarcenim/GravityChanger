@@ -15,7 +15,7 @@ public class GravityChangerFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
+        GravityChanger.init();
         GravityChanger.register();
 
         GravityChanger.LOG.info("[gravity-changer]");

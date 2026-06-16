@@ -37,7 +37,7 @@ public class GravityDirectionMobEffect extends MobEffect {
     
     static {
         for (Direction dir : Direction.values()) {
-            Holder<MobEffect> effect = register(dir.name(), new GravityDirectionMobEffect(dir));
+            Holder<MobEffect> effect = register(dir.getSerializedName(), new GravityDirectionMobEffect(dir));
             EFFECT_MAP.put(dir, effect);
         }
     }

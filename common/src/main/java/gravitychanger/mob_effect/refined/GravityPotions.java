@@ -14,6 +14,20 @@ import net.minecraft.world.item.alchemy.Potion;
 import java.util.EnumMap;
 
 public class GravityPotions {
+
+    public static final EnumMap<Direction, Potion> DIR_POTIONS = new EnumMap<>(Direction.class);
+
+    static {
+        for (Direction direction : Direction.values()) {
+            Potion potion = new Potion(
+                    new MobEffectInstance(
+                            GCUtil.dirtyCast(GravityDirectionMobEffect.EFFECT_MAP.get(direction)), 9600, 1
+                    )
+            );
+            DIR_POTIONS.put(direction, potion);
+        }
+    }
+
     public static Potion STRENGTH_DECR_POTION_0 = new Potion(
         new MobEffectInstance(
             GCUtil.dirtyCast(GravityStrengthMobEffect.DECREASE), 9600, 0
@@ -75,19 +89,6 @@ public class GravityPotions {
 
     public static void init() {
 
-    }
-    
-    public static final EnumMap<Direction, Potion> DIR_POTIONS = new EnumMap<>(Direction.class);
-    
-    static {
-        for (Direction direction : Direction.values()) {
-            Potion potion = new Potion(
-                new MobEffectInstance(
-                    GCUtil.dirtyCast(GravityDirectionMobEffect.EFFECT_MAP.get(direction)), 9600, 1
-                )
-            );
-            DIR_POTIONS.put(direction, potion);
-        }
     }
     
     public static ResourceLocation getPotionId(Direction direction) {
