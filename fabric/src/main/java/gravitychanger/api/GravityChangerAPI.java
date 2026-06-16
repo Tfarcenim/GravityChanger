@@ -1,10 +1,8 @@
 package gravitychanger.api;
 
 import gravitychanger.DimensionGravityDataComponent;
-import gravitychanger.EntityTags;
 import gravitychanger.GravityChangerComponents;
 import gravitychanger.GravityComponent;
-import gravitychanger.RotationAnimation;
 import gravitychanger.util.RotationUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,6 +1,6 @@
 package gravitychanger.mob_effect.refined;
 
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import gravitychanger.GravityComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -32,27 +32,6 @@ public class GravityStrengthStatusEffect extends MobEffect {
     }
 
     public static void init() {
-
-        GravityStrengthStatusEffect increase = new GravityStrengthStatusEffect(0x98D982, 2.2, 1);
-
-        GravityStrengthStatusEffect decrease = new GravityStrengthStatusEffect(0x28D982, 0.25, 1);
-
-        GravityStrengthStatusEffect reverse = new GravityStrengthStatusEffect(0x58D982, 1.0, -1);
-
-        INCREASE_GRAVITY = Registry.registerForHolder(
-                BuiltInRegistries.MOB_EFFECT,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "strength_increase"),
-                increase);
-
-        DECREASE_GRAVITY = Registry.registerForHolder(
-                BuiltInRegistries.MOB_EFFECT,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "strength_decrease"),
-                decrease);
-
-        REVERSE_GRAVITY = Registry.registerForHolder(
-                BuiltInRegistries.MOB_EFFECT,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "strength_reverse"),
-                reverse);
 
         GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
             if (entity instanceof LivingEntity livingEntity) {

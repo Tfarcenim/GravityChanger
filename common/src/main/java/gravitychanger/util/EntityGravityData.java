@@ -95,7 +95,7 @@ public abstract class EntityGravityData implements IEntityGravityData {
         EntityDimensions dimensions = entity.getDimensions(entity.getPose());
         if (newGravity.getOpposite() == oldGravity) {
             // In the center of the hit-box
-            return new Vec3(0, dimensions.height / 2, 0);
+            return new Vec3(0, dimensions.height() / 2, 0);
         }
         else {
             return Vec3.ZERO;

@@ -1,8 +1,7 @@
 package gravitychanger.plating;
 
 import com.mojang.logging.LogUtils;
-import gravitychanger.EntityTags;
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import gravitychanger.GravityComponent;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.GCUtil;
@@ -49,7 +48,7 @@ import java.util.List;
 public class GravityPlatingBlockEntity extends BlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "plating_block_entity");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "plating_block_entity");
     public static BlockEntityType<GravityPlatingBlockEntity> TYPE;
     
     private static final int MAX_LEVEL = 64;
@@ -320,7 +319,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                 }
             }
             
-            if (applies && GravityChangerMod.config.autoJumpOnGravityPlateInnerCorner) {
+            if (applies && GravityChangerFabric.config.autoJumpOnGravityPlateInnerCorner) {
                 tryToDoCornerAutoJump(blockState, blockPos, entity, comp);
             }
         }

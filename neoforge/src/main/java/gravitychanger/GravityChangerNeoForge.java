@@ -11,7 +11,8 @@ import gravitychanger.init.ModItems;
 import gravitychanger.item.GravityAnchorItem;
 import gravitychanger.mob_effect.GravityDirectionMobEffect;
 import gravitychanger.mob_effect.GravityInvertMobEffect;
-import gravitychanger.mob_effect.GravityPotions;
+import gravitychanger.mob_effect.refined.GravityPotions;
+import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
 import gravitychanger.network.S2CEntityGravityPacket;
 import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
@@ -31,24 +32,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegisterEvent;
-
-import static gravitychanger.mob_effect.GravityStrengthMobEffect.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(GravityChanger.MOD_ID)
-public class GravityChangerForge {
+public class GravityChangerNeoForge {
     
-    public GravityChangerForge() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public GravityChangerNeoForge(IEventBus bus) {
         // This method is invoked by the Forge mod loader when it is ready
         // to load your mod. You can access Forge and Common code in this
         // project.
@@ -58,22 +54,24 @@ public class GravityChangerForge {
         bus.addListener(this::register);
         // Use Forge to bootstrap the Common mod.
         GravityChanger.init();
-        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntity);
-        MinecraftForge.EVENT_BUS.addGenericListener(Level.class,this::attachLevel);
-        MinecraftForge.EVENT_BUS.addListener(this::login);
-        MinecraftForge.EVENT_BUS.addListener(this::commands);
-        MinecraftForge.EVENT_BUS.addListener(this::tracking);
-        MinecraftForge.EVENT_BUS.addListener(this::respawn);
-        MinecraftForge.EVENT_BUS.addListener(this::dimensionChange);
-        ForgeEvents.init();
+        //NeoForge.EVENT_BUS.addGenericListener(Entity.class,this::attachEntity);
+        //NeoForge.EVENT_BUS.addGenericListener(Level.class,this::attachLevel);
+        NeoForge.EVENT_BUS.addListener(this::login);
+        NeoForge.EVENT_BUS.addListener(this::commands);
+        NeoForge.EVENT_BUS.addListener(this::tracking);
+        NeoForge.EVENT_BUS.addListener(this::respawn);
+        NeoForge.EVENT_BUS.addListener(this::dimensionChange);
+        NeoForgeEvents.init();
     }
 
     public static void onTick(Entity entity) {
-        entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(IEntityGravityData::commonTick);
+        //todo entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(IEntityGravityData::commonTick);
     }
 
     void register(RegisterEvent event) {
-
+        if (event.getRegistry() == BuiltInRegistries.BLOCK) {
+            GravityChanger.register();
+        }
         event.register(Registries.COMMAND_ARGUMENT_TYPE,GravityChanger.id("direction"),
                 () -> {
                     SingletonArgumentInfo<DirectionArgumentType> info = SingletonArgumentInfo.contextFree(() -> DirectionArgumentType.instance);
@@ -104,40 +102,13 @@ public class GravityChangerForge {
             event.register(Registries.ITEM,GravityChanger.id("gravity_changer_west"),() ->  ModItems.GRAVITY_CHANGER_WEST);
             event.register(Registries.ITEM,GravityChanger.id("gravity_changer_east"),() ->  ModItems.GRAVITY_CHANGER_EAST);
 
+            Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,"side_data",GravityPlatingItem.SIDE_DATA_COMPONENT);
+
             for (Direction direction : Direction.values()) {
                 event.register(
                         Registries.ITEM, GravityChanger.id("gravity_anchor_" + direction.getName()), () -> GravityAnchorItem.ITEM_MAP.get(direction)
                 );
             }
-        } else if (event.getRegistryKey() == Registries.MOB_EFFECT) {
-            event.register(
-                    Registries.MOB_EFFECT,
-                    GravityChanger.id("strength_increase"),
-                    () -> INCREASE
-            );
-
-            event.register(
-                    Registries.MOB_EFFECT,
-                    GravityChanger.id("strength_decrease"),
-                    () -> DECREASE
-            );
-
-            event.register(
-                    Registries.MOB_EFFECT,
-                    GravityChanger.id("strength_reverse"),
-                    () -> REVERSE
-            );
-
-            event.register(
-                    Registries.MOB_EFFECT,GravityChanger.id("invert"), () -> GravityInvertMobEffect.INSTANCE
-            );
-
-            for (Direction dir : Direction.values()) {
-                event.register(
-                        Registries.MOB_EFFECT, GravityChanger.id(dir+""),() ->  GravityDirectionMobEffect.EFFECT_MAP.get(dir)
-                );
-            }
-
         } else if (event.getRegistryKey() == Registries.POTION) {
             event.register(
                     Registries.POTION,
@@ -172,12 +143,6 @@ public class GravityChangerForge {
                 );
             }
         }
-
-
-        event.register(
-                Registries.CREATIVE_MODE_TAB, GravityChanger.id("general"),
-                () -> ModCreativeTabs.GENERAL
-        );
 
         event.register(
                 Registries.BLOCK, GravityChanger.id("gravity_plating"), () -> GravityPlatingBlock.PLATING_BLOCK

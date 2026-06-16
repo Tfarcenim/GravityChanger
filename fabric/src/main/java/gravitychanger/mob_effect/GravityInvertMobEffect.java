@@ -1,6 +1,7 @@
 package gravitychanger.mob_effect;
 
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChanger;
+import gravitychanger.GravityChangerFabric;
 import gravitychanger.GravityComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -14,9 +15,9 @@ public class GravityInvertMobEffect extends MobEffect {
     
     public static final int COLOR = 0x98D982;
     
-    public static final ResourceLocation PHASE = ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "invert_mob_effect_phase");
+    public static final ResourceLocation PHASE = GravityChanger.id("invert_mob_effect_phase");
     
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "invert");
+    public static final ResourceLocation ID = GravityChanger.id("invert");
     
     public static final GravityInvertMobEffect INSTANCE = new GravityInvertMobEffect();
     

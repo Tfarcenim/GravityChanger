@@ -1,6 +1,8 @@
-package gravitychanger.mob_effect;
+package gravitychanger.mob_effect.refined;
 
 import gravitychanger.GravityChanger;
+import gravitychanger.mob_effect.GravityDirectionMobEffect;
+import gravitychanger.util.GCUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,25 +13,25 @@ import java.util.EnumMap;
 public class GravityPotions {
     public static Potion STRENGTH_DECR_POTION_0 = new Potion(
         new MobEffectInstance(
-            GravityStrengthMobEffect.DECREASE, 9600, 0
+            GCUtil.dirtyCast(GravityStrengthMobEffect.DECREASE), 9600, 0
         )
     );
     
     public static Potion STRENGTH_DECR_POTION_1 = new Potion(
         new MobEffectInstance(
-            GravityStrengthMobEffect.DECREASE, 9600, 1
+                GCUtil.dirtyCast(GravityStrengthMobEffect.DECREASE), 9600, 1
         )
     );
     
     public static Potion STRENGTH_INCR_POTION_0 = new Potion(
         new MobEffectInstance(
-            GravityStrengthMobEffect.INCREASE, 9600, 0
+            GCUtil.dirtyCast(GravityStrengthMobEffect.INCREASE), 9600, 0
         )
     );
     
     public static Potion STRENGTH_INCR_POTION_1 = new Potion(
         new MobEffectInstance(
-            GravityStrengthMobEffect.INCREASE, 9600, 1
+            GCUtil.dirtyCast(GravityStrengthMobEffect.INCREASE), 9600, 1
         )
     );
     
@@ -39,7 +41,7 @@ public class GravityPotions {
         for (Direction direction : Direction.values()) {
             Potion potion = new Potion(
                 new MobEffectInstance(
-                    GravityDirectionMobEffect.EFFECT_MAP.get(direction), 9600, 1
+                    GCUtil.dirtyCast(GravityDirectionMobEffect.EFFECT_MAP.get(direction)), 9600, 1
                 )
             );
             DIR_POTIONS.put(direction, potion);

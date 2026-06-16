@@ -36,9 +36,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private Abilities abilities;
     
     @Shadow
-    public abstract EntityDimensions getDimensions(Pose pose);
-    
-    @Shadow
     protected abstract boolean isStayingOnGroundSurface();
     
     @Shadow

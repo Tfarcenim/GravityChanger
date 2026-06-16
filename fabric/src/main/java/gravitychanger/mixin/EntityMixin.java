@@ -1,6 +1,6 @@
 package gravitychanger.mixin;
 
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
@@ -633,7 +633,7 @@ public abstract class EntityMixin {
         Entity this_ = (Entity) (Object) this;
     
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this_);
-        if (GravityChangerMod.config.voidDamageAboveWorld &&
+        if (GravityChangerFabric.config.voidDamageAboveWorld &&
             this.getY() > (double) (this.level.getMaxBuildHeight() + 256) &&
             gravityDirection == Direction.UP
         ) {
@@ -642,7 +642,7 @@ public abstract class EntityMixin {
             return;
         }
         
-        if (GravityChangerMod.config.voidDamageOnHorizontalFallTooFar &&
+        if (GravityChangerFabric.config.voidDamageOnHorizontalFallTooFar &&
             gravityDirection.getAxis() != Direction.Axis.Y &&
             fallDistance > 1024
             // TODO also handle reverse gravity strength

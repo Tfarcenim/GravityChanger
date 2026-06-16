@@ -28,7 +28,7 @@ public class GravityChangerComponents implements EntityComponentInitializer, Wor
         registry.registerForPlayers(
             GRAVITY_COMP_KEY, GravityComponent::new,
                 (from, to, provider, lossless, keepInventory, sameCharacter) -> {
-                    if (lossless || !GravityChangerMod.config.resetGravityOnRespawn) {
+                    if (lossless || !GravityChangerFabric.config.resetGravityOnRespawn) {
                         RespawnCopyStrategy.copy(from, to, provider);
                     }
                 }

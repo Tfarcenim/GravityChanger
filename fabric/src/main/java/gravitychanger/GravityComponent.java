@@ -213,7 +213,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
             currGravityDirection = baseGravityDirection;
             currGravityStrength = baseGravityStrength;
             currGravityStrength *= GravityChangerAPI.getDimensionGravityStrength(entity.level());
-            currGravityStrength *= GravityChangerMod.config.gravityStrengthMultiplier;
+            currGravityStrength *= GravityChangerFabric.config.gravityStrengthMultiplier;
             // the rotation parameters is not being reset here
             // the rotation parameter is kept when an effect vanishes
             currentEffectPriority = Double.MIN_VALUE;
@@ -416,7 +416,7 @@ public class GravityComponent implements Component, AutoSyncedComponent, CommonT
     
     // Adjust position to avoid suffocation in blocks when changing gravity
     private void adjustEntityPosition(Direction oldGravity, Direction newGravity, AABB entityBoundingBox) {
-        if (!GravityChangerMod.config.adjustPositionAfterChangingGravity) {
+        if (!GravityChangerFabric.config.adjustPositionAfterChangingGravity) {
             return;
         }
         

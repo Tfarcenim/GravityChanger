@@ -2,7 +2,6 @@ package gravitychanger.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import gravitychanger.RotationAnimation;
 import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

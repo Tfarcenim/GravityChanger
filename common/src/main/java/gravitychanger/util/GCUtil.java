@@ -3,9 +3,11 @@ package gravitychanger.util;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 
 public class GCUtil {
@@ -45,5 +47,9 @@ public class GCUtil {
             return entity instanceof RemotePlayer;
         }
         return false;
+    }
+
+    public static <M extends MobEffect> Holder<MobEffect> dirtyCast(Holder<M> holder) {
+        return (Holder<MobEffect>) holder;
     }
 }

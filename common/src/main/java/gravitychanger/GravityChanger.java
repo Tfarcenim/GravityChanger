@@ -2,6 +2,10 @@ package gravitychanger;
 
 import gravitychanger.api.RotationParameters;
 import gravitychanger.config.GravityChangerConfig;
+import gravitychanger.init.ModCreativeTabs;
+import gravitychanger.mob_effect.GravityDirectionMobEffect;
+import gravitychanger.mob_effect.GravityInvertMobEffect;
+import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -39,7 +43,15 @@ public class GravityChanger {
         GravityChanger.config = GravityChanger.configHolder.getConfig();
     }
 
+    public static void register() {
+        GravityStrengthMobEffect.init();
+        GravityInvertMobEffect.init();
+        GravityDirectionMobEffect.init();
+
+        ModCreativeTabs.init();
+    }
+
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID,path);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID,path);
     }
 }

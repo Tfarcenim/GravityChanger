@@ -1,11 +1,10 @@
-package gravitychanger.mob_effect;
+package gravitychanger.mob_effect.refined;
 
-import gravitychanger.GravityChangerMod;
-import gravitychanger.GravityComponent;
+import gravitychanger.GravityChanger;
+import gravitychanger.api.IEntityGravityData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,27 +15,30 @@ public class GravityStrengthMobEffect extends MobEffect {
     public final double base;
     public final int signum;
     
-    public static final Holder<MobEffect> INCREASE =
-        register("strength_increase", new GravityStrengthMobEffect(0x98D982, 1.2, 1));
-    public static final Holder<MobEffect> DECREASE =
-        register("strength_decrease", new GravityStrengthMobEffect(0x28D158, 0.7, 1));
+    public static final Holder<GravityStrengthMobEffect> INCREASE =
+        register("strength_increase",new GravityStrengthMobEffect(0x98D982, 1.2, 1));
+    public static final Holder<GravityStrengthMobEffect> DECREASE =
+        register("strength_decrease",new GravityStrengthMobEffect(0x98D982, 0.7, 1));
     
     // it turns gravity into levitation but does not change player orientation
-    public static final Holder<MobEffect> REVERSE =
-        register("strength_reverse", new GravityStrengthMobEffect(0x54E972, 1.0, -1));
+    public static final Holder<GravityStrengthMobEffect> REVERSE =
+            register("strength_reverse",new GravityStrengthMobEffect(0x98D982, 1.0, -1));
     
     protected GravityStrengthMobEffect(int color, double base, int signum) {
         super(MobEffectCategory.NEUTRAL, color);
         this.base = base;
         this.signum = signum;
     }
+
+    public static void init() {
+    }
     
     public double getGravityStrengthMultiplier(int level) {
         return Math.pow(base, level) * signum;
     }
     
-    private void apply(LivingEntity entity, GravityComponent component, Holder<MobEffect> effectHolder) {
-        MobEffectInstance effectInstance = entity.getEffect(effectHolder);
+    public <M extends MobEffect> void apply(LivingEntity entity, IEntityGravityData component, Holder<M> effectHolder) {
+        MobEffectInstance effectInstance = entity.getEffect((Holder<MobEffect>) effectHolder);
         
         if (effectInstance == null) {
             return;
@@ -46,8 +48,9 @@ public class GravityStrengthMobEffect extends MobEffect {
     
         component.applyGravityStrengthEffect(getGravityStrengthMultiplier(level));
     }
-    
-    public static void init() {
+
+    /*
+        public static void init() {
         GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> {
             if (entity instanceof LivingEntity livingEntity) {
                 GravityStrengthMobEffect increase,decrease,reverse;
@@ -60,8 +63,9 @@ public class GravityStrengthMobEffect extends MobEffect {
             }
         });
     }
+     */
 
-    private static Holder.Reference<MobEffect> register(String string, MobEffect mobEffect) {
-        return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, string), mobEffect);
+    private static <M extends MobEffect> Holder.Reference<M> register(String string, M mobEffect) {
+        return (Holder.Reference<M>) Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, GravityChanger.id(string), mobEffect);
     }
 }

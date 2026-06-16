@@ -1,7 +1,7 @@
 package gravitychanger.api;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 
 public class GravityUpdateEvent extends EntityEvent {
     private final IEntityGravityData gravityData;

@@ -1,7 +1,6 @@
 package gravitychanger.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import gravitychanger.RotationAnimation;
 import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;

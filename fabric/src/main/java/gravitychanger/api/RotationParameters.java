@@ -1,6 +1,6 @@
 package gravitychanger.api;
 
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import net.minecraft.nbt.CompoundTag;
 
 public record RotationParameters(
@@ -14,9 +14,9 @@ public record RotationParameters(
     
     public static void updateDefault() {
         defaultParam = new RotationParameters(
-            !GravityChangerMod.config.worldVelocity,
+            !GravityChangerFabric.config.worldVelocity,
             true,
-            GravityChangerMod.config.rotationTime
+            GravityChangerFabric.config.rotationTime
         );
     }
     

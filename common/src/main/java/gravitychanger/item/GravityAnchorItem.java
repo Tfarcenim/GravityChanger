@@ -29,17 +29,17 @@ public class GravityAnchorItem extends Item {
         super(settings);
         direction = _direction;
     }
-    
+
     @Override
-    public void appendHoverText(ItemStack itemStack, Level world, List<Component> tooltip, TooltipFlag tooltipContext) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_anchor.tooltip.0")
-                .withStyle(ChatFormatting.GRAY)
+                Component.translatable("gravity_changer.gravity_anchor.tooltip.0")
+                        .withStyle(ChatFormatting.GRAY)
         );
-        
+
         tooltip.add(
-            Component.translatable("gravity_changer.gravity_anchor.tooltip.1")
-                .withStyle(ChatFormatting.GRAY)
+                Component.translatable("gravity_changer.gravity_anchor.tooltip.1")
+                        .withStyle(ChatFormatting.GRAY)
         );
     }
 }

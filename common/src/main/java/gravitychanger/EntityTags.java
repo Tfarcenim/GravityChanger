@@ -21,8 +21,7 @@ public class EntityTags {
      * It's not favorable to let every mod add blacklist entity tag for this.
      */
     public static final TagKey<EntityType<?>> ALLOWED_SPECIAL = TagKey.create(
-        BuiltInRegistries.ENTITY_TYPE.key(),
-        new ResourceLocation("gravitychanger", "allowed_special")
+        BuiltInRegistries.ENTITY_TYPE.key(), GravityChanger.id( "allowed_special")
     );
     
     public static boolean canChangeGravity(Entity entity) {

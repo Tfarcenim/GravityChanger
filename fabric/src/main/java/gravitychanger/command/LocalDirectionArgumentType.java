@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -64,7 +64,7 @@ public class LocalDirectionArgumentType implements ArgumentType<LocalDirection> 
     
     public static void init() {
         ArgumentTypeRegistry.registerArgumentType(
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "local_direction"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "local_direction"),
             LocalDirectionArgumentType.class,
             SingletonArgumentInfo.contextFree(() -> LocalDirectionArgumentType.instance)
         );

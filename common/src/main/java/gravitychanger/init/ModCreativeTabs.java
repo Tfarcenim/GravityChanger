@@ -1,16 +1,21 @@
 package gravitychanger.init;
 
+import gravitychanger.GravityChanger;
 import gravitychanger.item.GravityAnchorItem;
-import gravitychanger.mob_effect.GravityPotions;
+import gravitychanger.mob_effect.refined.GravityPotions;
 import gravitychanger.plating.GravityPlatingBlockEntity;
 import gravitychanger.plating.GravityPlatingItem;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 public class ModCreativeTabs {
     public static final CreativeModeTab GENERAL = CreativeModeTab.builder(null,-1)
@@ -61,11 +66,19 @@ public class ModCreativeTabs {
 
                 for (Item potionItem : potionItems) {
                     for (Potion potion : GravityPotions.ALL) {
-                        ItemStack stack = PotionUtils.setPotion(new ItemStack(potionItem), potion);
+                        Holder<Potion> holder = new Holder.Direct<>(potion);
+                        ItemStack stack = PotionContents.createItemStack(potionItem, holder);
                         entries.accept(stack);
                     }
                 }
             })
             .title(Component.translatable("itemGroup.gravitychanger.general"))
             .build();
+
+    static {
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, GravityChanger.id("general"), ModCreativeTabs.GENERAL);
+    }
+
+    public static void init() {
+    }
 }

@@ -1,6 +1,7 @@
 package gravitychanger.plating;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
  * Based on code from AmethystGravity (by CyborgCabbage)
  */
 public class GravityPlatingBlock extends BaseEntityBlock {
+    public static final MapCodec<GravityPlatingBlock> CODEC = simpleCodec(GravityPlatingBlock::new);
     // in a corner, multiple faces of plates can occupy the same block
     
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -106,7 +108,12 @@ public class GravityPlatingBlock extends BaseEntityBlock {
         }
         return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
     }
-    
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return this.shapesByState.get(state);
@@ -250,9 +257,8 @@ public class GravityPlatingBlock extends BaseEntityBlock {
     }
     
     @Override
-    public InteractionResult use(
-        BlockState state, Level level, BlockPos pos, Player player,
-        InteractionHand hand, BlockHitResult hit
+    public InteractionResult useWithoutItem(
+        BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit
     ) {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
@@ -267,7 +273,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
             return InteractionResult.FAIL;
         }
         
-        return be.interact(level, pos, plateDir, player, hand);
+        return be.interact(level, pos, plateDir, player,player.getUsedItemHand());
     }
     
     /**
@@ -275,7 +281,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
      * Make it drop in creative mode.
      */
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof GravityPlatingBlockEntity be && !level.isClientSide && player.isCreative()) {
             List<ItemStack> drops = be.getDrops();
@@ -291,7 +297,7 @@ public class GravityPlatingBlock extends BaseEntityBlock {
             }
         }
         
-        super.playerWillDestroy(level, pos, state, player);
+        return super.playerWillDestroy(level, pos, state, player);
     }
     
     @Override

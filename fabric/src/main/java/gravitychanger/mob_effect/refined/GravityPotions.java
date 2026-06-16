@@ -1,6 +1,6 @@
 package gravitychanger.mob_effect.refined;
 
-import gravitychanger.GravityChangerMod;
+import gravitychanger.GravityChangerFabric;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -69,55 +69,55 @@ public class GravityPotions {
 
     public static ResourceLocation getPotionId(Direction direction) {
         return switch (direction) {
-            case DOWN -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_down_0");
-            case UP -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_up_0");
-            case NORTH -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_north_0");
-            case SOUTH -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_south_0");
-            case WEST -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_west_0");
-            case EAST -> ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_east_0");
+            case DOWN -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_down_0");
+            case UP -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_up_0");
+            case NORTH -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_north_0");
+            case SOUTH -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_south_0");
+            case WEST -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_west_0");
+            case EAST -> ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_east_0");
         };
     }
 
     public static void init() {
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_decr_0"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_decr_0"),
                 STRENGTH_DECR_POTION_0
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_decr_1"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_decr_1"),
                 STRENGTH_DECR_POTION_1
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_incr_0"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_incr_0"),
                 STRENGTH_INCR_POTION_0
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_incr_1"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_incr_1"),
                 STRENGTH_INCR_POTION_1
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_reverse_0"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_reverse_0"),
                 STRENGTH_REVERSE_POTION_0
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_reverse_1"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_reverse_1"),
                 STRENGTH_REVERSE_POTION_1
         );
 
         Registry.registerForHolder(
                 BuiltInRegistries.POTION,
-                ResourceLocation.fromNamespaceAndPath(GravityChangerMod.NAMESPACE, "gravity_invert_0"),
+                ResourceLocation.fromNamespaceAndPath(GravityChangerFabric.NAMESPACE, "gravity_invert_0"),
                 STRENGTH_INVERT_POTION_0
         );
 

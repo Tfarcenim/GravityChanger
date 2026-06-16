@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import gravitychanger.EntityTags;
 import gravitychanger.GravityChanger;
 import gravitychanger.api.GravityChangerAPI;
@@ -12,9 +14,13 @@ import gravitychanger.util.GCUtil;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -54,8 +60,21 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     }
     
     public static class SideData {
-        public boolean isAttracting = true;
-        public int level = 1;
+
+        public static final Codec<SideData> CODEC = RecordCodecBuilder.create(
+                sideDataInstance -> sideDataInstance.group(
+                        Codec.BOOL.fieldOf("is_attracting").forGetter(s -> s.isAttracting),
+                        Codec.INT.fieldOf("level").forGetter(s -> s.level)
+                ).apply(sideDataInstance,SideData::new)
+        );
+
+        public static final StreamCodec<RegistryFriendlyByteBuf,SideData> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.BOOL,sideData1 -> sideData1.isAttracting,
+                ByteBufCodecs.INT,sideData1 -> sideData1.level,SideData::new
+        );
+
+        public boolean isAttracting;
+        public int level;
         
         public @Nullable AABB effectBoxCache = null;
         
@@ -142,11 +161,10 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     private @Nullable SideData[] sideData = null;
     
     private @Nullable AABB roughAreaBoxCache = null;
-    
+
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         sideData = new SideData[6];
         for (Direction dir : Direction.values()) {
             String dirName = dir.getName();
@@ -156,10 +174,10 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             }
         }
     }
-    
+
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag,registries);
         
         if (sideData != null) {
             for (Direction dir : Direction.values()) {
@@ -177,14 +195,14 @@ public class GravityPlatingBlockEntity extends BlockEntity {
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
-    
+
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag,registries);
         return tag;
     }
-    
+
     public void refreshCache() {
         Level world = getLevel();
         
@@ -251,7 +269,7 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         List<Entity> entities = world.getEntitiesOfClass(
             Entity.class,
             roughBox,
-            e -> EntityTags.canChangeGravity(e)
+                EntityTags::canChangeGravity
         );
         
         for (Entity entity : entities) {

@@ -11,6 +11,7 @@
         "homepage": "https://fabricmc.net/",
         "sources": "https://github.com/FabricMC/fabric-example-mod"
     },
+    "accessWidener": "gravitychanger.accesswidener",
     "license": "${license}",
     "icon": "assets/modid/${mod_id}.png",
     "environment": "*",
