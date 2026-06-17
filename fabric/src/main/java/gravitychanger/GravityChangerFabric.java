@@ -1,13 +1,8 @@
 package gravitychanger;
 
+import gravitychanger.api.GravityChangerAPIFabric;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.command.GravityCommand;
-import gravitychanger.command.LocalDirectionArgumentType;
-import gravitychanger.item.GravityChangerItem;
-import gravitychanger.item.GravityChangerItemAOE;
-import gravitychanger.mob_effect.refined.GravityStrengthStatusEffect;
-import gravitychanger.plating.GravityPlatingBlockEntity;
-import gravitychanger.plating.GravityPlatingItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
@@ -30,7 +25,7 @@ public class GravityChangerFabric implements ModInitializer {
 //        GravityStrengthMobEffect.init();
 //        GravityPotions.init();
 
-        GravityComponent.GRAVITY_UPDATE_EVENT.register((entity, component) -> CommonEvents.handleGravity(entity,(IEntityGravityData)component));
+        GravityChangerAPIFabric.GRAVITY_UPDATE_EVENT.register(CommonEvents::handleGravity);
 
     }
 

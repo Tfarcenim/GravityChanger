@@ -24,9 +24,6 @@
         ],
         "modmenu": [
             "gravitychanger.ModMenuIntegration"
-        ],
-        "cardinal-components": [
-            "gravitychanger.GravityChangerComponents"
         ]
     },
     "mixins": [

@@ -1,19 +1,17 @@
 package gravitychanger;
 
-import gravitychanger.api.GravityChangerAPIForge;
-import gravitychanger.api.IEntityGravityData;
+import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.command.GravityCommand;
 import gravitychanger.network.PacketHandlerNeoForge;
 import gravitychanger.network.S2CEntityGravityPacket;
-import gravitychanger.network.S2CLevelGravityPacket;
 import gravitychanger.platform.Services;
+import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,7 +23,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(GravityChanger.MOD_ID)
 public class GravityChangerNeoForge {
-    
+
     public GravityChangerNeoForge(IEventBus bus) {
         // This method is invoked by the Forge mod loader when it is ready
         // to load your mod. You can access Forge and Common code in this
@@ -47,21 +45,13 @@ public class GravityChangerNeoForge {
         NeoForgeEvents.init();
     }
 
-    public static void onTick(Entity entity) {
-        //todo entity.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(IEntityGravityData::commonTick);
-    }
-
     void register(RegisterEvent event) {
         if (event.getRegistry() == BuiltInRegistries.BLOCK) {
             GravityChanger.register();
         }
-
-
     }
 
     void setup(FMLCommonSetupEvent event) {
-        Services.PLATFORM.registerClientPacket(S2CEntityGravityPacket.class,S2CEntityGravityPacket::new);
-        Services.PLATFORM.registerClientPacket(S2CLevelGravityPacket.class,S2CLevelGravityPacket::new);
     }
 
     void login(PlayerEvent.PlayerLoggedInEvent event) {
@@ -69,57 +59,58 @@ public class GravityChangerNeoForge {
         ServerLevel level = player.serverLevel();
         //                Services.PLATFORM.sendToTracking(new S2CSyncEntityGravityPacket(entity, serializeNBT()), entity, true);
 
-        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+        /*level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
             CompoundTag data = new CompoundTag();
             entityGravityAttachment.toNbt(data);
-            Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
-        });
+            Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data), player);
+        });*/
 
-        player.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(entityGravityAttachment -> {
-            CompoundTag data = new CompoundTag();
-            entityGravityAttachment.toNbt(data);
-            Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player,data),player,true);
-        });
+        EntityGravityData entityGravityData = GravityChangerAPI.getGravityData(player);
+        CompoundTag data = new CompoundTag();
+        entityGravityData.toNbt(data);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player, data), player, true);
     }
 
     void respawn(PlayerEvent.PlayerRespawnEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         ServerLevel level = player.serverLevel();
 
-        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+       /* level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
             CompoundTag data = new CompoundTag();
             entityGravityAttachment.toNbt(data);
             Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
-        });
+        });*/
 
-        player.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(entityGravityAttachment -> {
-            CompoundTag data = new CompoundTag();
-            entityGravityAttachment.toNbt(data);
-            Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player,data),player,true);
-        });
+        EntityGravityData entityGravityData = GravityChangerAPI.getGravityData(player);
+
+        CompoundTag data = new CompoundTag();
+        entityGravityData.toNbt(data);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(player, data), player, true);
     }
 
 
     void dimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         ServerLevel level = player.server.getLevel(event.getTo());
-        level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
+
+
+        /*level.getCapability(GravityChangerAPIForge.LEVEL_GRAVITY).ifPresent(entityGravityAttachment -> {
             CompoundTag data = new CompoundTag();
             entityGravityAttachment.toNbt(data);
             Services.PLATFORM.sendToClient(new S2CLevelGravityPacket(data),player);
-        });
+        });*/
     }
 
     void tracking(PlayerEvent.StartTracking event) {
         Player player = event.getEntity();
         Entity target = event.getTarget();
 
-        target.getCapability(GravityChangerAPIForge.ENTITY_GRAVITY).ifPresent(entityGravityAttachment -> {
-            CompoundTag data = new CompoundTag();
-            entityGravityAttachment.toNbt(data);
-            Services.PLATFORM.sendToClient(new S2CEntityGravityPacket(target,data),
-                    (ServerPlayer) player);
-        });
+        EntityGravityData targetEntityGravitydata = GravityChangerAPI.getGravityData(target);
+
+        CompoundTag data = new CompoundTag();
+        targetEntityGravitydata.toNbt(data);
+        Services.PLATFORM.sendToClient(new S2CEntityGravityPacket(target, data),
+                (ServerPlayer) player);
 
     }
 
@@ -129,17 +120,6 @@ public class GravityChangerNeoForge {
 
 
     void registerCaps(RegisterCapabilitiesEvent event) {
-        event.register(IEntityGravityData.class);
-        event.register(ILevelGravityData.class);
-    }
 
-    void attachEntity(AttachCapabilitiesEvent<Entity> event) {
-        Entity entity = event.getObject();
-        event.addCapability(GravityChanger.DATA_COMPONENT_ID,new EntityGravityCapability(entity));
-    }
-
-    void attachLevel(AttachCapabilitiesEvent<Level> event) {
-        Level level = event.getObject();
-        event.addCapability(GravityChanger.DIMENSION_DATA_ID,new LevelGravityCapability(level));
     }
 }

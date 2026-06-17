@@ -4,6 +4,7 @@ import gravitychanger.EntityDuck;
 import gravitychanger.EntityTags;
 import gravitychanger.RotationAnimation;
 import gravitychanger.attachments.DataAttachmentUtil;
+import gravitychanger.util.EntityGravityData;
 import gravitychanger.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface GravityChangerAPI {
 
-    static IEntityGravityData getGravityData(Entity entity) {
+    static EntityGravityData getGravityData(Entity entity) {
         return ((EntityDuck)entity).getGravityData();
     }
 

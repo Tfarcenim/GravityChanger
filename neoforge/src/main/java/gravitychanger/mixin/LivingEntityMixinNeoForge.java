@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixinForge {
+public class LivingEntityMixinNeoForge {
 
     //modify the gravity attribute
     @ModifyVariable(method = "travel(Lnet/minecraft/world/phys/Vec3;)V", at = @At(value = "INVOKE",

@@ -4,18 +4,11 @@ import gravitychanger.ClientPacketHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.Entity;
 
-public class S2CLevelGravityPacket implements S2CModPacket{
-
-    public final CompoundTag data;
+public record S2CLevelGravityPacket(CompoundTag data) implements S2CModPacket {
 
     public S2CLevelGravityPacket(FriendlyByteBuf buf) {
-        data = buf.readNbt();
-    }
-
-    public S2CLevelGravityPacket(CompoundTag data) {
-        this.data = data;
+        this(buf.readNbt());
     }
 
     @Override

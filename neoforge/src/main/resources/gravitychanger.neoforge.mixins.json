@@ -5,12 +5,11 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "EntityMixinForge",
-    "LivingEntityMixinForge"
+    "EntityMixinNeoForge",
+    "LivingEntityMixinNeoForge"
   ],
   "client": [
-    "client.GameRendererMixinForge",
-    "client.ScreenEffectRendererMixin"
+    "client.CameraMixinNeoForge"
   ],
   "server": [
   ],

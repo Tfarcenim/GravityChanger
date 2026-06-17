@@ -10,6 +10,7 @@ public class PacketHandlerNeoForge {
     public static PayloadRegistrar registrar;
     public static void register(RegisterPayloadHandlersEvent event) {
         registrar = event.registrar(GravityChanger.MOD_ID);
+        PacketHandler.registerPackets();
     }
 
 

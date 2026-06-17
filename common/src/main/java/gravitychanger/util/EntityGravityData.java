@@ -8,6 +8,8 @@ import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.api.IEntityGravityData;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.mixin.EntityAccessor;
+import gravitychanger.network.S2CEntityGravityPacket;
+import gravitychanger.platform.Services;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -251,7 +253,9 @@ public class EntityGravityData implements IEntityGravityData {
     }
 
     protected void syncEntity() {
-
+        CompoundTag tag = new CompoundTag();
+        toNbt(tag);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(entity,tag),entity,true);
     }
 
     public void applyGravityDirectionChange(
@@ -519,7 +523,7 @@ public class EntityGravityData implements IEntityGravityData {
     }
 
     protected void postEvent() {
-
+        Services.PLATFORM.postEvent(entity,this);
     }
 
 }

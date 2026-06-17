@@ -1,10 +1,12 @@
 package gravitychanger.platform;
 
+import gravitychanger.api.GravityUpdateEvent;
 import gravitychanger.attachments.CommonDataAttachment;
 import gravitychanger.network.C2SModPacket;
 import gravitychanger.network.PacketHandlerNeoForge;
 import gravitychanger.network.S2CModPacket;
 import gravitychanger.platform.services.IPlatformHelper;
+import gravitychanger.util.EntityGravityData;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,10 +14,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +47,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         return !FMLLoader.isProduction();
     }
 
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist == Dist.CLIENT;
+    }
 
     @Override
     public <MSG extends S2CModPacket> void registerClientPlayPacket(CustomPacketPayload.Type<MSG> type, StreamCodec<RegistryFriendlyByteBuf, MSG> streamCodec) {
@@ -115,5 +124,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         } else {
             throw new IllegalStateException("Cannot attach data to " + object);
         }
+    }
+
+    @Override
+    public void postEvent(Entity entity, EntityGravityData entityGravityData) {
+        NeoForge.EVENT_BUS.post(new GravityUpdateEvent(entity, entityGravityData));
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
@@ -144,6 +145,11 @@ public abstract class EntityMixin implements EntityDuck {
             box = box.move(0.0D, -1.0E-6D, 0.0D);
         }
         cir.setReturnValue(RotationUtil.boxPlayerToWorld(box, gravityDirection).move(this.position));
+    }
+
+    @Inject(method = "<init>",at = @At("RETURN"))
+    private void init(EntityType entityType, Level level, CallbackInfo ci) {
+        entityGravityData = new EntityGravityData((Entity) (Object) this);
     }
 
     @Inject(
@@ -522,43 +528,6 @@ public abstract class EntityMixin implements EntityDuck {
         }
     }
 
-    @ModifyVariable(
-            method = "updateFluidHeightAndDoFluidPushing(Lnet/minecraft/tags/TagKey;D)Z",
-            at = @At(
-                    value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
-                    ordinal = 0
-            ),
-            ordinal = 1
-    )
-    private Vec3 modify_updateMovementInFluid_Vec3d_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return vec3d;
-        }
-
-        return RotationUtil.vecPlayerToWorld(vec3d, gravityDirection);
-    }
-
-    @ModifyArg(
-            method = "updateFluidHeightAndDoFluidPushing",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/phys/Vec3;add(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
-                    ordinal = 1
-            ),
-            index = 0
-    )
-    private Vec3 modify_updateMovementInFluid_add_0(Vec3 vec3d) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return vec3d;
-        }
-
-        return RotationUtil.vecWorldToPlayer(vec3d, gravityDirection);
-    }
-
-
     @Inject(
             method = "push(Lnet/minecraft/world/entity/Entity;)V",
             at = @At("HEAD"),
@@ -690,7 +659,7 @@ public abstract class EntityMixin implements EntityDuck {
     }
 
     @Unique
-    protected final EntityGravityData entityGravityData = new EntityGravityData((Entity)  (Object) this);
+    protected EntityGravityData entityGravityData;
 
     @Override
     public EntityGravityData getGravityData() {

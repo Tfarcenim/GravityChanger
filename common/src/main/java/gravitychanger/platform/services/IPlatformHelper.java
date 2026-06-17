@@ -3,6 +3,7 @@ package gravitychanger.platform.services;
 import gravitychanger.attachments.CommonDataAttachment;
 import gravitychanger.network.C2SModPacket;
 import gravitychanger.network.S2CModPacket;
+import gravitychanger.util.EntityGravityData;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -76,4 +77,5 @@ public interface IPlatformHelper {
 
     <T> void setAttachedValue(Object object, CommonDataAttachment<T> attachment, @Nullable T value);
 
+    void postEvent(Entity entity, EntityGravityData entityGravityData);
 }
