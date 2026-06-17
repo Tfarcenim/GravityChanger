@@ -2,6 +2,7 @@ package gravitychanger.plating;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
@@ -73,8 +74,8 @@ public class GravityPlatingBlockEntity extends BlockEntity {
                 ByteBufCodecs.INT,sideData1 -> sideData1.level,SideData::new
         );
 
-        public boolean isAttracting;
-        public int level;
+        public final boolean isAttracting;
+        public final int level;
         
         public @Nullable AABB effectBoxCache = null;
         
@@ -155,6 +156,18 @@ public class GravityPlatingBlockEntity extends BlockEntity {
             }
             
             return effectBoxCache;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass()) return false;
+            SideData sideData = (SideData) object;
+            return isAttracting == sideData.isAttracting && level == sideData.level;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(isAttracting, level);
         }
     }
     
@@ -395,8 +408,9 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         }
         
         refreshCache();
-        
-        SideData sideDatum = sideData[plateDir.ordinal()];
+
+        int ordinal = plateDir.ordinal();
+        SideData sideDatum = sideData[ordinal];
         
         if (sideDatum == null) {
             return InteractionResult.FAIL;
@@ -406,25 +420,21 @@ public class GravityPlatingBlockEntity extends BlockEntity {
         if (handItem.getItem() == Items.AIR) {
             // reducing level
             if (sideDatum.level != 1) {
-                sideDatum.level -= 1;
+                sideData[ordinal] = new SideData(sideDatum.isAttracting,sideDatum.level-1);
                 if (!player.isCreative()) {
                     player.getInventory().add(new ItemStack(Items.AMETHYST_CLUSTER));
                 }
             }
             else {
-                sideDatum.isAttracting = !sideDatum.isAttracting;
+                sideData[ordinal] = new SideData(!sideDatum.isAttracting,sideDatum.level);
             }
         }
         else if (handItem.getItem() == Items.AMETHYST_CLUSTER) {
             if (!player.isCreative()) {
                 handItem.shrink(1);
             }
-            
-            sideDatum.level += 1;
-            
-            if (sideDatum.level > MAX_LEVEL) {
-                sideDatum.level = MAX_LEVEL;
-            }
+
+            sideData[ordinal] = new SideData(sideDatum.isAttracting,Math.min(MAX_LEVEL,sideDatum.level+1));
         }
         else {
             ((ServerPlayer) player).sendSystemMessage(

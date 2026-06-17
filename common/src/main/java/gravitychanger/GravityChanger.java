@@ -1,6 +1,7 @@
 package gravitychanger;
 
 import gravitychanger.api.RotationParameters;
+import gravitychanger.attachments.CommonDataAttachments;
 import gravitychanger.command.DirectionArgumentType;
 import gravitychanger.command.LocalDirectionArgumentType;
 import gravitychanger.config.GravityChangerConfig;
@@ -82,7 +83,7 @@ public class GravityChanger {
                 GravityPlatingItem.PLATING_BLOCK_ITEM
         );
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"),GravityPlatingBlockEntity.TYPE);
-
+        CommonDataAttachments.init();
     }
 
     public static ResourceLocation id(String path) {

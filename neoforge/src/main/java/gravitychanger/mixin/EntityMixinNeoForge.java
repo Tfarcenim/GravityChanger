@@ -13,20 +13,20 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixinNeoForge extends EntityMixin {
+public abstract class EntityMixinNeoForge {
     @Inject(method = "tick",at = @At("RETURN"))
     private void tickEntity(CallbackInfo ci) {
-        entityGravityData.commonTick();
+        GravityChangerAPI.getGravityData((Entity) (Object)this).commonTick();
     }
 
     @ModifyVariable(
-            method = "updateFluidHeightAndDoFluidPushing()V",
+            method = "lambda$updateFluidHeightAndDoFluidPushing$22",
             at = @At(
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
                     ordinal = 0
             ),
-            ordinal = 1
+            ordinal = 0
     )
     private Vec3 modify_updateMovementInFluid_Vec3d_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
@@ -38,11 +38,11 @@ public abstract class EntityMixinNeoForge extends EntityMixin {
     }
 
     @ModifyArg(
-            method = "updateFluidHeightAndDoFluidPushing()V",
+            method = "lambda$updateFluidHeightAndDoFluidPushing$22",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/phys/Vec3;add(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
-                    ordinal = 1
+                    ordinal = 0
             ),
             index = 0
     )
