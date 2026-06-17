@@ -9,7 +9,8 @@
     "LivingEntityMixinNeoForge"
   ],
   "client": [
-    "client.CameraMixinNeoForge"
+    "client.CameraMixinNeoForge",
+    "client.ScreenEffectRendererNeoForgeMixin"
   ],
   "server": [
   ],

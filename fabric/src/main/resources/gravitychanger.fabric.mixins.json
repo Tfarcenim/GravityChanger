@@ -10,8 +10,7 @@
   ],
   "client": [
     "client.CameraMixinFabric",
-    "client.GameRendererMixin",
-    "client.ScreenEffectRendererMixin"
+    "client.ScreenEffectRendererMixinFabric"
   ],
   "server": [
   ],

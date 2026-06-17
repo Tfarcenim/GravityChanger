@@ -54,6 +54,7 @@
   "client": [
     "client.BiomeEffectSoundPlayerMixin",
     "client.CameraMixin",
+    "client.GameRendererMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.EntityRenderDispatcherMixin",
     "client.EntityRenderMixin",
@@ -61,8 +62,7 @@
     "client.ItemPickupParticleMixin",
     "client.LocalPlayerMixin",
     "client.OtherClientPlayerEntityMixin",
-    "client.PlayerEntityRendererMixin",
-    "client.ScreenEffectRendererMixin"
+    "client.PlayerEntityRendererMixin"
   ],
   "server": [
   ],
