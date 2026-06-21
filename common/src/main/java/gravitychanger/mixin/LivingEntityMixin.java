@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -21,12 +22,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
@@ -39,8 +39,11 @@ public abstract class LivingEntityMixin extends Entity {
     
     @Shadow
     public abstract float getViewYRot(float tickDelta);
-    
-    
+
+
+    @Shadow
+    protected abstract void updateWalkAnimation(float partialTick);
+
     public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
@@ -112,7 +115,25 @@ public abstract class LivingEntityMixin extends Entity {
         
         return RotationUtil.vecWorldToPlayer(livingEntity.position(), gravityDirection).y;
     }
-    
+
+    @Inject(
+            method = "calculateEntityAnimation(Z)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void inject_updateLimbs(boolean flutter, CallbackInfo ci) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        if(gravityDirection == Direction.DOWN) return;
+
+        ci.cancel();
+
+        Vec3 playerPosDelta = RotationUtil.vecWorldToPlayer(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo,
+                gravityDirection);
+
+        float mag = (float) Mth.length(playerPosDelta.x,flutter ? playerPosDelta.y : 0.0D,playerPosDelta.z);
+        this.updateWalkAnimation(mag);
+    }
+
     @ModifyVariable(
         method = "travel(Lnet/minecraft/world/phys/Vec3;)V",
         at = @At(
