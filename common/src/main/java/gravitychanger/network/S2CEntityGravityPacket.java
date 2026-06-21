@@ -3,7 +3,6 @@ package gravitychanger.network;
 import gravitychanger.ClientPacketHandler;
 import gravitychanger.GravityChanger;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,11 +26,6 @@ public record S2CEntityGravityPacket(int entityID,CompoundTag data) implements S
     @Override
     public void handleClient() {
         ClientPacketHandler.handle(this);
-    }
-
-    public void write(FriendlyByteBuf to) {
-        to.writeInt(entityID);
-        to.writeNbt(data);
     }
 
     @Override

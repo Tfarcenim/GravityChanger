@@ -4,6 +4,7 @@ import gravitychanger.attachments.CommonDataAttachment;
 import gravitychanger.network.C2SModPacket;
 import gravitychanger.network.S2CModPacket;
 import gravitychanger.platform.services.IPlatformHelper;
+import gravitychanger.util.EntityGravityData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
@@ -65,6 +66,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
         } else {
             throw new RuntimeException(object + " does not support attachments!");
         }
+    }
+
+    @Override
+    public void postEvent(Entity entity, EntityGravityData entityGravityData) {
+
     }
 
     @SuppressWarnings("UnstableApiUsage")

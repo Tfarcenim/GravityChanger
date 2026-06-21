@@ -18,7 +18,7 @@ public class ModItems {
 
     public static final DirectionFamily<GravityChangerItemAOE> GRAVITY_CHANGERS_AOE = DirectionFamily.createAndRegister(
             BuiltInRegistries.ITEM,direction -> new GravityChangerItemAOE(new Item.Properties().stacksTo(1), direction),
-            "gravity_changer","aoe");
+            "gravity_changer","_aoe");
 
     static {
 

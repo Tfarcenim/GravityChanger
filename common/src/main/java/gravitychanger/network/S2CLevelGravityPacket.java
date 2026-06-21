@@ -16,10 +16,6 @@ public record S2CLevelGravityPacket(CompoundTag data) implements S2CModPacket {
         ClientPacketHandler.handle(this);
     }
 
-    public void write(FriendlyByteBuf to) {
-        to.writeNbt(data);
-    }
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return null;

@@ -13,7 +13,7 @@ public record DirectionFamily<T>(EnumMap<Direction, T> map) {
     public static <T> DirectionFamily<T> createAndRegister(Registry<? super T> registry, Function<Direction,T> creator,String prefix, String suffix) {
         EnumMap<Direction,T> m = new EnumMap<>(Direction.class);
         for (Direction direction : DIRECTIONS) {
-            m.put(direction, Registry.register(registry,GravityChanger.id(prefix+"_"+direction.getName()+"_"+ suffix),creator.apply(direction)));
+            m.put(direction, Registry.register(registry,GravityChanger.id(prefix+"_"+direction.getName()+ suffix),creator.apply(direction)));
         }
         return new DirectionFamily<>(m);
     }

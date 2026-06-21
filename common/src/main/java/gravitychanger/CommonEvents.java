@@ -30,8 +30,8 @@ public class CommonEvents {
 ////////////////////////////////////////////////////////////////////////////////////
         if (entity instanceof LivingEntity livingEntity) {
             GravityStrengthMobEffect.INCREASE.value().apply(livingEntity,gravity,GravityStrengthMobEffect.INCREASE);
-            GravityStrengthMobEffect.DECREASE.value().apply(livingEntity,gravity,GravityStrengthMobEffect.INCREASE);
-            GravityStrengthMobEffect.REVERSE.value().apply(livingEntity,gravity,GravityStrengthMobEffect.INCREASE);
+            GravityStrengthMobEffect.DECREASE.value().apply(livingEntity,gravity,GravityStrengthMobEffect.DECREASE);
+            GravityStrengthMobEffect.REVERSE.value().apply(livingEntity,gravity,GravityStrengthMobEffect.REVERSE);
         }
 ////////////////////////////////////////////////////////////////////DIRECTION
         if (entity instanceof LivingEntity livingEntity) {

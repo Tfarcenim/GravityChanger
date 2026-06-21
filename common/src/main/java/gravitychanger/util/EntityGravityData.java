@@ -519,7 +519,9 @@ public class EntityGravityData implements IEntityGravityData {
     }
 
     protected void sendSyncPacketToOtherPlayers() {
-
+        CompoundTag tag = new CompoundTag();
+        toNbt(tag);
+        Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(entity,tag),entity,false);
     }
 
     protected void postEvent() {
