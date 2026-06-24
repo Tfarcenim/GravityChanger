@@ -42,7 +42,10 @@ public class CameraMixinNeoForge {
             if (gravityDirection == Direction.DOWN && !animation.isInAnimation()) {
                 return;
             }
-            float partialTick = Minecraft.getInstance().getFrameTimeNs();
+
+            //TODO: Check if we want this to return 1.0 getTickDelta(false) or the real value
+            // while tick freeze is active
+            float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);//getTickDelta();
             long timeMs = entity.level().getGameTime() * 50 + (long) (partialTick * 50);
             Quaternionf rotation = new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs));
             rotation.conjugate();

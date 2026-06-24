@@ -1,5 +1,6 @@
 package gravitychanger;
 
+import gravitychanger.api.GravityChangerAPI;
 import gravitychanger.api.RotationParameters;
 import gravitychanger.attachments.CommonDataAttachments;
 import gravitychanger.command.DirectionArgumentType;
@@ -14,19 +15,28 @@ import gravitychanger.mob_effect.refined.GravityStrengthMobEffect;
 import gravitychanger.plating.GravityPlatingBlock;
 import gravitychanger.plating.GravityPlatingBlockEntity;
 import gravitychanger.plating.GravityPlatingItem;
+import gravitychanger.util.RotationUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 // This class is part of the common project meaning it is shared between all supported loaders. Code written here can only
 // import and access the vanilla codebase, libraries used by vanilla, and optionally third party libraries that provide
@@ -84,6 +94,48 @@ public class GravityChanger {
         );
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GravityChanger.id("gravity_plating"),GravityPlatingBlockEntity.TYPE);
         CommonDataAttachments.init();
+    }
+
+    public static Vec3 redirection(Vec3 movement, AABB entityBoundingBox, List<VoxelShape> collisions, Entity entity) {
+        Direction gravityDirection;
+        if (entity == null || (gravityDirection = GravityChangerAPI.getGravityDirection(entity)) == Direction.DOWN) {
+            return Entity.collideWithShapes(movement, entityBoundingBox, collisions);
+        }
+
+        Vec3 playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
+        double playerMovementX = playerMovement.x;
+        double playerMovementY = playerMovement.y;
+        double playerMovementZ = playerMovement.z;
+        Direction directionX = RotationUtil.dirPlayerToWorld(Direction.EAST, gravityDirection);
+        Direction directionY = RotationUtil.dirPlayerToWorld(Direction.UP, gravityDirection);
+        Direction directionZ = RotationUtil.dirPlayerToWorld(Direction.SOUTH, gravityDirection);
+        if (playerMovementY != 0.0D) {
+            playerMovementY = Shapes.collide(directionY.getAxis(), entityBoundingBox, collisions, playerMovementY * directionY.getAxisDirection().getStep()) * directionY.getAxisDirection().getStep();
+            if (playerMovementY != 0.0D) {
+                entityBoundingBox = entityBoundingBox.move(RotationUtil.vecPlayerToWorld(0.0D, playerMovementY, 0.0D, gravityDirection));
+            }
+        }
+
+        boolean isZLargerThanX = Math.abs(playerMovementX) < Math.abs(playerMovementZ);
+        if (isZLargerThanX && playerMovementZ != 0.0D) {
+            playerMovementZ = Shapes.collide(directionZ.getAxis(), entityBoundingBox, collisions, playerMovementZ * directionZ.getAxisDirection().getStep()) * directionZ.getAxisDirection().getStep();
+            if (playerMovementZ != 0.0D) {
+                entityBoundingBox = entityBoundingBox.move(RotationUtil.vecPlayerToWorld(0.0D, 0.0D, playerMovementZ, gravityDirection));
+            }
+        }
+
+        if (playerMovementX != 0.0D) {
+            playerMovementX = Shapes.collide(directionX.getAxis(), entityBoundingBox, collisions, playerMovementX * directionX.getAxisDirection().getStep()) * directionX.getAxisDirection().getStep();
+            if (!isZLargerThanX && playerMovementX != 0.0D) {
+                entityBoundingBox = entityBoundingBox.move(RotationUtil.vecPlayerToWorld(playerMovementX, 0.0D, 0.0D, gravityDirection));
+            }
+        }
+
+        if (!isZLargerThanX && playerMovementZ != 0.0D) {
+            playerMovementZ = Shapes.collide(directionZ.getAxis(), entityBoundingBox, collisions, playerMovementZ * directionZ.getAxisDirection().getStep()) * directionZ.getAxisDirection().getStep();
+        }
+        return new Vec3(playerMovementX, playerMovementY, playerMovementZ);
+        //return RotationUtil.vecPlayerToWorld(playerMovementX, playerMovementY, playerMovementZ, gravityDirection);
     }
 
     public static ResourceLocation id(String path) {
