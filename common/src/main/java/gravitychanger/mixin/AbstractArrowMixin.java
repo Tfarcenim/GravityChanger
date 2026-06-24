@@ -14,9 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -62,10 +60,5 @@ public abstract class AbstractArrowMixin extends Entity {
         args.set(1, pos.x);
         args.set(2, pos.y);
         args.set(3, pos.z);
-    }
-
-    @ModifyConstant(method = "tick()V", constant = @Constant())
-    private double multiplyGravity(double constant) {
-        return constant * GravityChangerAPI.getGravityStrength(this);
     }
 }

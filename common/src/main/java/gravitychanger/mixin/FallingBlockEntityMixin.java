@@ -1,13 +1,10 @@
 package gravitychanger.mixin;
 
-import gravitychanger.api.GravityChangerAPI;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(FallingBlockEntity.class)
 public abstract class FallingBlockEntityMixin extends Entity {
@@ -53,16 +50,4 @@ public abstract class FallingBlockEntityMixin extends Entity {
     //    }
     //    return original.offset(gravity.getOffsetX() * 0.5, 0.5, gravity.getOffsetZ() * 0.5);
     //}
-    
-    @ModifyArg(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;applyGravity()V"
-        ),
-        index = 1
-    )
-    private double multiplyGravity(double x) {
-        return x * GravityChangerAPI.getGravityStrength(this);
-    }
 }

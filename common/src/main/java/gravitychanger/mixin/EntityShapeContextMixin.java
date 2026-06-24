@@ -43,18 +43,29 @@ public abstract class EntityShapeContextMixin {
         
         return RotationUtil.boxWorldToPlayer(entity.getBoundingBox(), gravityDirection).minY;
     }
-    
+
     @Inject(
-        method = "isAbove(Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/core/BlockPos;Z)Z",
-        at = @At("HEAD"),
-        cancellable = true
+            method = "isAbove",
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void inject_isAbove(VoxelShape shape, BlockPos pos, boolean defaultValue, CallbackInfoReturnable<Boolean> cir) {
         if (this.entity == null) return;
-        
+
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.entity);
         if (gravityDirection == Direction.DOWN) return;
-        
-        cir.setReturnValue(this.entityBottom > RotationUtil.boxWorldToPlayer(new AABB(pos), gravityDirection).minY + RotationUtil.boxWorldToPlayer(shape.bounds().inflate(-9.999999747378752E-6D), gravityDirection).maxX);
+
+        if (shape.isEmpty()) {
+            cir.setReturnValue(true);
+            return;
+        }
+
+        AABB shapeBox = RotationUtil.boxWorldToPlayer(
+                shape.bounds().inflate(-9.999999747378752E-6D), gravityDirection
+        );
+        AABB posBox = RotationUtil.boxWorldToPlayer(new AABB(pos), gravityDirection);
+        cir.setReturnValue(
+                this.entityBottom > posBox.minY + shapeBox.maxX
+        );
     }
 }

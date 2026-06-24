@@ -6,8 +6,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "CommonHooksMixin",
-    "EntityMixinNeoForge",
-    "LivingEntityMixinNeoForge"
+    "EntityMixinNeoForge"
   ],
   "client": [
     "client.CameraMixinNeoForge",
