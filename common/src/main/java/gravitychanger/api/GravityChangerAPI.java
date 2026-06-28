@@ -74,7 +74,7 @@ public interface GravityChangerAPI {
 
         component.setBaseGravityDirection(direction);
 
-        component.updateGravityStatus();
+        component.updateGravityStatus(false);
 
         component.forceApplyGravityChange();
     }

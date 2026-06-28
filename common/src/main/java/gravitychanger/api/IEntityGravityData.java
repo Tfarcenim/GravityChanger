@@ -18,7 +18,7 @@ public interface IEntityGravityData {
     void setBaseGravityStrength(double strength);
     void reset();
 
-    void updateGravityStatus();
+    void updateGravityStatus(boolean sendPacketIfNecessary);
     void forceApplyGravityChange();
     void applyGravityStrengthEffect(double strengthMultiplier);
     RotationAnimation getRotationAnimation();

@@ -240,7 +240,7 @@ public class EntityGravityData implements IEntityGravityData {
             return;
         }
 
-        updateGravityStatus();
+        updateGravityStatus(true);
 
         applyGravityChange();
 
@@ -403,7 +403,7 @@ public class EntityGravityData implements IEntityGravityData {
     }
 
     @Override
-    public void updateGravityStatus() {
+    public void updateGravityStatus(boolean sendPacketIfNecessary) {
         // for the remote players and non-player entities,
         // their effect data is not synchronized to the client
         // (possibly for making it harder to cheat for hacked clients)
@@ -453,11 +453,12 @@ public class EntityGravityData implements IEntityGravityData {
 
             lastUpdateTickCount = entity.tickCount;
         }
-
-        boolean changed = oldGravityDirection != currGravityDirection ||
-                Math.abs(oldGravityStrength - currGravityStrength) > 0.0001;
-        if (changed && !entity.level().isClientSide) {
-            sendSyncPacketToOtherPlayers();
+        if (sendPacketIfNecessary) {
+            boolean changed = oldGravityDirection != currGravityDirection ||
+                    Math.abs(oldGravityStrength - currGravityStrength) > 0.0001;
+            if (changed) {
+                sendSyncPacketToOtherPlayers();
+            }
         }
     }
 
@@ -519,6 +520,7 @@ public class EntityGravityData implements IEntityGravityData {
     }
 
     protected void sendSyncPacketToOtherPlayers() {
+        if (entity.level().isClientSide()) return;
         CompoundTag tag = new CompoundTag();
         toNbt(tag);
         Services.PLATFORM.sendToTracking(new S2CEntityGravityPacket(entity,tag),entity,false);
